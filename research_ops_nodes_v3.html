@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Research Ops — Node Graph</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#080810;font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;overflow:hidden;height:100vh}
+#wrap{display:flex;height:100vh;width:100vw;position:relative}
+#nw{flex:1;background:#0b0b14;overflow:hidden;position:relative;cursor:grab;user-select:none;transition:background .4s}
+#nw.pan{cursor:grabbing}
+#nw.before-bg{background:#110b0b}
+#cv{position:absolute;width:1600px;height:1600px;transform-origin:0 0}
+.grid-bg{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,.045) 1px,transparent 1px);background-size:26px 26px;pointer-events:none}
+#svg-l{position:absolute;inset:0;width:1600px;height:1600px;pointer-events:none;overflow:visible}
+.nd{position:absolute;background:#1a1a26;border:0.5px solid rgba(255,255,255,.1);border-radius:10px;cursor:pointer;transition:border-color .15s,transform .15s,opacity .3s;display:flex;align-items:center;gap:10px;padding:9px 14px 9px 9px}
+.nd:hover{border-color:rgba(255,255,255,.24);transform:translateY(-1px)}
+.nd.hi{border-color:var(--nc)!important;transform:translateY(-2px)}
+.nd.cat-dim{opacity:.05!important;transform:none!important;pointer-events:none;transition:opacity .25s}
+.nd-logo{width:32px;height:32px;border-radius:8px;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.nd-info{flex:1;min-width:0}
+.nd-title{font-size:12px;font-weight:500;color:#d4d0c8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+.nd-sub{font-size:9.5px;color:rgba(255,255,255,.3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nd-sdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.port-in,.port-out{position:absolute;width:10px;height:10px;border-radius:50%;top:50%;transform:translateY(-50%);z-index:3;background:#252535;border:1.5px solid #12121e;transition:background .15s,box-shadow .15s}
+.port-in{left:-5px}
+.port-out{right:-5px}
+.nd:hover .port-in,.nd:hover .port-out{background:var(--nc)}
+.nd.hi .port-in,.nd.hi .port-out{background:var(--nc);box-shadow:0 0 7px var(--nc)}
+.col-lbl{position:absolute;font-size:8px;font-weight:500;letter-spacing:.1em;color:rgba(255,255,255,.15);text-transform:uppercase}
+.team-sep{position:absolute;left:0;width:1600px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.18) 8%,rgba(255,255,255,.18) 92%,transparent);pointer-events:none}
+.team-lbl{position:absolute;left:14px;font-size:8px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;opacity:.55;pointer-events:none;background:#0b0b14;padding:0 8px 0 0}
+/* presentation mode */
+.cv-smooth{transition:transform .55s cubic-bezier(.4,0,.2,1)!important}
+.nd.pres-dim{opacity:.18!important;filter:saturate(.4);transition:opacity .35s,filter .35s}
+.nd.pres-active{opacity:1!important;border-color:var(--nc)!important;box-shadow:0 0 0 2px var(--nc),0 12px 40px rgba(0,0,0,.55);transform:translateY(-2px) scale(1.02);transition:all .35s}
+.nd.pres-active .port-in,.nd.pres-active .port-out{background:var(--nc);box-shadow:0 0 8px var(--nc)}
+#present-bar{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(80px);display:flex;gap:10px;align-items:center;z-index:100;background:rgba(8,8,16,.94);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:7px 8px 7px 18px;box-shadow:0 8px 32px rgba(0,0,0,.5);transition:transform .3s cubic-bezier(.4,0,.2,1);opacity:0;pointer-events:none;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+body.present-mode #present-bar{transform:translateX(-50%) translateY(0);opacity:1;pointer-events:auto}
+.pres-counter{font-family:monospace;font-size:11px;color:rgba(255,255,255,.7);letter-spacing:.05em;min-width:44px;text-align:center}
+.pres-divider{width:1px;height:18px;background:rgba(255,255,255,.12);margin:0 4px}
+.pres-btn{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.75);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s,color .15s;line-height:1;padding:0}
+.pres-btn:hover{background:rgba(255,255,255,.18);color:#fff}
+.pres-btn.exit{background:rgba(226,75,74,.15);border-color:rgba(226,75,74,.3);color:#f87171;font-size:10px;width:auto;padding:0 12px;border-radius:15px}
+.pres-btn.exit:hover{background:rgba(226,75,74,.28)}
+.pres-label{font-size:10px;color:rgba(255,255,255,.4);letter-spacing:.06em;text-transform:uppercase}
+.cb.present-toggle{background:rgba(155,123,255,.12);border-color:rgba(155,123,255,.3);color:#bda6ff;font-size:11px;width:auto;padding:0 10px;gap:5px;display:inline-flex;align-items:center}
+.cb.present-toggle:hover{background:rgba(155,123,255,.22);color:#d4c5ff}
+body.present-mode #topbar,body.present-mode .leg,body.present-mode .state-banner{opacity:.18;pointer-events:none;transition:opacity .3s}
+body.present-mode #topbar:hover{opacity:1;pointer-events:auto}
+body.present-mode #nw{cursor:default!important}
+body.present-mode #nw.pan{cursor:default!important}
+.pres-mode-tag{display:none;padding:0 10px 0 4px;font-family:monospace;font-size:10px;color:rgba(155,123,255,.85);letter-spacing:.1em;text-transform:uppercase}
+body.present-mode.pres-single .pres-mode-tag{display:inline-block}
+body.present-mode.pres-single .pres-label,
+body.present-mode.pres-single .pres-counter,
+body.present-mode.pres-single .pres-divider,
+body.present-mode.pres-single .pres-nav-prev,
+body.present-mode.pres-single .pres-nav-next{display:none}
+.p-focus-btn{width:26px;height:26px;border-radius:6px;background:rgba(155,123,255,.13);border:1px solid rgba(155,123,255,.32);color:#bda6ff;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-right:6px;padding:0;transition:background .15s}
+.p-focus-btn:hover{background:rgba(155,123,255,.25);color:#d4c5ff}
+
+/* ───── Panel content classes (used by openPanel JS) ───── */
+.pp-head{padding:18px 18px 14px;border-bottom:0.5px solid rgba(255,255,255,.07)}
+.pp-row{display:flex;align-items:center;gap:11px;margin-bottom:12px}
+.pp-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pp-meta{flex:1;min-width:0}
+.pp-title{font-size:15px;font-weight:500;color:#e8e4dc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pp-cat{font-size:10px;color:rgba(255,255,255,.28);margin-top:2px}
+.pp-close{width:24px;height:24px;border-radius:6px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4);font-size:14px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;line-height:1;padding:0;transition:background .15s}
+.pp-close:hover{background:rgba(255,255,255,.12);color:rgba(255,255,255,.7)}
+.pp-status{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.pp-status-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;display:inline-block}
+.pp-status-txt{font-size:10px;font-weight:500}
+.pp-status-divider{font-size:10px;color:rgba(255,255,255,.18);margin:0 4px}
+.pp-mode-badge{font-size:10px;padding:2px 7px;border-radius:4px;border:1px solid;display:inline-block}
+.pp-section{padding:14px 18px;border-bottom:0.5px solid rgba(255,255,255,.07)}
+.pp-section-label{font-size:9px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.22);margin-bottom:7px}
+.pp-section-body{font-size:12px;color:rgba(255,255,255,.5);line-height:1.7}
+.pp-section-row{padding:12px 18px;border-bottom:0.5px solid rgba(255,255,255,.07);display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.pp-impact-label{font-size:10px;color:rgba(255,255,255,.28);flex-shrink:0}
+.pp-impact-value{font-size:11px;color:rgba(255,255,255,.5);text-align:right}
+.pp-open-btn{display:flex;align-items:center;justify-content:space-between;margin:14px 18px 0;padding:11px 14px;border-radius:9px;color:#e2ddd4;font-size:12px;font-weight:500;text-decoration:none;transition:background .15s}
+
+/* ═══════════════════ LIGHT MODE ═══════════════════ */
+/* Editor-style light theme: white bg, mint cross-grid */
+body.light{background:#ffffff}
+body.light #nw{background:#ffffff}
+body.light #nw.before-bg{background:#fdf4f4}
+body.light .grid-bg{
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28'><path d='M14 11v6M11 14h6' stroke='%23dbeee4' stroke-width='0.9' stroke-linecap='round' fill='none'/></svg>");
+  background-size:28px 28px;
+}
+body.light #topbar{
+  background:rgba(255,255,255,.96);
+  border-bottom-color:rgba(0,0,0,.07);
+}
+body.light .tb-title{color:#0a0a0a;font-weight:500}
+body.light .tb-sub{color:#7a7a7a}
+body.light .switcher{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.08)}
+body.light .sw-btn{color:rgba(0,0,0,.42)}
+body.light .sw-before{background:#fde9e9;color:#b73a2a;border:1px solid rgba(196,64,43,.28)}
+body.light .sw-after{background:#e6f5ec;color:#2c6b3a;border:1px solid rgba(34,140,80,.32)}
+body.light .cb{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.08);color:rgba(0,0,0,.55)}
+body.light .cb:hover{background:rgba(0,0,0,.09);color:#000}
+body.light .cb.present-toggle{background:rgba(155,123,255,.12);border-color:rgba(155,123,255,.32);color:#7253d9}
+body.light .cb.present-toggle:hover{background:rgba(155,123,255,.2);color:#5b3eb8}
+body.light .zm{background:rgba(0,0,0,.03);border-color:rgba(0,0,0,.06);color:rgba(0,0,0,.45)}
+body.light .leg{background:rgba(255,255,255,.94);border-color:rgba(0,0,0,.08)}
+body.light .li{color:rgba(0,0,0,.5)}
+body.light .li:hover{color:#0a0a0a;background:rgba(0,0,0,.05)}
+body.light .li.locked{color:#0a0a0a;background:rgba(0,0,0,.08);border-color:rgba(0,0,0,.14)}
+body.light .li.locked .ld{box-shadow:0 0 0 2px rgba(0,0,0,.1)}
+body.light .state-banner.banner-before{background:#fde9e9;border-color:rgba(196,64,43,.28);color:#b73a2a}
+body.light .state-banner.banner-after{background:#e6f5ec;border-color:rgba(34,140,80,.32);color:#2c6b3a}
+body.light .col-lbl{color:rgba(0,0,0,.32)}
+body.light .team-sep{background:linear-gradient(90deg,transparent,rgba(0,0,0,.13) 8%,rgba(0,0,0,.13) 92%,transparent)}
+body.light .team-lbl{background:#ffffff}
+/* Nodes go light on light bg (matches the editor reference) */
+body.light .nd{background:#ffffff;border-color:rgba(0,0,0,.1);box-shadow:0 1px 2px rgba(0,0,0,.04),0 4px 12px rgba(0,0,0,.06)}
+body.light .nd-title{color:#0a0a0a}
+body.light .nd-sub{color:rgba(0,0,0,.45)}
+body.light .port-in,body.light .port-out{background:#ffffff;border-color:rgba(0,0,0,.18)}
+body.light .nd:hover{box-shadow:0 0 0 2px rgba(124,92,255,.32),0 8px 24px rgba(0,0,0,.12);border-color:rgba(124,92,255,.45)}
+body.light .nd.hi{box-shadow:0 0 0 2px var(--nc),0 12px 32px rgba(0,0,0,.18)}
+body.light .nd.pres-active{box-shadow:0 0 0 2px var(--nc),0 16px 44px rgba(0,0,0,.22)}
+body.light .nd.pres-dim{filter:saturate(.5) brightness(.95)}
+/* Side panel goes light too */
+body.light #panel{background:#ffffff;border-left-color:rgba(0,0,0,.08)}
+body.light #panel::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15)}
+body.light .pp-head{border-bottom-color:rgba(0,0,0,.08)}
+body.light .pp-title{color:#0a0a0a}
+body.light .pp-cat{color:rgba(0,0,0,.45)}
+body.light .pp-close{background:rgba(0,0,0,.05);border-color:rgba(0,0,0,.1);color:rgba(0,0,0,.5)}
+body.light .pp-close:hover{background:rgba(0,0,0,.1);color:#000}
+body.light .pp-status-divider{color:rgba(0,0,0,.2)}
+body.light .pp-section{border-bottom-color:rgba(0,0,0,.08)}
+body.light .pp-section-label{color:rgba(0,0,0,.42)}
+body.light .pp-section-body{color:rgba(0,0,0,.65)}
+body.light .pp-section-row{border-bottom-color:rgba(0,0,0,.08)}
+body.light .pp-impact-label{color:rgba(0,0,0,.42)}
+body.light .pp-impact-value{color:rgba(0,0,0,.6)}
+body.light .pp-open-btn{color:#0a0a0a}
+body.light .p-focus-btn{color:#7253d9;background:rgba(124,92,255,.1);border-color:rgba(124,92,255,.32)}
+body.light .p-focus-btn:hover{background:rgba(124,92,255,.18);color:#5b3eb8}
+/* Present bar in light mode */
+body.light #present-bar{background:rgba(255,255,255,.96);border-color:rgba(0,0,0,.1);color:#0a0a0a;box-shadow:0 8px 32px rgba(0,0,0,.12)}
+body.light .pres-counter{color:rgba(0,0,0,.6)}
+body.light .pres-divider{background:rgba(0,0,0,.1)}
+body.light .pres-btn{background:rgba(0,0,0,.05);border-color:rgba(0,0,0,.1);color:rgba(0,0,0,.65)}
+body.light .pres-btn:hover{background:rgba(0,0,0,.1);color:#000}
+body.light .pres-label,body.light .pres-mode-tag{color:rgba(0,0,0,.45)}
+/* Brand mark in topbar */
+.brand-block{display:flex;align-items:center;gap:12px}
+.brand-mark-svg{width:28px;height:28px;flex-shrink:0;display:block}
+.brand-text-wrap{display:flex;flex-direction:column}
+#panel{width:290px;min-width:290px;background:#0f0f1a;border-left:1px solid rgba(255,255,255,.08);overflow-y:auto;transition:width .25s,min-width .25s;position:relative}
+#panel.closed{width:0;min-width:0;border:none;overflow:hidden}
+#panel::-webkit-scrollbar{width:4px}
+#panel::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
+.p-head{padding:16px 18px 12px;border-bottom:1px solid rgba(255,255,255,.07)}
+.p-icon-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.p-icon-bg{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.p-title{font-size:15px;font-weight:500;color:#e8e4dc}
+.p-cat{font-size:10px;color:rgba(255,255,255,.3);margin-top:1px}
+.p-desc{font-size:12px;color:rgba(255,255,255,.45);line-height:1.65;margin-top:2px}
+.p-section{padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.06)}
+.p-sec-label{font-size:9px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:8px}
+.p-row{display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;font-size:12px}
+.p-row-l{color:rgba(255,255,255,.35)}
+.p-row-v{color:#e2ddd4;font-weight:500}
+.green{color:#4ade80!important}.red{color:#f87171!important}.amber{color:#fbbf24!important}
+.p-open-btn{display:flex;align-items:center;justify-content:center;gap:8px;margin:14px 18px 0;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:#e2ddd4;font-size:12px;font-weight:500;cursor:pointer;text-decoration:none;transition:background .15s}
+.p-open-btn:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.28)}
+.p-close-btn{display:block;margin:12px 18px 0;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,.08);background:transparent;color:rgba(255,255,255,.3);font-size:11px;cursor:pointer;text-align:center}
+.p-close-btn:hover{background:rgba(255,255,255,.06)}
+.p-state-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:500;padding:3px 8px;border-radius:4px;margin-top:8px}
+#topbar{position:absolute;top:0;left:0;right:0;height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:rgba(11,11,20,.9);border-bottom:1px solid rgba(255,255,255,.07);z-index:10}
+.tb-title{font-size:13px;font-weight:500;color:rgba(255,255,255,.7)}
+.tb-sub{font-size:10px;color:rgba(255,255,255,.25)}
+.switcher{display:flex;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:3px;gap:2px}
+.sw-btn{padding:5px 16px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;border:none;background:transparent;color:rgba(255,255,255,.4);transition:all .2s}
+.sw-before{background:#2a0f0f;color:#f87171;border:1px solid rgba(226,75,74,.25)}
+.sw-after{background:rgba(34,197,94,.1);color:#4ade80;border:1px solid rgba(34,197,94,.2)}
+.tb-controls{display:flex;align-items:center;gap:6px}
+.cb{width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.45);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.cb:hover{background:rgba(255,255,255,.15);color:#fff}
+.zm{height:28px;padding:0 8px;border-radius:7px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.3);font-size:10px;font-family:monospace;display:flex;align-items:center}
+.leg{position:absolute;bottom:10px;left:10px;display:flex;gap:12px;align-items:center;background:rgba(8,8,16,.9);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:7px 12px;z-index:5}
+.li{display:flex;align-items:center;gap:5px;font-size:9.5px;color:rgba(255,255,255,.32);cursor:pointer;border-radius:6px;padding:4px 7px;margin:-4px -3px;transition:background .15s,color .15s,border-color .15s;border:1px solid transparent}
+.li:hover{color:rgba(255,255,255,.65);background:rgba(255,255,255,.06)}
+.li.locked{color:#fff;background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.18)}
+.li.locked .ld{box-shadow:0 0 0 2px rgba(255,255,255,.18)}
+.ld{width:7px;height:7px;border-radius:50%;transition:box-shadow .15s}
+.nd.cat-dim{opacity:.05!important;transform:none!important;pointer-events:none;transition:opacity .25s}
+.state-banner{position:absolute;top:56px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:500;padding:4px 14px;border-radius:20px;z-index:6;pointer-events:none;white-space:nowrap}
+.banner-before{background:rgba(226,75,74,.12);border:1px solid rgba(226,75,74,.25);color:#f87171}
+.banner-after{background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);color:#4ade80}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="nw">
+    <div id="cv"><div class="grid-bg"></div><svg id="svg-l" style="position:absolute;inset:0;width:1600px;height:1600px;pointer-events:none;overflow:visible"></svg></div>
+    <div id="topbar">
+      <div class="brand-block">
+        <svg class="brand-mark-svg" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+          <rect width="32" height="32" rx="7" fill="#ec4078"/>
+          <path d="M7.5 22 L7.5 10 L11 10 L13.5 14.5 L16 19 L18.5 14.5 L21 10 L24.5 10 L24.5 22 L22 22 L22 14.5 L18.5 19.5 L13.5 19.5 L10 14.5 L10 22 Z" fill="white"/>
+        </svg>
+        <div class="brand-text-wrap">
+          <div class="tb-title">Research ops pipeline</div>
+          <div class="tb-sub">Mermaid · click any node to open · drag to pan · scroll to zoom</div>
+        </div>
+      </div>
+      <div class="switcher">
+        <button class="sw-btn sw-before" id="sw-b" onclick="setMode('before')">Before</button>
+        <button class="sw-btn" id="sw-a" onclick="setMode('after')">After</button>
+      </div>
+      <div class="tb-controls">
+        <button class="cb present-toggle" id="btn-present" onclick="enterPresent()" title="Presentation mode (P)">▶ Present</button>
+        <button class="cb" id="btn-theme" onclick="toggleTheme()" title="Toggle light / dark mode"><svg viewBox="0 0 16 16" fill="none" style="width:14px;height:14px"><circle cx="8" cy="8" r="3.2" fill="currentColor"/><g stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><line x1="8" y1="1" x2="8" y2="2.6"/><line x1="8" y1="13.4" x2="8" y2="15"/><line x1="1" y1="8" x2="2.6" y2="8"/><line x1="13.4" y1="8" x2="15" y2="8"/><line x1="3.05" y1="3.05" x2="4.2" y2="4.2"/><line x1="11.8" y1="11.8" x2="12.95" y2="12.95"/><line x1="3.05" y1="12.95" x2="4.2" y2="11.8"/><line x1="11.8" y1="4.2" x2="12.95" y2="3.05"/></g></svg></button>
+        <button class="cb" onclick="fitView()" title="Fit to screen">⊡</button>
+        <button class="cb" id="btn-zi">+</button>
+        <div class="zm" id="zm-lbl">70%</div>
+        <button class="cb" id="btn-zo">−</button>
+      </div>
+    </div>
+    <div class="state-banner banner-before" id="state-banner">Fragmented — 3 disconnected streams · all manual · no shared output</div>
+    <div class="leg">
+      <div class="li" id="leg-Product"    onclick="lockCat('Product')"   ><div class="ld" style="background:#378ADD"></div>Product</div>
+      <div class="li" id="leg-Design"     onclick="lockCat('Design')"    ><div class="ld" style="background:#1D9E75"></div>Design</div>
+      <div class="li" id="leg-Growth"     onclick="lockCat('Growth')"    ><div class="ld" style="background:#BA7517"></div>Growth</div>
+      <div class="li" id="leg-Automation" onclick="lockCat('Automation')"><div class="ld" style="background:#E04E25"></div>Automation</div>
+      <div class="li" id="leg-AI"         onclick="lockCat('AI')"        ><div class="ld" style="background:#9B7BFF"></div>AI</div>
+      <div class="li" id="leg-Output"     onclick="lockCat('Output')"    ><div class="ld" style="background:#22c55e"></div>Output</div>
+      <div class="li" id="leg-Manual"     onclick="lockCat('Manual')"    ><div class="ld" style="background:#888780"></div>Manual</div>
+    </div>
+    <div id="present-bar">
+      <span class="pres-mode-tag">Focus</span>
+      <span class="pres-label">Step</span>
+      <span class="pres-counter" id="pres-counter">1 / 1</span>
+      <div class="pres-divider"></div>
+      <button class="pres-btn pres-nav-prev" onclick="presentPrev()" title="Previous (←)">◀</button>
+      <button class="pres-btn pres-nav-next" onclick="presentNext()" title="Next (→ / Space)">▶</button>
+      <div class="pres-divider"></div>
+      <button class="pres-btn exit" onclick="exitPresent()" title="Exit (Esc)">Exit</button>
+    </div>
+  </div>
+  <div id="panel" class="closed"><div id="panel-content"></div></div>
+</div>
+<script>
+const LOGOS={
+  mixpanel:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px"><rect width="32" height="32" rx="7" fill="#7856FF"/><path d="M7 22l4-10 3 5 3-8 4 5 4-6" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  apollo:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px"><rect width="32" height="32" rx="7" fill="#0F172A"/><circle cx="16" cy="16" r="7" stroke="white" stroke-width="1.5"/><ellipse cx="16" cy="16" rx="13" ry="5" stroke="white" stroke-width="1" transform="rotate(-30 16 16)"/><circle cx="16" cy="16" r="2.5" fill="white"/></svg>`,
+  zapier:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px"><rect width="32" height="32" rx="7" fill="#FF4A00"/><path d="M16 5l2.5 7.5H26l-6 4.5 2.5 7.5L16 20l-6.5 4.5L12 17 6 12.5h7.5L16 5z" fill="white"/></svg>`,
+  figma:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px"><rect width="32" height="32" rx="7" fill="#1E1E2E"/><rect x="9" y="4" width="7" height="7" rx="3.5" fill="#F24E1E"/><rect x="16" y="4" width="7" height="7" rx="3.5" fill="#FF7262"/><rect x="9" y="11" width="7" height="7" rx="3.5" fill="#A259FF"/><rect x="9" y="18" width="7" height="7" rx="3.5" fill="#0ACF83"/><circle cx="19.5" cy="14.5" r="3.5" fill="#1ABCFE"/></svg>`,
+  vistaly:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px"><rect width="32" height="32" rx="7" fill="#2563EB"/><path d="M8 10l8 13 8-13" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 10l5 8 5-8" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/></svg>`,
+  notion:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px"><rect width="32" height="32" rx="7" fill="#F5F5F0"/><path d="M9 8.5h3.5l9 12V8.5h2V23.5h-3.5L11 11.5v12H9V8.5z" fill="#1A1A18"/></svg>`,
+  maze:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px"><rect width="32" height="32" rx="7" fill="#E8452A"/><rect x="6" y="6" width="20" height="20" rx="3" stroke="white" stroke-width="1.5" fill="none"/><path d="M10 10h6v5h-3v5h6v-3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`,
+  typeform:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px"><rect width="32" height="32" rx="7" fill="#1C1C1E"/><path d="M9 14h14M16 9v14" stroke="white" stroke-width="2.2" stroke-linecap="round"/></svg>`,
+  jira:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px"><rect width="32" height="32" rx="7" fill="#0052CC"/><path d="M16 4l12 12-12 12L4 16 16 4z" fill="#2684FF"/><path d="M16 4L8 12l8 8 8-8L16 4z" fill="#0052CC"/><path d="M16 4l-4 12 4 4 4-4L16 4z" fill="white" opacity="0.9"/></svg>`,
+  slack:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px"><rect width="32" height="32" rx="7" fill="#1A1A1A"/><path d="M11.5 9a2 2 0 0 0-4 0v6a2 2 0 0 0 4 0V9z" fill="#E01E5A"/><path d="M24.5 15a2 2 0 0 1 0 4h-6a2 2 0 0 1 0-4h6z" fill="#E01E5A"/><path d="M20.5 9a2 2 0 0 0-4 0v6a2 2 0 0 0 4 0V9z" fill="#2EB67D"/><path d="M24.5 11a2 2 0 0 1 0 4h-2a2 2 0 0 1 0-4h2z" fill="#2EB67D"/><path d="M11.5 17a2 2 0 0 0-4 0v6a2 2 0 0 0 4 0v-6z" fill="#36C5F0"/><path d="M7.5 20a2 2 0 0 0 0 4h6a2 2 0 0 0 0-4h-6z" fill="#36C5F0"/><path d="M20.5 17a2 2 0 0 0-4 0v6a2 2 0 0 0 4 0v-6z" fill="#ECB22E"/><path d="M20.5 20a2 2 0 0 0 0 4h2a2 2 0 0 0 0-4h-2z" fill="#ECB22E"/></svg>`,
+  zoom:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px"><rect width="32" height="32" rx="7" fill="#2D8CFF"/><rect x="5" y="10" width="14" height="12" rx="3" fill="white"/><path d="M19 14l8-4v12l-8-4v-4z" fill="white"/></svg>`,
+  statsig:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px"><rect width="32" height="32" rx="7" fill="#FF5C35"/><rect x="6" y="18" width="4" height="8" rx="1.5" fill="white" opacity="0.6"/><rect x="14" y="12" width="4" height="14" rx="1.5" fill="white" opacity="0.8"/><rect x="22" y="6" width="4" height="20" rx="1.5" fill="white"/><path d="M8 14l6-4 8-4" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>`,
+  calendly:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px"><rect width="32" height="32" rx="7" fill="#006BFF"/><rect x="6" y="9" width="20" height="17" rx="3" stroke="white" stroke-width="1.5" fill="none"/><path d="M6 14h20M11 6v6M21 6v6" stroke="white" stroke-width="1.5" stroke-linecap="round"/><circle cx="11" cy="20" r="1.5" fill="white"/><circle cx="16" cy="20" r="1.5" fill="white"/><circle cx="21" cy="20" r="1.5" fill="white"/></svg>`,
+  claude:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px"><rect width="32" height="32" rx="7" fill="#CC785C"/><path d="M12 24l4-16 4 16M9 19h14" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  confluence:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px"><rect width="32" height="32" rx="7" fill="#0052CC"/><path d="M6 21c3-4 5-5 10-5s7 1 10 5" stroke="white" stroke-width="1.8" stroke-linecap="round" fill="none"/><path d="M6 16c3-4 5-6 10-6s7 2 10 6" stroke="white" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.5"/></svg>`,
+  netlify:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px"><rect width="32" height="32" rx="7" fill="#00AD9F"/><path d="M19 10l4 6-4 6H13l-4-6 4-6h6z" stroke="white" stroke-width="1.5" fill="none" stroke-linejoin="round"/><circle cx="16" cy="16" r="2" fill="white"/></svg>`,
+  vercel:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px"><rect width="32" height="32" rx="7" fill="#0D0D0D"/><path d="M16 8L26 24H6L16 8z" fill="white"/></svg>`,
+  manual:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px"><rect width="32" height="32" rx="7" fill="#2A2A3C"/><path d="M13 26V18M13 18c0 0-3-4-3-6a3 3 0 0 1 6 0v6M16 17.5v-2a2 2 0 0 1 4 0V18" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 17.5v-1a2 2 0 0 1 4 0V23l-4 3h-7" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  cursor:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px"><rect width="32" height="32" rx="7" fill="#0D0D0D"/><path d="M9 6l14 10-6 1.5L22 26 18.5 27 14 17.5 8.5 22z" fill="white"/></svg>`,
+};
+function logoEl(ic){
+  return `<div class="nd-logo">${LOGOS[ic]||LOGOS.manual}</div>`;
+}
+
+const W=172;
+
+const TINFO={
+  mixpanel:{url:'https://mixpanel.com',m:'Fix events first — everything downstream depends on this',role:'Starting point for the entire PM research stream. Cohort selection here determines who gets interviewed. Currently unreliable — fixing this is action 01 and a prerequisite for all quantitative decisions.'},
+  apollo:{url:'https://apollo.io',m:'Automates outreach to ~20 target users/month',role:'Turns a Mixpanel cohort into a personalized email sequence without manual work. Removes the biggest scheduling bottleneck. After setup, outreach runs passively — no PM action needed.'},
+  zapier:{url:'https://zapier.com',m:'Replaces ~4 hrs/week of manual scheduling ops',role:'The central automation layer connecting every tool. Already installed but not deployed. This is the unlock — without Zapier, every step between Mixpanel and a Jira ticket requires a human. With it, the pipeline runs on its own.'},
+  figma:{url:'https://figma.com',m:'Prototype share link goes into Jira Prototype URL field',role:'Used in Phase 2 of the design workflow. The key change: instead of tagging individual frames, the designer shares the full prototype link. This covers multi-frame flows and eliminates the need for a Figma webhook server.'},
+  'jira-proto':{url:'https://mermaidchart.atlassian.net',m:'One Jira field routes all three prototype types',role:'The unified trigger for Phase 2 testing. Designer pastes any prototype URL (Figma, Vercel, Netlify) into this single Jira field. Zapier reads the URL pattern and routes to the right Maze template. One action for the designer regardless of how they built the prototype.'},
+  vistaly:{url:'https://vistaly.com',m:'Single source of truth — all teams converge here',role:'The destination for all research output. Every PM interview, Maze test result, Typeform response, and A/B experiment routes here through Claude synthesis. First time Product and Design see each other\'s findings in one place.'},
+  notion:{url:'https://notion.so',m:'Question bank: 50+ questions tagged by theme',role:'Stores the shared question bank and Maze task script templates. Zapier queries it at sprint start to surface relevant questions, and at test trigger to inject pre-written task scripts into Maze. Prevents every test from starting from scratch.'},
+  maze:{url:'https://maze.co',m:'24hr turnaround, 20–40 testers per run',role:'Runs unmoderated usability tests on both Figma click-throughs and real coded prototypes. Auto-triggered by Zapier with the prototype URL and task script injected. Results feed directly into Claude synthesis — no manual download, no copy-paste.'},
+  typeform:{url:'https://typeform.com',m:'5 behavioral event triggers in-product',role:'Creates a continuous signal between moderated sessions. Micro-surveys triggered by real product behavior (first diagram, export, abandoned upgrade) give Growth and Product data between research cycles without scheduling a single interview.'},
+  jira:{url:'https://mermaidchart.atlassian.net',m:'Auto-created tickets with source citations',role:'Receives auto-created research tickets from Claude synthesis. Each ticket includes the source interview or test, verbatim quotes, and a confidence level. No manual writeup required from any team — research findings land in the sprint backlog automatically.'},
+  slack:{url:'https://slack.com',m:'#research — 5-bullet summary after every session',role:'The broadcast layer. Every research output — PM interview, Maze result, Typeform response — posts a 5-bullet summary to #research. PMs see design findings without asking. Designers see PM interview data. Growth sees qualitative context for their A/B results.'},
+  zoom:{url:'https://zoom.us',m:'Transcript auto-captured, synthesis triggered post-call',role:'The interview execution layer. When a Zoom call ends, the cloud recording triggers Zapier which sends the transcript to Claude API for synthesis. The human action (running the interview) is preserved; everything after is automated.'},
+  statsig:{url:'https://statsig.com',m:'A/B results cross-referenced with qualitative data',role:'Currently siloed in Confluence with no connection to interview data. In the new pipeline, Statsig experiment results route to Claude synthesis and are cross-referenced with interview quotes and Typeform responses. For the first time, Growth can see why an experiment moved (or didn\'t move) a metric.'},
+  calendly:{url:'https://calendly.com',m:'Booking auto-creates Google Meet link and reminders',role:'Converts an Apollo outreach response into a confirmed interview slot. The booking link is embedded in the email sequence — when a user clicks and books, Calendly auto-creates the Meet link, sends reminders, and triggers the post-interview gift card automation.'},
+  claude:{url:'https://claude.ai',m:'Tags themes, extracts quotes, flags severity, creates Vistaly cards',role:'The synthesis engine for all research inputs. Same prompt, same taxonomy, same output format whether processing a PM interview transcript, a Maze test result, or a Statsig experiment. Creates the unified research pool in Vistaly that makes cross-team findings visible for the first time.'},
+  confluence:{url:'https://mermaidchart.atlassian.net',m:'Experiment docs — being unified into Vistaly',role:'Currently the only home for Growth experiment results. In the new pipeline, Confluence is kept for structured experiment charters but results are cross-referenced into Vistaly so they appear alongside interview and survey data.'},
+  cursor:{url:'https://cursor.sh',m:'Real code prototype → richer test signal than click-through',role:'Used in Phase 2 of the design workflow as an alternative to Figma prototyping. Cursor + Claude produces a working coded prototype deployed to a Vercel preview URL. Maze tests on real code give more reliable usability signal than click-throughs — testers encounter actual error states and real interaction patterns.'},
+  netlify:{url:'https://netlify.com',m:'30-second deploy for Claude artifact prototypes',role:'Used when the prototype was built as a Claude HTML artifact. Claude artifact URLs are session-private and can\'t be shared with Maze testers. Deploying to Netlify (one command: netlify drop) creates a public URL that feeds into the same Zapier trigger as Vercel previews.'},
+  vercel:{url:'https://vercel.com',m:'Auto-generates preview URL on every Cursor push',role:'Vercel is the deployment target for Cursor + Claude prototypes. Every git push auto-generates a preview URL — no manual deploy step. That URL is pasted into the Jira Prototype URL field to trigger the Maze test. Vercel can also post the preview URL to Slack automatically, removing even the paste step.'},
+  'task-script':{url:'https://notion.so',m:'5 pre-built templates + Claude drafts for new flows',role:'The step that was missing from the original flow. Without task scripts, a Maze test is a prototype demo, not a usability test. This node fetches the matching task script from Notion for the 5 known flows, or triggers Claude to draft 3 tasks from the Jira ticket context for new features. Tasks are injected into Maze alongside the prototype URL in a single API call.'},
+};
+
+const AN=[
+  {id:'mixpanel',x:40, y:70, w:W,   t:'Mixpanel',       s:'Behavioral cohorts',    c:'Product',    col:'#378ADD',ic:'mixpanel', b:'trigger',st:'ok',  tip:'Segments users by funnel stage and behavior. Source for PM interview recruitment. Zapier exports cohort automatically.',url:'https://mixpanel.com'},
+  {id:'jira-ds', x:40, y:280,w:W,   t:'Jira ticket',    s:'Design sprint start',   c:'Design',     col:'#1D9E75',ic:'jira',     b:'trigger',st:'ok',  tip:'Creating a design ticket fires the Phase 1 discovery chain: Vistaly lookup + question bank surfaced to Slack.',url:'https://mermaidchart.atlassian.net'},
+  {id:'jira-proto',x:40, y:590,w:W,  t:'Jira: Prototype URL', s:'One field · three sources', c:'Design', col:'#1D9E75',ic:'jira', b:'trigger',st:'setup',tip:'Designer pastes prototype URL into the Jira "Prototype URL" field — regardless of source (Figma, Vercel, Netlify). Zapier reads the URL pattern and routes to the correct Maze template. One trigger for all prototype types.',url:'https://mermaidchart.atlassian.net'},
+
+  {id:'figma-src', x:290, y:620,w:W,  t:'Figma prototype', s:'figma.com/proto/…', c:'Design', col:'#1D9E75',ic:'figma',   b:'trigger',st:'ok',  tip:'Designer links frames in Figma and shares the prototype URL. Covers the entire multi-frame flow — not a single frame. Zapier detects figma.com/proto pattern and fires the Maze click-through template.',url:'https://figma.com'},
+  {id:'vercel-src',x:290, y:780,w:W,  t:'Vercel preview',  s:'*.vercel.app',      c:'Design', col:'#9B7BFF',ic:'vercel',  b:'trigger',st:'setup',tip:'Cursor+Claude prototype pushed to Vercel. Preview URL auto-generated on every push. Zapier detects *.vercel.app or *.netlify.app and fires the Maze web prototype template — testers use real code.',url:'https://vercel.com'},
+  {id:'netlify-src',x:290, y:940,w:W, t:'Claude artifact', s:'Export → Netlify',  c:'Design', col:'#BA7517',ic:'netlify',  b:'trigger',st:'setup',tip:'Claude artifact downloaded as HTML, deployed to Netlify in one command (netlify drop). Public URL pasted into Jira field. Same Maze web template as Vercel. Note: Claude artifact URLs are session-private — the deploy step is required.',url:'https://netlify.com'},
+  {id:'ship',    x:40, y:1120,w:W,   t:'Feature ships',  s:'Jira → Done',           c:'Design',     col:'#888780',ic:'jira',     b:'trigger',st:'ok',  tip:'Jira status change to Done triggers post-ship Maze test and activates Typeform behavioral surveys.',url:'https://mermaidchart.atlassian.net'},
+  {id:'statsig', x:40, y:1340,w:W,   t:'Statsig A/B',    s:'Experiment result',     c:'Growth',     col:'#BA7517',ic:'statsig',  b:'trigger',st:'ok',  tip:'A/B results from Growth experiments. Cross-referenced with interview quotes and Typeform responses by Claude.',url:'https://statsig.com'},
+  {id:'apollo',  x:290, y:70, w:W,   t:'Apollo',         s:'Email enrichment',      c:'Automation', col:'#E04E25',ic:'apollo',   b:'auto',   st:'ok',  tip:'Enriches Mixpanel cohort → personalized email sequence → Calendly scheduling link embedded automatically.',url:'https://apollo.io'},
+  {id:'vcheck',  x:290, y:280,w:W,   t:'Vistaly lookup', s:'Past research query',   c:'Automation', col:'#7F77DD',ic:'vistaly',  b:'auto',   st:'ok',  tip:'Queries Vistaly for cards tagged with the relevant feature area. Surfaces what the team already knows before design starts.',url:'https://vistaly.com'},
+  {id:'qbank',   x:290, y:440,w:W,   t:'Question bank',  s:'Notion · by theme',     c:'Automation', col:'#7F77DD',ic:'notion',   b:'auto',   st:'setup',tip:'Notion database of research questions tagged by theme. 3-5 most relevant questions auto-surfaced per sprint.',url:'https://notion.so'},
+  {id:'maze',    x:800, y:620,w:W,   t:'Maze test',      s:'Click-through · 20-40',  c:'Design',     col:'#1D9E75',ic:'maze',     b:'auto',   st:'ok',  tip:'Maze API auto-triggered with Figma prototype URL. Fast click-through testing. 24-hour turnaround within same sprint.',url:'https://maze.co'},
+  {id:'cursor',  x:800, y:780,w:W,   t:'Cursor + Claude',s:'Working prototype',     c:'Design',     col:'#1D9E75',ic:'cursor',   b:'auto',   st:'setup',tip:'Designer builds a real coded prototype in Cursor using Claude. Real inputs, real state, real errors. Deploys to a preview URL — testers interact with actual code, not click-through. Preview URL can become the handoff directly to engineering.',url:'https://cursor.sh'},
+  {id:'maze-ps', x:290, y:1120,w:W,   t:'Maze post-ship', s:'Live feature test',     c:'Design',     col:'#1D9E75',ic:'maze',     b:'auto',   st:'ok',  tip:'Same Maze template run on the live feature after shipping. Catches regressions vs the prototype baseline.',url:'https://maze.co'},
+  {id:'typeform',x:290, y:1340,w:W,   t:'Typeform',       s:'Behavioral triggers',   c:'Growth',     col:'#BA7517',ic:'typeform', b:'auto',   st:'setup',tip:'In-app micro-surveys: first diagram created, 3-day return, export action, abandoned upgrade, 7-day anniversary.',url:'https://typeform.com'},
+  {id:'zapier',  x:540, y:70, w:166, t:'Zapier',         s:'Orchestration layer',   c:'Automation', col:'#E04E25',ic:'zapier',   b:'auto',   st:'ok',  tip:'Central automation hub. Chains: cohort export → Apollo outreach → Calendly booking → Zoom → gift card. 4 hrs/week → 15 min review.',url:'https://zapier.com'},
+  {id:'calendly',x:800, y:70,w:W,   t:'Calendly',       s:'Auto-schedule',         c:'Automation', col:'#888780',ic:'calendly', b:'auto',   st:'ok',  tip:'Booking link auto-embedded in email. Zoom link auto-created on booking. Reminder emails and gift card fully automated.',url:'https://calendly.com'},
+  {id:'s-digest',x:540, y:350,w:W,   t:'Slack digest',   s:'#design-sprint brief',  c:'Automation', col:'#7F77DD',ic:'slack',    b:'auto',   st:'ok',  tip:'Research digest + open questions posted to Slack when design ticket is created. Designer opens Figma with context.',url:'https://slack.com'},
+  {id:'task-script',x:540, y:760,w:W, t:'Task script',     s:'Notion bank · Claude draft', c:'Automation', col:'#7F77DD',ic:'notion',   b:'auto',   st:'setup',tip:'Zapier fetches the matching task script from the Notion template bank (5 pre-built flows). If the feature is new, Claude drafts 3 tasks from the Jira ticket context and posts them to Slack for a 30-second human review. Tasks injected into Maze alongside the prototype URL.',url:'https://notion.so'},
+  {id:'tf-route',x:540, y:1340,w:W,   t:'Typeform → Notion',s:'Zapier router',       c:'Automation', col:'#BA7517',ic:'notion',   b:'auto',   st:'ok',  tip:'Survey responses routed via Zapier to Notion research repo, tagged with user cohort and timestamp.',url:'https://notion.so'},
+  {id:'zoom',    x:1060, y:70,w:W,   t:'Zoom interview', s:'Transcript captured',   c:'Product',    col:'#378ADD',ic:'zoom',     b:'auto',   st:'ok',  tip:'Interview recorded. Transcript auto-captured. Zapier triggers Claude synthesis immediately after call ends.',url:'https://zoom.us'},
+  {id:'claude',  x:1060, y:630,w:166, t:'Claude API',     s:'Synthesis agent',       c:'AI',         col:'#9B7BFF',ic:'claude',   b:'auto',   st:'ok',  tip:'Same prompt for all inputs: tags themes, extracts quotes, flags issues with severity, auto-creates Vistaly card + Jira ticket, posts Slack summary.',url:'https://claude.ai'},
+  {id:'vistaly', x:1310, y:450,w:166, t:'Vistaly',        s:'Unified research pool', c:'Output',     col:'#22c55e',ic:'vistaly',  b:'output', st:'ok',  tip:'Single source of truth. All teams, same taxonomy, full history. Cross-referenceable: A/B result + interview + survey = one card.',url:'https://vistaly.com'},
+  {id:'jira-out',x:1310, y:630,w:W,   t:'Jira card',      s:'Auto-created + cited',  c:'Output',     col:'#378ADD',ic:'jira',     b:'output', st:'ok',  tip:'Auto-created with source citation and confidence level. No manual writeup required from any team.',url:'https://mermaidchart.atlassian.net'},
+  {id:'slack-out',x:1310, y:790,w:W,  t:'Slack #research',s:'5-bullet summary',      c:'Output',     col:'#7F77DD',ic:'slack',    b:'output', st:'ok',  tip:'Broadcast to all teams after every session. PMs see design findings. Designers see PM interview data.',url:'https://slack.com'},
+];
+const AE=[
+  {f:'mixpanel',t:'apollo',c:'#378ADD'},{f:'mixpanel',t:'zapier',c:'#378ADD'},
+  {f:'jira-ds', t:'vcheck',c:'#1D9E75'},{f:'jira-ds', t:'qbank', c:'#1D9E75'},
+  {f:'jira-proto',t:'figma-src',c:'#1D9E75'},{f:'jira-proto',t:'vercel-src',c:'#9B7BFF'},{f:'jira-proto',t:'netlify-src',c:'#BA7517'},{f:'figma-src',t:'task-script',c:'#1D9E75'},{f:'vercel-src',t:'task-script',c:'#9B7BFF'},{f:'netlify-src',t:'task-script',c:'#BA7517'},{f:'task-script',t:'maze',c:'#7F77DD'},{f:'task-script',t:'cursor',c:'#7F77DD'},{f:'cursor',  t:'claude', c:'#1D9E75'},{f:'ship',    t:'maze-ps',c:'#888780'},
+  {f:'ship',    t:'typeform',c:'#888780'},{f:'statsig', t:'claude',c:'#BA7517'},
+  {f:'apollo',  t:'zapier', c:'#E04E25'},{f:'vcheck',  t:'s-digest',c:'#7F77DD'},
+  {f:'qbank',   t:'s-digest',c:'#7F77DD'},{f:'maze',   t:'claude', c:'#1D9E75'},
+  {f:'maze-ps', t:'claude', c:'#1D9E75'},{f:'typeform',t:'tf-route',c:'#BA7517'},
+  {f:'zapier',  t:'calendly',c:'#E04E25'},{f:'calendly',t:'zoom',  c:'#888780'},
+  {f:'zoom',    t:'claude', c:'#378ADD'},{f:'claude',  t:'vistaly',c:'#9B7BFF'},
+  {f:'claude',  t:'jira-out',c:'#9B7BFF'},{f:'claude', t:'slack-out',c:'#9B7BFF'},
+];
+
+const BN=[
+  {id:'mix-b',  x:40, y:90, w:W,   t:'Mixpanel',       s:'Events fire incorrectly',c:'Analytics',col:'#e24b4a',ic:'mixpanel', b:'broken',  st:'bad', tip:'Mixpanel events fire incorrectly. Cohort data unreliable. Every quantitative decision is built on uncertain ground.',url:'https://mixpanel.com'},
+  {id:'exp-b',  x:240,y:90, w:W,   t:'Manual export',  s:'4 hrs/week',             c:'Manual',   col:'#888780',ic:'manual',   b:'manual',  st:'bad', tip:'Team manually exports cohorts and builds email lists. No automation, no tracking, no consistency.'},
+  {id:'email-b',x:450,y:90, w:W,   t:'Manual email',   s:'1-by-1 outreach',        c:'Manual',   col:'#888780',ic:'apollo',   b:'manual',  st:'warn',tip:'PMs manually write outreach emails. Inconsistent messaging. No scheduling automation.',url:'https://apollo.io'},
+  {id:'cal-b',  x:660,y:90, w:W,   t:'Calendly',       s:'No automation',          c:'Manual',   col:'#888780',ic:'calendly', b:'manual',  st:'warn',tip:'Booking links manually shared. No Zoom auto-creation. No reminder flows. No gift card automation.',url:'https://calendly.com'},
+  {id:'zoom-b', x:870,y:90, w:W,   t:'Zoom + notes',   s:'Manual write-up 2hrs+',  c:'Manual',   col:'#888780',ic:'zoom',     b:'manual',  st:'warn',tip:'Interview conducted. PM takes manual notes. 2+ hours of write-up per session. No transcript. No synthesis.',url:'https://zoom.us'},
+  {id:'jira-b', x:1080,y:90,w:W,   t:'Manual Jira',    s:'Sometimes written',      c:'Output',   col:'#888780',ic:'jira',     b:'manual',  st:'bad', tip:'If the PM has time after the interview, they write a Jira ticket. Often skipped. No citations.',url:'https://mermaidchart.atlassian.net'},
+  {id:'gut-b',  x:40, y:290,w:W,   t:'Gut decision',   s:'No research basis',      c:'Design',   col:'#e24b4a',ic:'manual',   b:'broken',  st:'bad', tip:'Designers start without research. The most expensive problem: decisions made with no user data.'},
+  {id:'figma-b',x:240,y:290,w:W,   t:'Figma',          s:'Design by assumption',   c:'Design',   col:'#888780',ic:'figma',    b:'manual',  st:'warn',tip:'Design happens without validated assumptions. Problems discovered late in the process, requiring expensive rework.',url:'https://figma.com'},
+  {id:'ut-b',   x:450,y:290,w:W,   t:'UserTesting',    s:'Credits only, ad-hoc',   c:'Research', col:'#BA7517',ic:'manual',   b:'warn',    st:'warn',tip:'Credits exist but no systematic process. Used sporadically. Results never synthesized or shared.'},
+  {id:'maze-b', x:660,y:290,w:W,   t:'Maze',           s:'Sporadic, no API',       c:'Research', col:'#BA7517',ic:'maze',     b:'warn',    st:'warn',tip:'Used occasionally, no API triggers. Results not fed back into roadmap. No shared templates.',url:'https://maze.co'},
+  {id:'dead-b', x:870,y:290,w:W,   t:'Figma — dead end',s:'No handoff',            c:'Output',   col:'#e24b4a',ic:'figma',    b:'broken',  st:'bad', tip:'Design research stays in Figma. Never reaches Vistaly or the product roadmap. Findings are lost.',url:'https://figma.com'},
+  {id:'stat-b', x:40, y:490,w:W,   t:'Statsig A/B',    s:'Results in Confluence',  c:'Growth',   col:'#BA7517',ic:'statsig',  b:'warn',    st:'warn',tip:'A/B test results documented in Confluence only. Never cross-referenced with qualitative data.',url:'https://statsig.com'},
+  {id:'conf-b', x:240,y:490,w:W,   t:'Confluence',     s:'Siloed, not shared',     c:'Output',   col:'#888780',ic:'confluence',b:'warn',   st:'warn',tip:'Experiment results in Confluence, interviews in Notion, designs in Figma. 3 silos, 0 shared context.',url:'https://mermaidchart.atlassian.net'},
+  {id:'multi-b',x:450,y:490,w:166, t:'Many dashboards', s:'Analysis paralysis',    c:'Analytics',col:'#e24b4a',ic:'mixpanel', b:'broken',  st:'bad', tip:'Too many Mixpanel dashboards with no consistency. Teams spend time reconciling data instead of acting.',url:'https://mixpanel.com'},
+];
+const BE=[
+  {f:'mix-b', t:'exp-b',  c:'#e24b4a',d:true},
+  {f:'exp-b', t:'email-b',c:'#888780'},
+  {f:'email-b',t:'cal-b', c:'#888780'},
+  {f:'cal-b', t:'zoom-b', c:'#888780'},
+  {f:'zoom-b',t:'jira-b', c:'#888780',d:true},
+  {f:'gut-b', t:'figma-b',c:'#e24b4a'},
+  {f:'figma-b',t:'ut-b',  c:'#888780',d:true},
+  {f:'figma-b',t:'maze-b',c:'#888780',d:true},
+  {f:'maze-b',t:'dead-b', c:'#888780'},
+  {f:'stat-b',t:'conf-b', c:'#BA7517'},
+];
+
+let mode='before', cN=BN, cE=BE, nMap={}, hiId=null, lockedCat=null;
+const cv=document.getElementById('cv');
+const svgl=document.getElementById('svg-l');
+const nw=document.getElementById('nw');
+
+function bCls(b){return b==='auto'||b==='output'?'nb-auto':b==='trigger'?'nb-trigger':b==='broken'?'nb-broken':b==='warn'?'nb-warn':'nb-manual';}
+function bLbl(b){return({auto:'Automated',output:'Output',trigger:'Trigger',broken:'Broken',manual:'Manual',warn:'Needs attention'})[b]||b;}
+function sCl(s){return s==='ok'?'#22c55e':s==='setup'?'#fbbf24':s==='warn'?'#fbbf24':'#f87171';}
+function stTxt(s){return s==='ok'?'Automated':s==='setup'?'Setup needed':s==='bad'?'Needs fixing':'Manual / partial';}
+
+function addTeamSeparators(seps){
+  seps.forEach(s=>{
+    const line=document.createElement('div');
+    line.className='team-sep';
+    line.style.cssText=`top:${s.y}px`;
+    cv.appendChild(line);
+    const lbl=document.createElement('div');
+    lbl.className='team-lbl';
+    lbl.style.cssText=`top:${s.labelY}px;color:${s.col}`;
+    lbl.textContent=s.label;
+    cv.appendChild(lbl);
+  });
+}
+
+function clearCv(){document.querySelectorAll('.nd,.col-lbl,.team-sep,.team-lbl').forEach(e=>e.remove());nMap={};}
+
+function buildNodes(nodes){
+  clearCv();
+  nodes.forEach(n=>{
+    const el=document.createElement('div');
+    el.className='nd'; el.id='n-'+n.id;
+    el.style.cssText=`left:${n.x}px;top:${n.y}px;--nc:${n.col};width:${n.w||W}px`;
+    el.innerHTML=`
+      <div class="port-in"></div>
+      ${logoEl(n.ic)}
+      <div class="nd-info">
+        <div class="nd-title">${n.t}</div>
+        <div class="nd-sub">${n.s}</div>
+      </div>
+      <div class="nd-sdot" style="background:${sCl(n.st)}"></div>
+      <div class="port-out"></div>`;
+    el.addEventListener('mouseenter',()=>{if(lockedCat&&n.c!==lockedCat)return;el.classList.add('hi');hiId=n.id;drawEdges();});
+    el.addEventListener('mouseleave',()=>{el.classList.remove('hi');hiId=null;drawEdges();});
+    el.addEventListener('click',e=>{
+      e.stopPropagation();
+      if(presentMode){
+        let idx=presentOrder.indexOf(n.id);
+        if(idx<0){
+          presentOrder=[n.id];
+          idx=0;
+          document.body.classList.add('pres-single');
+        }
+        presentIdx=idx;
+        focusPresentNode();
+        return;
+      }
+      openPanel(n);
+    });
+    cv.appendChild(el);
+    nMap[n.id]={...n,el};
+  });
+}
+
+function addColLabel(x,y,label){
+  if(!label) return;
+  const l=document.createElement('div');
+  l.className='col-lbl';l.style.cssText=`left:${x}px;top:${y}px`;l.textContent=label;
+  cv.appendChild(l);
+}
+
+function getH(id){const el=document.getElementById('n-'+id);return el?el.offsetHeight:80;}
+function pO(id){const n=nMap[id];if(!n)return null;return{x:n.x+(n.w||W),y:n.y+getH(id)/2};}
+function pI(id){const n=nMap[id];if(!n)return null;return{x:n.x,y:n.y+getH(id)/2};}
+
+function drawEdges(){
+  svgl.innerHTML='';
+  const reach=lockedCat?getReachableIds(lockedCat):null;
+  const isLight=document.body.classList.contains('light');
+  cE.forEach(e=>{
+    const s=pO(e.f),d=pI(e.t); if(!s||!d) return;
+    const dx=Math.abs(d.x-s.x)*0.52;
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d',`M${s.x},${s.y} C${s.x+dx},${s.y} ${d.x-dx},${d.y} ${d.x},${d.y}`);
+    path.setAttribute('fill','none');
+    path.setAttribute('stroke',e.c||'#888');
+    path.setAttribute('stroke-width',isLight?'1.8':'1.5');
+    if(e.d) path.setAttribute('stroke-dasharray','5 4');
+    const nodeActive=hiId&&(e.f===hiId||e.t===hiId);
+    const inFlow=reach&&reach.has(e.f)&&reach.has(e.t);
+    let op;
+    if(lockedCat){op=inFlow?(isLight?'0.85':'0.75'):(isLight?'0.06':'0.03');}
+    else if(hiId){op=nodeActive?(isLight?'0.95':'0.9'):(isLight?'0.12':'0.07');}
+    else{op=isLight?'0.6':'0.42';}
+    path.setAttribute('opacity',op);
+    svgl.appendChild(path);
+  });
+}
+
+function getReachableIds(cat){
+  const seeds=Object.values(nMap).filter(n=>n.c===cat).map(n=>n.id);
+  const visited=new Set(seeds);
+  const queue=[...seeds];
+  while(queue.length){
+    const id=queue.shift();
+    cE.forEach(e=>{
+      if(e.f===id&&!visited.has(e.t)){visited.add(e.t);queue.push(e.t);}
+    });
+  }
+  return visited;
+}
+
+function applyLock(){
+  const reach=lockedCat?getReachableIds(lockedCat):null;
+  document.querySelectorAll('.nd').forEach(el=>{
+    const id=el.id.replace('n-','');
+    const n=nMap[id]; if(!n) return;
+    el.classList.toggle('cat-dim',!!(lockedCat&&!reach.has(id)));
+  });
+  document.querySelectorAll('.li').forEach(li=>{
+    li.classList.toggle('locked',li.id.replace('leg-','')===lockedCat);
+  });
+}
+
+function lockCat(cat){
+  lockedCat=(lockedCat===cat)?null:cat;
+  applyLock();
+  drawEdges();
+}
+
+function openPanel(n){
+  const panel=document.getElementById('panel');
+  const content=document.getElementById('panel-content');
+  panel.classList.remove('closed');
+  if(typeof recomputeBounds==='function')setTimeout(()=>{recomputeBounds();if(!presentMode)applyT();},260);
+  const ti=TINFO[n.ic]||TINFO[n.id]||{};
+  const isAfter=mode==='after';
+  const stColor=n.st==='ok'?'#22c55e':n.st==='bad'?'#f87171':'#fbbf24';
+  const stTxt=n.st==='ok'?'Automated':n.st==='setup'?'Setup needed':n.st==='bad'?'Needs fixing':'Manual / partial';
+  const url=n.url||ti.url;
+  const iconSvg=(LOGOS[n.ic]||LOGOS.manual).replace(/style="width:28px;height:28px"/g,'style="width:22px;height:22px;display:block"');
+  const modeColor=isAfter?'#22c55e':'#f87171';
+  const modeBg=isAfter?'rgba(34,197,94,.07)':'rgba(226,75,74,.08)';
+  const modeBorder=isAfter?'rgba(34,197,94,.2)':'rgba(226,75,74,.2)';
+  const modeLabel=isAfter?'After \u2014 target state':'Before \u2014 current state';
+  const title=n.t.replace(' \u26a0','');
+
+  const roleSection=ti.role
+    ? '<div class="pp-section"><div class="pp-section-label">How it fits the pipeline</div><div class="pp-section-body">'+ti.role+'</div></div>'
+    : '';
+
+  const impactSection=ti.m
+    ? '<div class="pp-section-row"><span class="pp-impact-label">Impact</span><span class="pp-impact-value">'+ti.m+'</span></div>'
+    : '';
+
+  const openBtn=url
+    ? '<a href="'+url+'" target="_blank" class="pp-open-btn" style="border:1px solid '+n.col+'40;background:'+n.col+'0e"><span>Open '+title+'</span><svg viewBox="0 0 14 14" fill="none" style="width:14px;height:14px;flex-shrink:0;opacity:.6"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>'
+    : '';
+
+  content.innerHTML=
+    '<div class="pp-head">'
+    +'<div class="pp-row">'
+    +'<div class="pp-icon" style="background:'+n.col+'18;border:1px solid '+n.col+'28">'+iconSvg+'</div>'
+    +'<div class="pp-meta">'
+    +'<div class="pp-title">'+title+'</div>'
+    +'<div class="pp-cat">'+n.c+' \u00b7 '+n.s+'</div>'
+    +'</div>'
+    +'<button class="p-focus-btn" onclick="focusOnNode(\''+n.id+'\')" title="Focus on this node (presentation spotlight)"><svg viewBox="0 0 14 14" fill="none" style="width:13px;height:13px"><circle cx="7" cy="7" r="2.5" stroke="currentColor" stroke-width="1.5"/><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1" opacity=".55"/></svg></button>'
+    +'<button class="pp-close" onclick="closePanel()">\u2715</button>'
+    +'</div>'
+    +'<div class="pp-status">'
+    +'<span class="pp-status-dot" style="background:'+stColor+'"></span>'
+    +'<span class="pp-status-txt" style="color:'+stColor+'">'+stTxt+'</span>'
+    +'<span class="pp-status-divider">\u00b7</span>'
+    +'<span class="pp-mode-badge" style="background:'+modeBg+';border-color:'+modeBorder+';color:'+modeColor+'">'+modeLabel+'</span>'
+    +'</div>'
+    +'</div>'
+    +'<div class="pp-section">'
+    +'<div class="pp-section-label">What it does</div>'
+    +'<div class="pp-section-body">'+n.tip+'</div>'
+    +'</div>'
+    +roleSection
+    +impactSection
+    +openBtn
+    +'<div style="height:20px"></div>';
+}
+function closePanel(){document.getElementById('panel').classList.add('closed');if(typeof recomputeBounds==='function')setTimeout(()=>{recomputeBounds();applyT();},260);}
+
+function setMode(m){
+  mode=m; lockedCat=null;
+  document.getElementById('sw-b').className='sw-btn'+(m==='before'?' sw-before':'');
+  document.getElementById('sw-a').className='sw-btn'+(m==='after'?' sw-after':'');
+  const banner=document.getElementById('state-banner');
+  if(m==='before'){
+    cN=BN;cE=BE;nw.classList.add('before-bg');
+    banner.className='state-banner banner-before';
+    banner.textContent='Fragmented — 3 disconnected streams · all manual · no shared output';
+    buildNodes(BN);
+    addColLabel(44,14,'Product stream');addColLabel(44,260,'Design stream');addColLabel(44,460,'Growth stream');
+    addTeamSeparators([
+      {y:250, labelY:254, label:'Design stream', col:'#1D9E75'},
+      {y:455, labelY:459, label:'Growth stream', col:'#BA7517'},
+    ]);
+  } else {
+    cN=AN;cE=AE;nw.classList.remove('before-bg');
+    banner.className='state-banner banner-after';
+    banner.textContent='Automated pipeline — one synthesis layer · one unified output pool';
+    buildNodes(AN);
+    [{x:44,l:'Triggers'},{x:294,l:'Data layer'},{x:544,l:'Automation'},{x:804,l:'Execution'},{x:1064,l:'Synthesis'},{x:1314,l:'Outputs'}].forEach(c=>addColLabel(c.x,14,c.l));
+    addTeamSeparators([
+      {y:220, labelY:224, label:'Design team', col:'#1D9E75'},
+      {y:1260, labelY:1264, label:'Growth team', col:'#BA7517'},
+    ]);
+  }
+  setTimeout(()=>{drawEdges();fitView();},80);
+  closePanel();
+}
+
+nw.addEventListener('click',e=>{if(!e.target.closest('.nd')&&!e.target.closest('#panel')&&!e.target.closest('.leg')){closePanel();}});
+
+let scale=0.7,ox=20,oy=48,drag=false,sx=0,sy=0,sox=0,soy=0;
+let minScale=0.25, maxScale=2, contentBBox={x1:0,y1:0,x2:1600,y2:1600};
+const PADDING=60, TOPBAR_H=46;
+
+function getViewport(){
+  const panel=document.getElementById('panel');
+  const panelW=panel.classList.contains('closed')?0:panel.offsetWidth;
+  return {w:nw.clientWidth-panelW, h:nw.clientHeight-TOPBAR_H};
+}
+
+function computeContentBBox(){
+  let x1=Infinity,y1=Infinity,x2=-Infinity,y2=-Infinity;
+  if(!cN||!cN.length) return {x1:0,y1:0,x2:1600,y2:1600};
+  cN.forEach(n=>{
+    const w=n.w||W;
+    x1=Math.min(x1,n.x);
+    y1=Math.min(y1,n.y);
+    x2=Math.max(x2,n.x+w);
+    y2=Math.max(y2,n.y+56);
+  });
+  return {x1:x1-PADDING,y1:y1-PADDING,x2:x2+PADDING,y2:y2+PADDING};
+}
+
+function recomputeBounds(){
+  contentBBox=computeContentBBox();
+  const v=getViewport();
+  const cw=contentBBox.x2-contentBBox.x1, ch=contentBBox.y2-contentBBox.y1;
+  minScale=Math.min(v.w/cw, v.h/ch);
+  if(scale<minScale) scale=minScale;
+}
+
+function clampPan(){
+  const v=getViewport();
+  const cw=(contentBBox.x2-contentBBox.x1)*scale;
+  const ch=(contentBBox.y2-contentBBox.y1)*scale;
+  const margin=80;
+  if(cw<=v.w){
+    ox=(v.w-cw)/2-contentBBox.x1*scale;
+  } else {
+    const minOx=v.w-margin-contentBBox.x2*scale;
+    const maxOx=margin-contentBBox.x1*scale;
+    ox=Math.max(minOx,Math.min(maxOx,ox));
+  }
+  if(ch<=v.h){
+    oy=TOPBAR_H+(v.h-ch)/2-contentBBox.y1*scale;
+  } else {
+    const minOy=TOPBAR_H+v.h-margin-contentBBox.y2*scale;
+    const maxOy=TOPBAR_H+margin-contentBBox.y1*scale;
+    oy=Math.max(minOy,Math.min(maxOy,oy));
+  }
+}
+
+function applyT(){
+  if(scale<minScale) scale=minScale;
+  if(scale>maxScale) scale=maxScale;
+  if(!presentMode) clampPan();
+  cv.style.transform=`translate(${ox}px,${oy}px) scale(${scale})`;
+  document.getElementById('zm-lbl').textContent=Math.round(scale*100)+'%';
+}
+
+nw.addEventListener('mousedown',e=>{
+  if(presentMode) return;
+  if(e.target.closest('.nd')||e.target.closest('#topbar')||e.target.closest('.leg')||e.target.closest('#present-bar'))return;
+  drag=true;sx=e.clientX;sy=e.clientY;sox=ox;soy=oy;nw.classList.add('pan');
+});
+window.addEventListener('mousemove',e=>{if(!drag)return;ox=sox+(e.clientX-sx);oy=soy+(e.clientY-sy);applyT();});
+window.addEventListener('mouseup',()=>{drag=false;nw.classList.remove('pan');});
+
+nw.addEventListener('wheel',e=>{
+  e.preventDefault();
+  if(presentMode) return;
+  // multiplicative zoom — gentler, scale-aware
+  const factor=Math.exp(-e.deltaY*0.0008);
+  const ns=Math.max(minScale,Math.min(maxScale,scale*factor));
+  if(ns===scale) return;
+  const r=nw.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;
+  ox=mx-(mx-ox)*(ns/scale);
+  oy=my-(my-oy)*(ns/scale);
+  scale=ns;
+  applyT();
+},{passive:false});
+
+document.getElementById('btn-zi').onclick=()=>{
+  const ns=Math.min(maxScale,scale*1.18);
+  const v=getViewport(),mx=v.w/2,my=TOPBAR_H+v.h/2;
+  ox=mx-(mx-ox)*(ns/scale);oy=my-(my-oy)*(ns/scale);
+  scale=ns;applyT();
+};
+document.getElementById('btn-zo').onclick=()=>{
+  const ns=Math.max(minScale,scale/1.18);
+  const v=getViewport(),mx=v.w/2,my=TOPBAR_H+v.h/2;
+  ox=mx-(mx-ox)*(ns/scale);oy=my-(my-oy)*(ns/scale);
+  scale=ns;applyT();
+};
+
+function fitView(){
+  recomputeBounds();
+  const v=getViewport();
+  const cw=contentBBox.x2-contentBBox.x1, ch=contentBBox.y2-contentBBox.y1;
+  scale=Math.min(v.w/cw, v.h/ch);
+  ox=(v.w-cw*scale)/2-contentBBox.x1*scale;
+  oy=TOPBAR_H+(v.h-ch*scale)/2-contentBBox.y1*scale;
+  cv.classList.add('cv-smooth');
+  applyT();
+  setTimeout(()=>cv.classList.remove('cv-smooth'),600);
+}
+
+window.addEventListener('resize',()=>{recomputeBounds();applyT();});
+
+/* ────────── PRESENTATION MODE ────────── */
+let presentMode=false, presentIdx=0, presentOrder=[];
+
+function buildPresentOrder(){
+  // If a category filter is locked, only present the visible (reachable) nodes
+  if(lockedCat){
+    const reach=getReachableIds(lockedCat);
+    presentOrder=cN.filter(n=>reach.has(n.id)).map(n=>n.id);
+  } else {
+    presentOrder=cN.map(n=>n.id);
+  }
+}
+
+function enterPresent(opts){
+  opts=opts||{};
+  if(!cN||!cN.length) return;
+  presentMode=true;
+  if(opts.singleId&&nMap[opts.singleId]){
+    presentOrder=[opts.singleId];
+    document.body.classList.add('pres-single');
+  } else {
+    buildPresentOrder();
+    document.body.classList.remove('pres-single');
+  }
+  presentIdx=0;
+  document.body.classList.add('present-mode');
+  // open panel space so layout settles before focus
+  document.getElementById('panel').classList.remove('closed');
+  setTimeout(()=>focusPresentNode(),50);
+}
+
+function focusOnNode(id){
+  enterPresent({singleId:id});
+}
+
+function exitPresent(){
+  presentMode=false;
+  document.body.classList.remove('present-mode');
+  document.body.classList.remove('pres-single');
+  document.querySelectorAll('.nd').forEach(el=>{
+    el.classList.remove('pres-active','pres-dim');
+  });
+  closePanel();
+  setTimeout(()=>fitView(),60);
+}
+
+function presentNext(){
+  if(!presentMode) return;
+  if(presentIdx<presentOrder.length-1){
+    presentIdx++;
+    focusPresentNode();
+  }
+}
+function presentPrev(){
+  if(!presentMode) return;
+  if(presentIdx>0){
+    presentIdx--;
+    focusPresentNode();
+  }
+}
+
+function focusPresentNode(){
+  const id=presentOrder[presentIdx];
+  const n=nMap[id];
+  if(!n||!n.el) return;
+  // dim/highlight
+  document.querySelectorAll('.nd').forEach(el=>{
+    el.classList.remove('pres-active');
+    el.classList.add('pres-dim');
+  });
+  n.el.classList.remove('pres-dim');
+  n.el.classList.add('pres-active');
+  // zoom to node
+  const targetScale=1.5;
+  const v=getViewport();
+  const nodeW=n.w||W;
+  const nodeH=n.el.offsetHeight||50;
+  const cx=n.x+nodeW/2, cy=n.y+nodeH/2;
+  scale=targetScale;
+  ox=v.w/2-cx*scale;
+  oy=TOPBAR_H+v.h/2-cy*scale;
+  cv.classList.add('cv-smooth');
+  cv.style.transform=`translate(${ox}px,${oy}px) scale(${scale})`;
+  document.getElementById('zm-lbl').textContent=Math.round(scale*100)+'%';
+  setTimeout(()=>cv.classList.remove('cv-smooth'),600);
+  // open side panel
+  openPanel(n);
+  // update counter
+  const counter=document.getElementById('pres-counter');
+  if(counter) counter.textContent=`${presentIdx+1} / ${presentOrder.length}`;
+}
+
+document.addEventListener('keydown',e=>{
+  // Allow P key to enter presentation mode anytime
+  if(!presentMode && (e.key==='p'||e.key==='P')){
+    if(document.activeElement&&['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+    enterPresent();
+    return;
+  }
+  if(!presentMode) return;
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='Enter'){
+    e.preventDefault();presentNext();
+  } else if(e.key==='ArrowLeft'){
+    e.preventDefault();presentPrev();
+  } else if(e.key==='Escape'){
+    e.preventDefault();exitPresent();
+  }
+});
+
+// Click-to-advance in present mode (anywhere except buttons / panel / nodes)
+nw.addEventListener('click',e=>{
+  if(!presentMode) return;
+  if(e.target.closest('.nd')||e.target.closest('#panel')||e.target.closest('#present-bar')||e.target.closest('#topbar')) return;
+  if(document.body.classList.contains('pres-single')){
+    exitPresent();
+  } else {
+    presentNext();
+  }
+});
+
+// Restore theme BEFORE first render to avoid flash of dark
+try{
+  const saved=localStorage.getItem('mc-nodes-theme');
+  if(saved==='light') document.body.classList.add('light');
+}catch(e){}
+
+setMode('before');
+fitView();
+
+/* ────────── THEME TOGGLE ────────── */
+function toggleTheme(){
+  const isLight=document.body.classList.toggle('light');
+  try{localStorage.setItem('mc-nodes-theme',isLight?'light':'dark');}catch(e){}
+  updateThemeIcon();
+  drawEdges();
+}
+function updateThemeIcon(){
+  const btn=document.getElementById('btn-theme');
+  if(!btn) return;
+  const isLight=document.body.classList.contains('light');
+  // Sun icon when in dark (clicking goes to light), moon icon when in light (clicking goes to dark)
+  btn.innerHTML=isLight
+    ? '<svg viewBox="0 0 16 16" fill="none" style="width:14px;height:14px"><path d="M13.5 9.2A5.6 5.6 0 0 1 6.8 2.5a.4.4 0 0 0-.5-.5 6.5 6.5 0 1 0 7.7 7.7.4.4 0 0 0-.5-.5z" fill="currentColor"/></svg>'
+    : '<svg viewBox="0 0 16 16" fill="none" style="width:14px;height:14px"><circle cx="8" cy="8" r="3.2" fill="currentColor"/><g stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><line x1="8" y1="1" x2="8" y2="2.6"/><line x1="8" y1="13.4" x2="8" y2="15"/><line x1="1" y1="8" x2="2.6" y2="8"/><line x1="13.4" y1="8" x2="15" y2="8"/><line x1="3.05" y1="3.05" x2="4.2" y2="4.2"/><line x1="11.8" y1="11.8" x2="12.95" y2="12.95"/><line x1="3.05" y1="12.95" x2="4.2" y2="11.8"/><line x1="11.8" y1="4.2" x2="12.95" y2="3.05"/></g></svg>';
+}
+updateThemeIcon();
+</script>
+</body>
+</html>

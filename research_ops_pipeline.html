@@ -1,0 +1,1721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Research Ops Overhaul — Mermaid Chart</title>
+<meta name="description" content="A consolidated research operations pipeline for Mermaid Chart. 14 tools, 13 ops gaps, 11 unvalidated product issues, and a 7-step automation roadmap.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;0,9..144,900;1,9..144,400;1,9..144,500;1,9..144,600;1,9..144,700&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #dde9d8;
+  --bg-2: #d2e0cc;
+  --paper: #ffffff;
+  --ink: #0a0a0a;
+  --ink-2: #2a2a2a;
+  --muted: #6b6b6b;
+  --rule: #b8c6b3;
+  --rule-strong: #a3b59e;
+  --accent: #ec4078;
+  --accent-2: #c92560;
+  --accent-soft: #fce4ea;
+  --critical: #c4402b;
+  --high: #c97b1f;
+  --medium: #8a7a4a;
+  --good: #4f7142;
+  --ink-blue: #1f3a5c;
+  --display: 'Fraunces', Georgia, serif;
+  --body: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--body);
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 17px;
+  line-height: 1.55;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-image:
+    radial-gradient(circle at 15% 8%, rgba(236, 64, 120, 0.035) 0%, transparent 40%),
+    radial-gradient(circle at 85% 75%, rgba(15, 18, 25, 0.06) 0%, transparent 35%);
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 4vw, 3rem);
+}
+
+.narrow {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 4vw, 3rem);
+}
+
+/* ═══════════ HEADER ═══════════ */
+header.site {
+  border-bottom: 1px solid var(--rule);
+  padding: 1.25rem 0;
+  position: sticky;
+  top: 0;
+  background: rgba(221, 233, 216, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 50;
+}
+.site-inner {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 4vw, 3rem);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.brand {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--accent);
+}
+.brand-mark {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+.brand-mark svg { width: 100%; height: 100%; display: block; }
+.meta-line {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ═══════════ HERO ═══════════ */
+.hero {
+  padding: clamp(4rem, 10vw, 8rem) 0 clamp(3rem, 6vw, 5rem);
+  position: relative;
+}
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.hero-eyebrow::before {
+  content: '';
+  width: 32px;
+  height: 1px;
+  background: var(--accent);
+}
+h1.hero-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(2.75rem, 7vw, 5.75rem);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  font-variation-settings: "opsz" 144;
+  margin-bottom: 1.5rem;
+}
+h1.hero-title em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent);
+  font-feature-settings: "ss01";
+}
+.hero-deck {
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(1.15rem, 1.8vw, 1.5rem);
+  line-height: 1.45;
+  color: var(--ink-2);
+  max-width: 40rem;
+  font-style: italic;
+}
+.hero-meta {
+  margin-top: 3.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.5rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.hero-meta span strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* ═══════════ STATS BAR ═══════════ */
+.stats-bar {
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding: 2.25rem 0;
+  margin: 0 0 5rem 0;
+  background: var(--bg-2);
+}
+.stats-grid {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 4vw, 3rem);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(1rem, 3vw, 3rem);
+}
+@media (max-width: 720px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 2rem 1.5rem; }
+}
+.stat {
+  display: flex;
+  flex-direction: column;
+}
+.stat-num {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(2.75rem, 5vw, 4rem);
+  line-height: 1;
+  color: var(--accent);
+  letter-spacing: -0.03em;
+  font-variation-settings: "opsz" 144;
+}
+.stat-label {
+  margin-top: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-2);
+  font-weight: 500;
+}
+.stat-sub {
+  margin-top: 0.3rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* ═══════════ SECTIONS ═══════════ */
+section {
+  padding: clamp(3rem, 6vw, 5rem) 0;
+}
+section.tight { padding: clamp(2rem, 4vw, 3rem) 0; }
+
+.section-marker {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 1rem;
+}
+.section-num {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.1rem;
+  color: var(--accent);
+  font-variation-settings: "opsz" 144;
+}
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+}
+
+h2.section-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(2rem, 4.5vw, 3.25rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
+  color: var(--ink);
+  font-variation-settings: "opsz" 144;
+}
+h2.section-title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+h3 {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 1.5rem;
+  letter-spacing: -0.015em;
+  margin-bottom: 0.5rem;
+}
+h4 {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 1.15rem;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.4rem;
+}
+
+p { margin-bottom: 1rem; color: var(--ink-2); }
+p.lead {
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: 1.35rem;
+  line-height: 1.5;
+  color: var(--ink);
+  font-style: italic;
+}
+
+p.lead::first-letter {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 4.5rem;
+  float: left;
+  line-height: 0.85;
+  margin: 0.25rem 0.6rem 0 0;
+  color: var(--accent);
+  font-style: normal;
+}
+
+.pullquote {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 1.5rem;
+  line-height: 1.4;
+  color: var(--ink);
+  border-left: 2px solid var(--accent);
+  padding-left: 1.5rem;
+  margin: 2rem 0;
+  max-width: 38rem;
+}
+
+/* ═══════════ TEAM CARDS ═══════════ */
+.teams {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+@media (max-width: 900px) {
+  .teams { grid-template-columns: 1fr; }
+}
+.team-card {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  padding: 1.75rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.team-card::before {
+  content: '';
+  position: absolute;
+  top: -1px; left: -1px; right: -1px;
+  height: 3px;
+  background: var(--accent);
+}
+.team-card.design::before { background: var(--ink-blue); }
+.team-card.growth::before { background: var(--high); }
+.team-tag {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+}
+.team-card h3 {
+  margin-bottom: 1rem;
+  color: var(--ink);
+}
+.team-card .who {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 1.25rem;
+  font-family: var(--mono);
+}
+.team-card ul {
+  list-style: none;
+  font-size: 0.92rem;
+  color: var(--ink-2);
+  flex: 1;
+}
+.team-card ul li {
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed var(--rule);
+  display: flex;
+  gap: 0.5rem;
+}
+.team-card ul li:last-child { border-bottom: 0; }
+.team-card ul li::before {
+  content: '→';
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.team-card .weakness {
+  margin-top: 1.25rem;
+  padding: 1rem;
+  background: var(--accent-soft);
+  border-left: 3px solid var(--accent);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+.team-card .weakness strong {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-2);
+  margin-bottom: 0.4rem;
+}
+
+/* ═══════════ TOOL INVENTORY TABLE ═══════════ */
+.tool-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 2rem;
+  font-size: 0.92rem;
+}
+.tool-table thead th {
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 500;
+  padding: 0.85rem 1rem;
+  border-bottom: 2px solid var(--ink);
+}
+.tool-table tbody td {
+  padding: 1.1rem 1rem;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+.tool-table tbody tr:last-child td { border-bottom: 1px solid var(--ink); }
+.tool-table tbody tr:hover { background: rgba(236, 64, 120, 0.02); }
+.tool-table .cat {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 1.05rem;
+  color: var(--ink);
+  width: 22%;
+}
+.tool-table .tools { width: 38%; color: var(--ink-2); }
+.tool-table .status { color: var(--muted); font-size: 0.88rem; }
+.tag {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 2px;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+  margin-right: 0.3rem;
+  white-space: nowrap;
+}
+.tag.cut { background: rgba(196, 64, 43, 0.1); color: var(--critical); }
+.tag.keep { background: rgba(79, 113, 66, 0.1); color: var(--good); }
+.tag.fix { background: rgba(201, 123, 31, 0.12); color: var(--high); }
+
+/* ═══════════ GAP ANALYSIS ═══════════ */
+.gap-section { margin-bottom: 3rem; }
+.gap-section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.severity-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+}
+.severity-pill::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.severity-pill.critical { background: rgba(196, 64, 43, 0.1); color: var(--critical); }
+.severity-pill.critical::before { background: var(--critical); }
+.severity-pill.high { background: rgba(201, 123, 31, 0.12); color: var(--high); }
+.severity-pill.high::before { background: var(--high); }
+.severity-pill.medium { background: rgba(138, 122, 74, 0.12); color: var(--medium); }
+.severity-pill.medium::before { background: var(--medium); }
+.gap-section h3 {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.4rem;
+  color: var(--ink-2);
+}
+.gaps-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+@media (max-width: 760px) {
+  .gaps-grid { grid-template-columns: 1fr; }
+}
+.gap-card {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  padding: 1.5rem;
+  border-left: 3px solid var(--rule-strong);
+}
+.gap-card.critical { border-left-color: var(--critical); }
+.gap-card.high { border-left-color: var(--high); }
+.gap-card.medium { border-left-color: var(--medium); }
+.gap-num {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.6rem;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+  line-height: 1;
+}
+.gap-card h4 { color: var(--ink); margin-bottom: 0.6rem; }
+.gap-card p {
+  font-size: 0.92rem;
+  margin: 0;
+  color: var(--ink-2);
+  line-height: 1.55;
+}
+
+/* ═══════════ PRODUCT ISSUES TABLE ═══════════ */
+.issues-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 2rem;
+  font-size: 0.93rem;
+}
+.issues-table thead th {
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 500;
+  padding: 0.85rem 1rem;
+  border-bottom: 2px solid var(--ink);
+}
+.issues-table tbody td {
+  padding: 0.95rem 1rem;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+.issues-table tbody tr:last-child td { border-bottom: 1px solid var(--ink); }
+.issues-table tbody tr.priority { background: rgba(236, 64, 120, 0.04); }
+.issues-table tbody tr.priority:hover { background: rgba(236, 64, 120, 0.07); }
+.issues-table .issue-name {
+  font-family: var(--display);
+  font-weight: 500;
+  color: var(--ink);
+  font-size: 1rem;
+}
+.issues-table .priority .issue-name::after {
+  content: '★';
+  color: var(--accent);
+  margin-left: 0.4rem;
+  font-size: 0.85rem;
+}
+.signal { color: var(--ink-2); font-size: 0.88rem; }
+.status-pill {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.status-pill.unresearched { background: rgba(196, 64, 43, 0.1); color: var(--critical); }
+.status-pill.known { background: rgba(138, 122, 74, 0.12); color: var(--medium); }
+.status-pill.progress { background: rgba(201, 123, 31, 0.12); color: var(--high); }
+
+/* ═══════════ PIPELINE DIAGRAM ═══════════ */
+.pipeline-wrap {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  padding: 2.5rem clamp(1rem, 3vw, 2.5rem);
+  margin-top: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+.pipeline-wrap::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+.pipeline-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.before-after-labels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.before-after-labels .before { color: var(--critical); }
+.before-after-labels .after { color: var(--good); }
+.before-after-labels strong {
+  display: block;
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.5rem;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--ink);
+  margin-top: 0.35rem;
+}
+
+/* ═══════════ CONVERGENCE CARDS ═══════════ */
+.converge-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 2rem;
+}
+@media (max-width: 900px) {
+  .converge-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .converge-grid { grid-template-columns: 1fr; }
+}
+.converge-card {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.converge-icon {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 2rem;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+.converge-card h4 {
+  color: var(--ink);
+  font-size: 1.05rem;
+  margin: 0;
+}
+.converge-card p {
+  font-size: 0.88rem;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ═══════════ EXPERIMENT POOL ═══════════ */
+.three-col {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  margin-top: 2rem;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+}
+@media (max-width: 800px) {
+  .three-col { grid-template-columns: 1fr; }
+}
+.three-col > div {
+  padding: 2rem 1.75rem;
+  border-right: 1px solid var(--rule);
+}
+.three-col > div:last-child { border-right: 0; }
+@media (max-width: 800px) {
+  .three-col > div { border-right: 0; border-bottom: 1px solid var(--rule); }
+  .three-col > div:last-child { border-bottom: 0; }
+}
+.three-col .label {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.75rem;
+}
+.three-col h4 {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.6rem;
+  color: var(--ink);
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.01em;
+}
+.three-col p {
+  font-size: 0.92rem;
+  color: var(--ink-2);
+  margin: 0;
+}
+
+/* ═══════════ IMPACT BLOCKS ═══════════ */
+.impact-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+@media (max-width: 760px) {
+  .impact-grid { grid-template-columns: 1fr; }
+}
+.impact {
+  background: #0f1219;
+  color: var(--bg);
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.impact.alt { background: var(--accent); }
+.impact-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-bottom: 1rem;
+}
+.impact-num {
+  font-family: var(--display);
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(3rem, 6vw, 5rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin-bottom: 1rem;
+  font-variation-settings: "opsz" 144;
+}
+.impact h4 {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: inherit;
+}
+.impact p {
+  font-size: 0.95rem;
+  color: inherit;
+  opacity: 0.85;
+  margin-bottom: 0.5rem;
+}
+.impact .annual {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255,255,255,0.2);
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+}
+.impact .annual strong { color: inherit; opacity: 1; }
+
+/* ═══════════ ROADMAP ═══════════ */
+.roadmap { margin-top: 2rem; }
+.roadmap-step {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 2rem;
+  padding: 2rem 0;
+  border-top: 1px solid var(--rule);
+  align-items: start;
+}
+.roadmap-step:last-child { border-bottom: 1px solid var(--ink); }
+.roadmap-step:first-child { border-top: 1px solid var(--ink); }
+@media (max-width: 700px) {
+  .roadmap-step { grid-template-columns: 1fr; gap: 0.75rem; padding: 1.75rem 0; }
+}
+.step-num {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 4rem;
+  line-height: 0.85;
+  color: var(--accent);
+  letter-spacing: -0.04em;
+  font-variation-settings: "opsz" 144;
+}
+.step-content h3 {
+  color: var(--ink);
+  font-weight: 500;
+  margin-bottom: 0.85rem;
+}
+.step-content p {
+  font-size: 0.96rem;
+  color: var(--ink-2);
+  margin-bottom: 1rem;
+}
+.step-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+  margin-top: 0.75rem;
+  padding-top: 0.85rem;
+  border-top: 1px dashed var(--rule);
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+.step-meta .field {
+  display: flex;
+  gap: 0.5rem;
+}
+.step-meta strong {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink);
+  font-weight: 500;
+}
+.step-meta .field span {
+  color: var(--ink-2);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+}
+
+/* ═══════════ QUESTIONS ═══════════ */
+.questions { margin-top: 2rem; }
+.question {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  gap: 1.5rem;
+  padding: 1.75rem 0;
+  border-top: 1px solid var(--rule);
+  align-items: start;
+}
+.question:last-child { border-bottom: 1px solid var(--ink); }
+.question:first-child { border-top: 1px solid var(--ink); }
+.question-num {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 0.95rem;
+  color: var(--accent);
+  font-family: var(--mono);
+  letter-spacing: 0.1em;
+  margin-top: 0.4rem;
+}
+.question h4 {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.4rem;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+.question p {
+  font-size: 0.95rem;
+  color: var(--ink-2);
+  margin: 0;
+}
+
+/* ═══════════ FOOTER ═══════════ */
+footer {
+  margin-top: 5rem;
+  padding: 3rem 0 4rem;
+  border-top: 1px solid var(--ink);
+  background: var(--bg-2);
+}
+.footer-inner {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 4vw, 3rem);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+.footer-mark {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.4rem;
+  color: var(--ink);
+}
+.footer-meta {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  line-height: 1.7;
+  text-align: right;
+}
+
+/* fade-in animation on load */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.hero > * { animation: fadeUp 0.8s ease-out backwards; }
+.hero-eyebrow { animation-delay: 0.1s; }
+.hero-title { animation-delay: 0.2s; }
+.hero-deck { animation-delay: 0.35s; }
+.hero-meta { animation-delay: 0.5s; }
+
+/* selection */
+::selection { background: var(--accent); color: var(--bg); }
+
+/* utility */
+.divider-bullet {
+  display: inline-block;
+  margin: 0 0.5rem;
+  color: var(--rule-strong);
+}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="site-inner">
+    <div class="brand">
+      <span class="brand-mark"><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="7" fill="#ec4078"/><path d="M7.5 22 L7.5 10 L11 10 L13.5 14.5 L16 19 L18.5 14.5 L21 10 L24.5 10 L24.5 22 L22 22 L22 14.5 L18.5 19.5 L13.5 19.5 L10 14.5 L10 22 Z" fill="white"/></svg></span>
+      <span>Mermaid</span>
+    </div>
+    <div class="meta-line">Dops · Internal · April 2026</div>
+  </div>
+</header>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-eyebrow">Research Operations · Mermaid Chart</div>
+    <h1 class="hero-title">A research<br><em>pipeline</em>, not<br>a research stack.</h1>
+    <p class="hero-deck">Two teams. Fourteen tools. Thirteen ops gaps. Eleven unvalidated product issues. One automated pipeline to fix all of it.</p>
+    <div class="hero-meta">
+      <span><strong>Compiled</strong> &nbsp;April 2026</span>
+      <span><strong>Sources</strong> &nbsp;16 session notes</span>
+      <span><strong>Teams</strong> &nbsp;Product · Design · Growth</span>
+      <span><strong>Status</strong> &nbsp;Proposal</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ STATS BAR ═══════════ -->
+<div class="stats-bar">
+  <div class="stats-grid">
+    <div class="stat">
+      <div class="stat-num">14</div>
+      <div class="stat-label">Tools in stack</div>
+      <div class="stat-sub">across 6 categories</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">13</div>
+      <div class="stat-label">Ops gaps found</div>
+      <div class="stat-sub">3 critical blockers</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">11</div>
+      <div class="stat-label">Product issues</div>
+      <div class="stat-sub">unvalidated today</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">7</div>
+      <div class="stat-label">People affected</div>
+      <div class="stat-sub">3 PMs · 1 GL · 3 designers</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ EXEC SUMMARY ═══════════ -->
+<section>
+  <div class="narrow">
+    <div class="section-marker">
+      <span class="section-num">01</span>
+      <span class="section-label">Executive Summary</span>
+    </div>
+
+    <p class="lead">Two teams are running parallel research operations with fourteen tools, significant manual overhead, and a broken data foundation. The stack is capable but fragmented. Most research is episodic rather than continuous. Gut decisions are still common despite tooling.</p>
+
+    <p>The single biggest blocker is Mixpanel data inaccuracy, which undermines every quantitative decision downstream. Thirteen operational gaps have been identified — three are critical blockers today. Eleven product issues are known but completely unvalidated.</p>
+
+    <p>With targeted automation across seven workflows, the team can shift from monthly research cycles to a near-continuous insight pipeline with minimal added headcount — reclaiming roughly 179 hours per month and around <strong style="color: var(--ink); font-weight: 600;">$178,560 in annual value</strong>.</p>
+
+    <div class="pullquote">The stack is comprehensive but the tools don't talk to each other. Every step from Mixpanel to a Jira ticket requires a human.</div>
+  </div>
+</section>
+
+<!-- ═══════════ CURRENT STATE ═══════════ -->
+<section>
+  <div class="container">
+    <div class="section-marker">
+      <span class="section-num">02</span>
+      <span class="section-label">Current State · Workflows</span>
+    </div>
+    <h2 class="section-title">Three teams,<br>three streams,<br><em>zero shared context.</em></h2>
+
+    <div class="teams">
+      <div class="team-card">
+        <div class="team-tag">Product Team</div>
+        <h3>The most mature workflow.</h3>
+        <div class="who">3 PMs · 2–4 interviews / week target</div>
+        <ul>
+          <li>Mixpanel cohort → Apollo email → Calendly → Zoom</li>
+          <li>Transcript → Claude classification → Notion / Confluence / Vistaly</li>
+          <li>Statsig A/B tests, Typeform & Google Forms surveys</li>
+          <li>Heap and FullStory for passive behavior tracking</li>
+          <li>Targets achieved inconsistently due to manual scheduling</li>
+        </ul>
+        <div class="weakness">
+          <strong>Critical Weakness</strong>
+          The entire quantitative funnel depends on Mixpanel data known to fire incorrectly. Cohort selection may pull the wrong users; A/B baselines may be invalid.
+        </div>
+      </div>
+
+      <div class="team-card design">
+        <div class="team-tag">Design Team</div>
+        <h3>Validates after, not before.</h3>
+        <div class="who">3 designers · ad-hoc cadence</div>
+        <ul>
+          <li>Gut decision → monthly moderated sessions</li>
+          <li>UserTesting · Maze · Card sorting</li>
+          <li>Figma prototyping → ad-hoc delivery</li>
+          <li>Hotjar and Zoom in supporting roles</li>
+          <li>No systematic synthesis step</li>
+        </ul>
+        <div class="weakness">
+          <strong>Critical Weakness</strong>
+          No documented handoff from design research to product roadmap. Design and Product run in parallel with no shared question bank, no shared repository, no merge point.
+        </div>
+      </div>
+
+      <div class="team-card growth">
+        <div class="team-tag">Growth Lead</div>
+        <h3>Three signals, three silos.</h3>
+        <div class="who">1 lead · owns A/B program</div>
+        <ul>
+          <li>Statsig A/B experiments — Confluence-only writeups</li>
+          <li>No connection between experiments and qualitative research</li>
+          <li>Owns Mixpanel dashboards — directly hit by bad event data</li>
+          <li>Three signals (Statsig, interviews, surveys) live in three places</li>
+          <li>Cross-referencing never happens today</li>
+        </ul>
+        <div class="weakness">
+          <strong>Critical Weakness</strong>
+          What happened (Statsig), why (interviews), and how it felt (surveys) are never combined into one view. Every experiment is judged on numbers alone.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ TOOL INVENTORY ═══════════ -->
+<section>
+  <div class="container">
+    <div class="section-marker">
+      <span class="section-num">03</span>
+      <span class="section-label">Tool Inventory</span>
+    </div>
+    <h2 class="section-title">Fourteen tools.<br><em>None of them talk.</em></h2>
+    <p style="max-width: 42rem; color: var(--ink-2);">A capable stack with one missing layer. Zapier is already connected but barely deployed — that's the unlock for most of what follows.</p>
+
+    <table class="tool-table">
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Tools</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="cat">Analytics</td>
+          <td class="tools">Mixpanel · Statsig · Heap · FullStory</td>
+          <td class="status"><span class="tag fix">Fix</span> Mixpanel events fire wrong &nbsp;·&nbsp; <span class="tag cut">Cut</span> FullStory redundant</td>
+        </tr>
+        <tr>
+          <td class="cat">Research &amp; Testing</td>
+          <td class="tools">UserTesting · Maze · Zoom · Hotjar</td>
+          <td class="status"><span class="tag keep">Keep</span> UserTesting credits, Maze, Zoom &nbsp;·&nbsp; <span class="tag cut">Cut</span> Hotjar</td>
+        </tr>
+        <tr>
+          <td class="cat">Outreach &amp; Surveys</td>
+          <td class="tools">Apollo · Calendly · Typeform · Google Forms</td>
+          <td class="status">Manual today &nbsp;·&nbsp; downgrade Calendly &amp; Typeform to free tier</td>
+        </tr>
+        <tr>
+          <td class="cat">Docs &amp; PM</td>
+          <td class="tools">Notion · Vistaly · Confluence · Jira · Slack</td>
+          <td class="status"><span class="tag keep">Keep</span> Vistaly = source of truth · used inconsistently</td>
+        </tr>
+        <tr>
+          <td class="cat">Design</td>
+          <td class="tools">Figma · Mermaid Chart</td>
+          <td class="status">Figma central to design research</td>
+        </tr>
+        <tr>
+          <td class="cat">AI / Automation</td>
+          <td class="tools">Claude (partial) · Zapier (connected, unused)</td>
+          <td class="status"><span class="tag fix">Fix</span> Claude transcripts only — expand · Zapier is the unlock</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════ GAP ANALYSIS ═══════════ -->
+<section>
+  <div class="container">
+    <div class="section-marker">
+      <span class="section-num">04</span>
+      <span class="section-label">Gap Analysis · 13 gaps identified</span>
+    </div>
+    <h2 class="section-title">Where the<br>system <em>breaks down.</em></h2>
+
+    <div class="gap-section">
+      <div class="gap-section-head">
+        <span class="severity-pill critical">Critical</span>
+        <h3>Blocking decisions now</h3>
+      </div>
+      <div class="gaps-grid">
+        <div class="gap-card critical">
+          <div class="gap-num">01</div>
+          <h4>Broken data foundation</h4>
+          <p>Mixpanel events fire incorrectly. Cohort selection pulls the wrong users. Funnel metrics are misleading. A/B baselines may be invalid. Every quantitative decision is uncertain until this is fixed.</p>
+        </div>
+        <div class="gap-card critical">
+          <div class="gap-num">02</div>
+          <h4>No systematic prioritization</h4>
+          <p>Both teams make gut-based calls on editor UX, AI features, and onboarding. There's no research-backed framework. The team may be shipping the wrong things — quickly.</p>
+        </div>
+        <div class="gap-card critical">
+          <div class="gap-num">03</div>
+          <h4>Research vs shipping speed mismatch</h4>
+          <p>Research timelines don't fit sprint cycles. Designer involvement creates delivery risk. The result: teams skip research to ship, then discover problems post-launch.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="gap-section">
+      <div class="gap-section-head">
+        <span class="severity-pill high">High</span>
+        <h3>Compounding over time</h3>
+      </div>
+      <div class="gaps-grid">
+        <div class="gap-card high">
+          <div class="gap-num">04</div>
+          <h4>No continuous feedback loop</h4>
+          <p>Research is episodic — monthly sessions, quarterly studies. Issues accumulate between cycles with no always-on signal from real users.</p>
+        </div>
+        <div class="gap-card high">
+          <div class="gap-num">05</div>
+          <h4>Hard to find representative users</h4>
+          <p>No automated user pool. Manual outreach skews findings toward power users who are easiest to reach.</p>
+        </div>
+        <div class="gap-card high">
+          <div class="gap-num">06</div>
+          <h4>Analysis paralysis</h4>
+          <p>Too many dashboards, inconsistent signals, no single source of truth. Teams reconcile data instead of acting on it.</p>
+        </div>
+        <div class="gap-card high">
+          <div class="gap-num">07</div>
+          <h4>Plugin-to-platform conversion untracked</h4>
+          <p>A key growth vector — users arriving via plugin — has no measurement, funnel definition, or research program.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="gap-section">
+      <div class="gap-section-head">
+        <span class="severity-pill medium">Medium</span>
+        <h3>Important but not blocking</h3>
+      </div>
+      <div class="gaps-grid">
+        <div class="gap-card medium">
+          <div class="gap-num">08</div>
+          <h4>No shared question bank</h4>
+          <p>Every interview starts from scratch. No accumulated institutional research knowledge across sessions or teams.</p>
+        </div>
+        <div class="gap-card medium">
+          <div class="gap-num">09</div>
+          <h4>Design-to-product handoff gap</h4>
+          <p>Design team findings don't feed into the product roadmap or Vistaly. Two research lanes with no merge point.</p>
+        </div>
+        <div class="gap-card medium">
+          <div class="gap-num">10</div>
+          <h4>High operational overhead</h4>
+          <p>Significant human effort spent on logistics and scheduling across 14 disconnected tools rather than on insight generation.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ PRODUCT ISSUES ═══════════ -->
+<section>
+  <div class="container">
+    <div class="section-marker">
+      <span class="section-num">05</span>
+      <span class="section-label">Known Product Issues · 11 unvalidated</span>
+    </div>
+    <h2 class="section-title">Eleven problems.<br><em>Zero validated root causes.</em></h2>
+    <p style="max-width: 42rem; color: var(--ink-2);">Flagged across multiple sessions but lacking validated root cause analysis. The starred items are highest priority — predefined prompts, coldstart templates, and editor navigation all show zero or near-zero adoption.</p>
+
+    <table class="issues-table">
+      <thead>
+        <tr>
+          <th style="width: 30%;">Issue</th>
+          <th style="width: 38%;">Signal</th>
+          <th style="width: 32%;">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="priority">
+          <td class="issue-name">Predefined prompts</td>
+          <td class="signal">Zero adoption</td>
+          <td><span class="status-pill unresearched">Unresearched · highest priority</span></td>
+        </tr>
+        <tr class="priority">
+          <td class="issue-name">Coldstart templates</td>
+          <td class="signal">Low adoption</td>
+          <td><span class="status-pill unresearched">Unresearched</span></td>
+        </tr>
+        <tr class="priority">
+          <td class="issue-name">Editor navigation</td>
+          <td class="signal">User struggle · needs code/prompt split</td>
+          <td><span class="status-pill unresearched">Unresearched</span></td>
+        </tr>
+        <tr>
+          <td class="issue-name">Homepage problems</td>
+          <td class="signal">Flagged by both teams</td>
+          <td><span class="status-pill unresearched">Undefined</span></td>
+        </tr>
+        <tr>
+          <td class="issue-name">Onboarding failure</td>
+          <td class="signal">Drop-off — 4 screens before value</td>
+          <td><span class="status-pill progress">A/B test in progress</span></td>
+        </tr>
+        <tr>
+          <td class="issue-name">Vibe diagramming bugs</td>
+          <td class="signal">Tool malfunctioning</td>
+          <td><span class="status-pill unresearched">Unresearched</span></td>
+        </tr>
+        <tr>
+          <td class="issue-name">OSS routing error</td>
+          <td class="signal">OSS users sent to trial</td>
+          <td><span class="status-pill known">Dev issue · known</span></td>
+        </tr>
+        <tr>
+          <td class="issue-name">Social proof missing</td>
+          <td class="signal">Absent from upgrade modals</td>
+          <td><span class="status-pill unresearched">Unresearched</span></td>
+        </tr>
+        <tr>
+          <td class="issue-name">AI chat follow-up UX</td>
+          <td class="signal">User frustration</td>
+          <td><span class="status-pill unresearched">Unresearched</span></td>
+        </tr>
+        <tr>
+          <td class="issue-name">Voice diagramming UX</td>
+          <td class="signal">No clear wait/stop state</td>
+          <td><span class="status-pill unresearched">Unresearched</span></td>
+        </tr>
+        <tr>
+          <td class="issue-name">Manual mode popup</td>
+          <td class="signal">Blocks mode selection</td>
+          <td><span class="status-pill known">Functional regression · known</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════ BEFORE & AFTER ═══════════ -->
+<section>
+  <div class="container">
+    <div class="section-marker">
+      <span class="section-num">06</span>
+      <span class="section-label">Before &amp; After · The Pipeline</span>
+    </div>
+    <h2 class="section-title">From three<br>broken streams<br>to <em>one pipeline.</em></h2>
+
+    <div class="pipeline-wrap">
+      <div class="before-after-labels">
+        <div class="before">
+          Today
+          <strong>Three streams. Zero shared context.</strong>
+        </div>
+        <div class="after">
+          After
+          <strong>One pipeline. One repository.</strong>
+        </div>
+      </div>
+
+      <svg class="pipeline-svg" viewBox="0 0 1100 540" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Before and after research operations pipeline">
+        <defs>
+          <marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#c4402b"/>
+          </marker>
+          <marker id="arrow-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#1a1714"/>
+          </marker>
+          <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#d92d52"/>
+          </marker>
+          <linearGradient id="gradFlow" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#d92d52" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="#d92d52" stop-opacity="1"/>
+          </linearGradient>
+        </defs>
+
+        <!-- divider line down the middle -->
+        <line x1="540" y1="20" x2="540" y2="520" stroke="#c8bca0" stroke-width="1" stroke-dasharray="4 4"/>
+
+        <!-- ============= BEFORE (left side) ============= -->
+        <!-- Stream 1: Product -->
+        <g>
+          <rect x="20" y="40" width="120" height="44" rx="2" fill="#fff" stroke="#1a1714" stroke-width="1"/>
+          <text x="80" y="60" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#807a72" letter-spacing="1">PRODUCT · 3 PMs</text>
+          <text x="80" y="76" text-anchor="middle" font-family="Fraunces, serif" font-size="13" fill="#1a1714" font-style="italic">Mixpanel</text>
+
+          <line x1="140" y1="62" x2="170" y2="62" stroke="#c4402b" stroke-width="1.5" marker-end="url(#arrow-red)"/>
+
+          <rect x="170" y="40" width="100" height="44" rx="2" fill="#fff" stroke="#c4402b" stroke-width="1" stroke-dasharray="3 3"/>
+          <text x="220" y="60" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#c4402b" letter-spacing="1">BROKEN</text>
+          <text x="220" y="76" text-anchor="middle" font-family="Fraunces, serif" font-size="13" fill="#1a1714" font-style="italic">cohort export</text>
+
+          <line x1="270" y1="62" x2="300" y2="62" stroke="#1a1714" stroke-width="1" marker-end="url(#arrow-ink)"/>
+
+          <rect x="300" y="40" width="100" height="44" rx="2" fill="#fff" stroke="#1a1714" stroke-width="1"/>
+          <text x="350" y="60" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#807a72" letter-spacing="1">MANUAL · 4hr/wk</text>
+          <text x="350" y="76" text-anchor="middle" font-family="Fraunces, serif" font-size="13" fill="#1a1714" font-style="italic">Apollo + Cal</text>
+
+          <line x1="400" y1="62" x2="430" y2="62" stroke="#1a1714" stroke-width="1" marker-end="url(#arrow-ink)"/>
+
+          <rect x="430" y="40" width="80" height="44" rx="2" fill="#fff" stroke="#1a1714" stroke-width="1"/>
+          <text x="470" y="60" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#807a72" letter-spacing="1">OUTPUT</text>
+          <text x="470" y="76" text-anchor="middle" font-family="Fraunces, serif" font-size="13" fill="#1a1714" font-style="italic">Jira</text>
+        </g>
+
+        <!-- Stream 2: Design -->
+        <g>
+          <rect x="20" y="180" width="120" height="44" rx="2" fill="#fff" stroke="#1f3a5c" stroke-width="1"/>
+          <text x="80" y="200" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#807a72" letter-spacing="1">DESIGN · 3 DS</text>
+          <text x="80" y="216" text-anchor="middle" font-family="Fraunces, serif" font-size="13" fill="#1a1714" font-style="italic">Gut call</text>
+
+          <line x1="140" y1="202" x2="170" y2="202" stroke="#1a1714" stroke-width="1" marker-end="url(#arrow-ink)"/>
+
+          <rect x="170" y="180" width="100" height="44" rx="2" fill="#fff" stroke="#1a1714" stroke-width="1"/>
+          <text x="220" y="200" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#807a72" letter-spacing="1">MONTHLY</text>
+          <text x="220" y="216" text-anchor="middle" font-family="Fraunces, serif" font-size="13" fill="#1a1714" font-style="italic">Maze + UT</text>
+
+          <line x1="270" y1="202" x2="300" y2="202" stroke="#1a1714" stroke-width="1" marker-end="url(#arrow-ink)"/>
+
+          <rect x="300" y="180" width="100" height="44" rx="2" fill="#fff" stroke="#1a1714" stroke-width="1"/>
+          <text x="350" y="200" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#807a72" letter-spacing="1">NO SYNTHESIS</text>
+          <text x="350" y="216" text-anchor="middle" font-family="Fraunces, serif" font-size="13" fill="#1a1714" font-style="italic">manual notes</text>
+
+          <line x1="400" y1="202" x2="430" y2="202" stroke="#c4402b" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#arrow-red)"/>
+
+          <rect x="430" y="180" width="80" height="44" rx="2" fill="#fff" stroke="#c4402b" stroke-width="1" stroke-dasharray="3 3"/>
+          <text x="470" y="200" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#c4402b" letter-spacing="1">DEAD END</text>
+          <text x="470" y="216" text-anchor="middle" font-family="Fraunces, serif" font-size="13" fill="#1a1714" font-style="italic">Figma only</text>
+        </g>
+
+        <!-- Stream 3: Growth -->
+        <g>
+          <rect x="20" y="320" width="120" height="44" rx="2" fill="#fff" stroke="#c97b1f" stroke-width="1"/>
+          <text x="80" y="340" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#807a72" letter-spacing="1">GROWTH · 1 LD</text>
+          <text x="80" y="356" text-anchor="middle" font-family="Fraunces, serif" font-size="13" fill="#1a1714" font-style="italic">Statsig A/B</text>
+
+          <line x1="140" y1="342" x2="170" y2="342" stroke="#1a1714" stroke-width="1" marker-end="url(#arrow-ink)"/>
+
+          <rect x="170" y="320" width="100" height="44" rx="2" fill="#fff" stroke="#1a1714" stroke-width="1"/>
+          <text x="220" y="340" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#807a72" letter-spacing="1">MANUAL ANALYSIS</text>
+          <text x="220" y="356" text-anchor="middle" font-family="Fraunces, serif" font-size="13" fill="#1a1714" font-style="italic">spreadsheet</text>
+
+          <line x1="270" y1="342" x2="300" y2="342" stroke="#1a1714" stroke-width="1" marker-end="url(#arrow-ink)"/>
+
+          <rect x="300" y="320" width="100" height="44" rx="2" fill="#fff" stroke="#1a1714" stroke-width="1"/>
+          <text x="350" y="340" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#807a72" letter-spacing="1">OUTPUT</text>
+          <text x="350" y="356" text-anchor="middle" font-family="Fraunces, serif" font-size="13" fill="#1a1714" font-style="italic">Confluence</text>
+
+          <line x1="400" y1="342" x2="430" y2="342" stroke="#c4402b" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#arrow-red)"/>
+
+          <rect x="430" y="320" width="80" height="44" rx="2" fill="#fff" stroke="#c4402b" stroke-width="1" stroke-dasharray="3 3"/>
+          <text x="470" y="340" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#c4402b" letter-spacing="1">SILO</text>
+          <text x="470" y="356" text-anchor="middle" font-family="Fraunces, serif" font-size="13" fill="#1a1714" font-style="italic">no x-ref</text>
+        </g>
+
+        <!-- Result label below for BEFORE -->
+        <text x="265" y="450" text-anchor="middle" font-family="Fraunces, serif" font-size="14" font-style="italic" fill="#807a72">3 outputs · 3 repositories · 0 shared context</text>
+        <text x="265" y="475" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#c4402b" letter-spacing="2">EVERY STEP MANUAL</text>
+
+        <!-- ============= AFTER (right side) ============= -->
+        <!-- Three input streams converging -->
+        <g>
+          <!-- Inputs (right side, all converging into Zapier) -->
+          <rect x="570" y="40" width="115" height="36" rx="2" fill="#fff" stroke="#1a1714" stroke-width="1"/>
+          <text x="627" y="55" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#807a72" letter-spacing="1">PMs</text>
+          <text x="627" y="70" text-anchor="middle" font-family="Fraunces, serif" font-size="12" fill="#1a1714" font-style="italic">Mixpanel cohort</text>
+
+          <rect x="570" y="90" width="115" height="36" rx="2" fill="#fff" stroke="#1a1714" stroke-width="1"/>
+          <text x="627" y="105" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#807a72" letter-spacing="1">DESIGN</text>
+          <text x="627" y="120" text-anchor="middle" font-family="Fraunces, serif" font-size="12" fill="#1a1714" font-style="italic">Maze API trigger</text>
+
+          <rect x="570" y="140" width="115" height="36" rx="2" fill="#fff" stroke="#1a1714" stroke-width="1"/>
+          <text x="627" y="155" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#807a72" letter-spacing="1">GROWTH</text>
+          <text x="627" y="170" text-anchor="middle" font-family="Fraunces, serif" font-size="12" fill="#1a1714" font-style="italic">Statsig + Typeform</text>
+
+          <!-- Converging arrows -->
+          <path d="M685,58 Q740,58 740,180" stroke="url(#gradFlow)" stroke-width="2" fill="none" marker-end="url(#arrow-accent)"/>
+          <path d="M685,108 L740,180" stroke="url(#gradFlow)" stroke-width="2" fill="none" marker-end="url(#arrow-accent)"/>
+          <path d="M685,158 Q740,158 740,180" stroke="url(#gradFlow)" stroke-width="2" fill="none" marker-end="url(#arrow-accent)"/>
+
+          <!-- Zapier orchestration -->
+          <rect x="700" y="200" width="160" height="50" rx="2" fill="#1a1714" stroke="#1a1714" stroke-width="1"/>
+          <text x="780" y="220" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#d92d52" letter-spacing="2">AUTOMATION</text>
+          <text x="780" y="240" text-anchor="middle" font-family="Fraunces, serif" font-size="14" fill="#fff" font-style="italic">Zapier orchestration</text>
+
+          <line x1="780" y1="250" x2="780" y2="285" stroke="#d92d52" stroke-width="2" marker-end="url(#arrow-accent)"/>
+
+          <!-- Claude synthesis -->
+          <rect x="700" y="290" width="160" height="50" rx="2" fill="#d92d52" stroke="#d92d52"/>
+          <text x="780" y="310" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#fff" letter-spacing="2" opacity="0.85">SYNTHESIS</text>
+          <text x="780" y="328" text-anchor="middle" font-family="Fraunces, serif" font-size="14" fill="#fff" font-style="italic">Claude API</text>
+
+          <line x1="780" y1="340" x2="780" y2="375" stroke="#d92d52" stroke-width="2" marker-end="url(#arrow-accent)"/>
+
+          <!-- Vistaly unified -->
+          <rect x="680" y="380" width="200" height="56" rx="2" fill="#fff" stroke="#1a1714" stroke-width="2"/>
+          <text x="780" y="402" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#d92d52" letter-spacing="2">UNIFIED REPOSITORY</text>
+          <text x="780" y="423" text-anchor="middle" font-family="Fraunces, serif" font-size="17" fill="#1a1714" font-style="italic" font-weight="500">Vistaly</text>
+
+          <!-- Outputs -->
+          <line x1="700" y1="408" x2="660" y2="408" stroke="#1a1714" stroke-width="1" stroke-dasharray="2 2"/>
+          <text x="650" y="404" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="9" fill="#807a72" letter-spacing="1">→ Jira tickets</text>
+          <text x="650" y="418" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="9" fill="#807a72" letter-spacing="1">→ #research Slack</text>
+          <text x="650" y="432" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="9" fill="#807a72" letter-spacing="1">→ master dashboard</text>
+        </g>
+
+        <!-- Result label below for AFTER -->
+        <text x="780" y="475" text-anchor="middle" font-family="Fraunces, serif" font-size="14" font-style="italic" fill="#1a1714">All signals · same taxonomy · one pool</text>
+        <text x="780" y="498" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#4f7142" letter-spacing="2">~15 MIN REVIEW · NOT 4 HRS</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ CONVERGENCE ═══════════ -->
+<section>
+  <div class="container">
+    <div class="section-marker">
+      <span class="section-num">07</span>
+      <span class="section-label">Where the teams converge</span>
+    </div>
+    <h2 class="section-title">Six points<br>of <em>shared truth.</em></h2>
+    <p style="max-width: 42rem; color: var(--ink-2);">Today, every team writes its own questions, runs its own sessions, and stores its own findings. After the overhaul, six shared layers connect everything.</p>
+
+    <div class="converge-grid">
+      <div class="converge-card">
+        <div class="converge-icon">i.</div>
+        <h4>Vistaly · source of truth</h4>
+        <p>Single repository for all research signals. All teams route findings here, no exceptions.</p>
+      </div>
+      <div class="converge-card">
+        <div class="converge-icon">ii.</div>
+        <h4>Shared question bank</h4>
+        <p>Notion database tagged by theme and method. Slack bot surfaces relevant questions at sprint planning.</p>
+      </div>
+      <div class="converge-card">
+        <div class="converge-icon">iii.</div>
+        <h4>AI synthesis pipeline</h4>
+        <p>Same Claude prompt, same taxonomy, same output format — regardless of team or method.</p>
+      </div>
+      <div class="converge-card">
+        <div class="converge-icon">iv.</div>
+        <h4>#research Slack channel</h4>
+        <p>One channel broadcasting findings across teams. 5-bullet summary auto-posted after every session.</p>
+      </div>
+      <div class="converge-card">
+        <div class="converge-icon">v.</div>
+        <h4>Auto Jira tickets</h4>
+        <p>Both teams' sessions auto-create cards with source citations and confidence levels. No manual writeup.</p>
+      </div>
+      <div class="converge-card">
+        <div class="converge-icon">vi.</div>
+        <h4>Experiment cross-reference</h4>
+        <p>A/B result + interview quotes + survey response = one unified Vistaly card per experiment.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ EXPERIMENT POOL ═══════════ -->
+<section>
+  <div class="container">
+    <div class="section-marker">
+      <span class="section-num">08</span>
+      <span class="section-label">Growth experiments as one pool</span>
+    </div>
+    <h2 class="section-title">What happened.<br>Why it happened.<br><em>How it felt.</em></h2>
+    <p style="max-width: 42rem; color: var(--ink-2);">Three signals that today live in three places and are never combined. After: every experiment generates one Vistaly card containing the metric movement, the qualitative explanation, and the user's reaction.</p>
+
+    <div class="three-col">
+      <div>
+        <div class="label">What happened</div>
+        <h4>Statsig A/B results</h4>
+        <p>Metric movement and confidence intervals — tells you if something worked.</p>
+      </div>
+      <div>
+        <div class="label">Why it happened</div>
+        <h4>User interviews</h4>
+        <p>Qualitative context from the same cohort — tells you why it worked or failed.</p>
+      </div>
+      <div>
+        <div class="label">How it felt</div>
+        <h4>Typeform in-app</h4>
+        <p>Behavioral context and immediate reaction — tells you how users experienced it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ IMPACT ═══════════ -->
+<section>
+  <div class="container">
+    <div class="section-marker">
+      <span class="section-num">09</span>
+      <span class="section-label">Time &amp; Financial Impact</span>
+    </div>
+    <h2 class="section-title">The price of<br>doing <em>nothing.</em></h2>
+
+    <div class="impact-grid">
+      <div class="impact">
+        <div class="impact-eyebrow">Time reclaimed</div>
+        <div class="impact-num">179<span style="font-size: 0.45em; opacity: 0.7;"> hrs/mo</span></div>
+        <h4>Across the team, every month</h4>
+        <p>3 PMs: 63 hrs · Growth lead: 41 hrs · 3 designers: 75 hrs</p>
+        <p>At $80/hr blended = $14,320/month in reclaimed capacity.</p>
+        <div class="annual"><strong>$171,840</strong> — annual capacity recovered</div>
+      </div>
+
+      <div class="impact alt">
+        <div class="impact-eyebrow">Tool savings (net)</div>
+        <div class="impact-num">$410<span style="font-size: 0.45em; opacity: 0.7;"> /mo</span></div>
+        <h4>After cuts and reinvestment</h4>
+        <p>Cuts: FullStory ~$350 · Hotjar $80 · Typeform $80 · Calendly $50</p>
+        <p>Reinvestment: -$150/mo (Zapier upgrade + Claude API).</p>
+        <div class="annual"><strong>$4,920</strong> — annual net savings</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 2rem; padding: 2rem; background: var(--bg-2); border: 1px solid var(--rule); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <div style="font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem;">Combined annual value</div>
+        <div style="font-family: var(--display); font-style: italic; font-weight: 400; font-size: 2.5rem; color: var(--accent); line-height: 1; font-variation-settings: 'opsz' 144;">$178,560</div>
+      </div>
+      <div style="font-family: var(--display); font-style: italic; font-size: 1.15rem; color: var(--ink-2); max-width: 24rem; text-align: right;">Time + tools, year one. Before counting any uplift from better decisions.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ ROADMAP ═══════════ -->
+<section>
+  <div class="container">
+    <div class="section-marker">
+      <span class="section-num">10</span>
+      <span class="section-label">Automation Roadmap · 7 actions</span>
+    </div>
+    <h2 class="section-title">Seven steps,<br>in <em>this order.</em></h2>
+    <p style="max-width: 42rem; color: var(--ink-2);">Sequenced by prerequisite dependency. Step 1 is non-negotiable — every quantitative decision downstream depends on reliable data.</p>
+
+    <div class="roadmap">
+      <div class="roadmap-step">
+        <div class="step-num">01</div>
+        <div class="step-content">
+          <h3>Fix the data foundation</h3>
+          <p>Run a full audit of every Mixpanel and Statsig event. Build a canonical event taxonomy in Notion with definitions, fire conditions, and owners. Set up a weekly Zapier cron that monitors fire rates and posts anomalies to a <code style="font-family: var(--mono); font-size: 0.85em; color: var(--accent);">#data-health</code> Slack channel. Add accuracy stamps to all dashboards.</p>
+          <div class="step-meta">
+            <div class="field"><strong>Tools</strong><span>Mixpanel · Statsig · Zapier · Slack · Notion</span></div>
+            <div class="field"><strong>Effort</strong><span>3–5 days</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="roadmap-step">
+        <div class="step-num">02</div>
+        <div class="step-content">
+          <h3>One master dashboard</h3>
+          <p>Archive every dashboard except one canonical Mixpanel board tracking WAU/MAU, conversion funnel, feature adoption (predefined prompts, templates, AI chat), plugin-to-platform rate, and D1/D7/D30 retention. Weekly Monday Slack post with a 3-number summary.</p>
+          <div class="step-meta">
+            <div class="field"><strong>Tools</strong><span>Mixpanel · Slack · Zapier</span></div>
+            <div class="field"><strong>Effort</strong><span>2 days</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="roadmap-step">
+        <div class="step-num">03</div>
+        <div class="step-content">
+          <h3>Automate the interview pipeline</h3>
+          <p>Zapier chain: Mixpanel cohort → Apollo enrichment → email sequence → Calendly booking → Zoom auto-created → post-interview gift card trigger. Converts ~4 hrs/week of manual work to ~15 min review. Target 2–4 interviews/week running passively.</p>
+          <div class="step-meta">
+            <div class="field"><strong>Tools</strong><span>Zapier · Mixpanel · Apollo · Calendly · Zoom</span></div>
+            <div class="field"><strong>Effort</strong><span>2–3 days</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="roadmap-step">
+        <div class="step-num">04</div>
+        <div class="step-content">
+          <h3>AI research synthesis agent</h3>
+          <p>After each interview: Claude API runs on the transcript to tag themes, extract verbatim quotes, flag product issues with severity, auto-create Vistaly card and Jira ticket with source citation and confidence level, and post a 5-bullet summary to <code style="font-family: var(--mono); font-size: 0.85em; color: var(--accent);">#research</code>. The team is already partially doing this — fully operationalize it.</p>
+          <div class="step-meta">
+            <div class="field"><strong>Tools</strong><span>Claude API · Zapier · Vistaly · Jira · Slack · Notion</span></div>
+            <div class="field"><strong>Effort</strong><span>3–4 days</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="roadmap-step">
+        <div class="step-num">05</div>
+        <div class="step-content">
+          <h3>Continuous in-app feedback loops</h3>
+          <p>Typeform micro-surveys triggered by behavioral events: first diagram created, 3-day return visit, export action, abandoned upgrade click, 7-day anniversary. Two questions max each. Route responses via Zapier into the Notion research repo, tagged with cohort and timestamp.</p>
+          <div class="step-meta">
+            <div class="field"><strong>Tools</strong><span>Typeform · Zapier · Notion</span></div>
+            <div class="field"><strong>Effort</strong><span>~1 week (5 triggers)</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="roadmap-step">
+        <div class="step-num">06</div>
+        <div class="step-content">
+          <h3>Async testing on every feature ship</h3>
+          <p>Maze test templates for the 5 critical flows: onboarding, first diagram, AI chat, export and share, and plan upgrade. After each ship that touches one of these flows, auto-trigger the relevant Maze test via API. 20–40 testers per run. Results feed Vistaly via webhook.</p>
+          <div class="step-meta">
+            <div class="field"><strong>Tools</strong><span>Maze · Zapier · Vistaly · CI/CD</span></div>
+            <div class="field"><strong>Effort</strong><span>2 days/template + 1 day wiring</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="roadmap-step">
+        <div class="step-num">07</div>
+        <div class="step-content">
+          <h3>Shared question bank + sprint surfacing</h3>
+          <p>Notion database of research questions tagged by theme (onboarding, conversion, AI features, retention, editor UX) and method (interview, survey, A/B, usability). Slack bot scans sprint Jira tickets and surfaces the 5 most relevant questions at sprint planning. Stops starting every interview from scratch.</p>
+          <div class="step-meta">
+            <div class="field"><strong>Tools</strong><span>Notion · Jira · Slack · Zapier</span></div>
+            <div class="field"><strong>Effort</strong><span>1–2 days</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ QUESTIONS ═══════════ -->
+<section>
+  <div class="container">
+    <div class="section-marker">
+      <span class="section-num">11</span>
+      <span class="section-label">Research Questions · Next 30 days</span>
+    </div>
+    <h2 class="section-title">Five questions<br>worth <em>answering now.</em></h2>
+    <p style="max-width: 42rem; color: var(--ink-2);">Highest-value questions the team should answer immediately, based on zero-adoption signals and conversion risk.</p>
+
+    <div class="questions">
+      <div class="question">
+        <div class="question-num">Q.01</div>
+        <div>
+          <h4>Why do users not engage with predefined prompts?</h4>
+          <p>High-investment feature, zero adoption. Root cause completely unknown. Use remaining UserTesting credits here.</p>
+        </div>
+      </div>
+      <div class="question">
+        <div class="question-num">Q.02</div>
+        <div>
+          <h4>Where do users drop off in the first session, and why?</h4>
+          <p>Conversion-critical. Onboarding A/B is in progress, but there is no qualitative context explaining the drop-off behavior.</p>
+        </div>
+      </div>
+      <div class="question">
+        <div class="question-num">Q.03</div>
+        <div>
+          <h4>What happens between plugin discovery and paying customer?</h4>
+          <p>Plugin-to-platform funnel is completely unmeasured. A significant blind spot for growth.</p>
+        </div>
+      </div>
+      <div class="question">
+        <div class="question-num">Q.04</div>
+        <div>
+          <h4>What causes users to return after the first session vs abandon?</h4>
+          <p>D7 retention — no validated hypothesis on what drives it. Foundation for any retention improvement.</p>
+        </div>
+      </div>
+      <div class="question">
+        <div class="question-num">Q.05</div>
+        <div>
+          <h4>What is the actual job users hire Mermaid Chart for?</h4>
+          <p>Both teams report uncertainty about core use cases. The foundation question that should inform roadmap prioritization.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-mark">— Research Ops Overhaul.</div>
+    <div class="footer-meta">
+      Compiled from 16 internal session notes<br>
+      Product · Design · Growth teams · April 2026<br>
+      Mermaid Chart · Internal proposal
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

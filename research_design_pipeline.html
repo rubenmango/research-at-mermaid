@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Design Research Pipeline — Mermaid Chart</title>
+<meta name="description" content="A focused design research pipeline for Mermaid Chart. Three phases: sprint discovery, prototype testing, post-ship validation. Built around one Jira field and three prototype sources.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;0,9..144,900;1,9..144,400;1,9..144,500;1,9..144,600;1,9..144,700&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #dde9d8;
+  --bg-2: #d2e0cc;
+  --paper: #ffffff;
+  --ink: #0a0a0a;
+  --ink-2: #2a2a2a;
+  --muted: #6b6b6b;
+  --rule: #b8c6b3;
+  --rule-strong: #a3b59e;
+  --accent: #ec4078;
+  --accent-2: #c92560;
+  --accent-soft: #fce4ea;
+  --critical: #c4402b;
+  --high: #c97b1f;
+  --medium: #8a7a4a;
+  --good: #4f7142;
+  --design: #1f3a5c;
+  --display: 'Fraunces', Georgia, serif;
+  --body: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--body);
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 17px;
+  line-height: 1.55;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-image:
+    radial-gradient(circle at 15% 8%, rgba(236, 64, 120, 0.035) 0%, transparent 40%),
+    radial-gradient(circle at 85% 75%, rgba(15, 18, 25, 0.06) 0%, transparent 35%);
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 4vw, 3rem);
+}
+
+.narrow {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 4vw, 3rem);
+}
+
+/* ═══════════ HEADER ═══════════ */
+header.site {
+  border-bottom: 1px solid var(--rule);
+  padding: 1.25rem 0;
+  position: sticky;
+  top: 0;
+  background: rgba(221, 233, 216, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 50;
+}
+.site-inner {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 4vw, 3rem);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.brand {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--accent);
+}
+.brand-mark {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+.brand-mark svg { width: 100%; height: 100%; display: block; }
+.meta-line {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ═══════════ HERO ═══════════ */
+.hero {
+  padding: clamp(4rem, 10vw, 8rem) 0 clamp(3rem, 6vw, 5rem);
+  position: relative;
+}
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.hero-eyebrow::before {
+  content: '';
+  width: 32px;
+  height: 1px;
+  background: var(--accent);
+}
+h1.hero-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(2.75rem, 7vw, 5.75rem);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  font-variation-settings: "opsz" 144;
+  margin-bottom: 1.5rem;
+}
+h1.hero-title em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent);
+}
+.hero-deck {
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(1.15rem, 1.8vw, 1.5rem);
+  line-height: 1.45;
+  color: var(--ink-2);
+  max-width: 40rem;
+  font-style: italic;
+}
+.hero-meta {
+  margin-top: 3.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.5rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.hero-meta span strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* ═══════════ STATS BAR ═══════════ */
+.stats-bar {
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding: 2.25rem 0;
+  margin: 0 0 5rem 0;
+  background: var(--bg-2);
+}
+.stats-grid {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 4vw, 3rem);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: clamp(1rem, 3vw, 2.5rem);
+}
+@media (max-width: 900px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 2rem 1.5rem; }
+}
+.stat { display: flex; flex-direction: column; }
+.stat-num {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(2.25rem, 4vw, 3.25rem);
+  line-height: 1;
+  color: var(--accent);
+  letter-spacing: -0.03em;
+  font-variation-settings: "opsz" 144;
+}
+.stat-label {
+  margin-top: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-2);
+  font-weight: 500;
+}
+.stat-sub {
+  margin-top: 0.3rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+/* ═══════════ SECTIONS ═══════════ */
+section { padding: clamp(3rem, 6vw, 5rem) 0; }
+section.tight { padding: clamp(2rem, 4vw, 3rem) 0; }
+
+.section-marker {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 1rem;
+}
+.section-num {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.1rem;
+  color: var(--accent);
+  font-variation-settings: "opsz" 144;
+}
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+}
+
+h2.section-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(2rem, 4.5vw, 3.25rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
+  color: var(--ink);
+  font-variation-settings: "opsz" 144;
+}
+h2.section-title em { font-style: italic; color: var(--accent); }
+
+h3 {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 1.5rem;
+  letter-spacing: -0.015em;
+  margin-bottom: 0.5rem;
+}
+h4 {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 1.15rem;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.4rem;
+}
+
+p { margin-bottom: 1rem; color: var(--ink-2); }
+p.lead {
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: 1.35rem;
+  line-height: 1.5;
+  color: var(--ink);
+  font-style: italic;
+}
+p.lead::first-letter {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 4.5rem;
+  float: left;
+  line-height: 0.85;
+  margin: 0.25rem 0.6rem 0 0;
+  color: var(--accent);
+  font-style: normal;
+}
+
+.pullquote {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 1.5rem;
+  line-height: 1.4;
+  color: var(--ink);
+  border-left: 2px solid var(--accent);
+  padding-left: 1.5rem;
+  margin: 2rem 0;
+  max-width: 38rem;
+}
+
+/* ═══════════ CONCERNS GRID ═══════════ */
+.concerns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+@media (max-width: 900px) { .concerns { grid-template-columns: 1fr; } }
+.concern {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+}
+.concern-said {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 1.25rem;
+  color: var(--accent);
+  line-height: 1.35;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px dashed var(--rule);
+  margin-bottom: 1.25rem;
+}
+.concern-said::before { content: "“"; color: var(--accent); font-weight: 500; }
+.concern-said::after { content: "”"; color: var(--accent); font-weight: 500; }
+.concern-fix-label {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+.concern h4 { color: var(--ink); margin-bottom: 0.7rem; }
+.concern p { font-size: 0.92rem; color: var(--ink-2); margin: 0; line-height: 1.55; }
+
+/* ═══════════ PHASE OVERVIEW ═══════════ */
+.phases-overview {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  margin-top: 2rem;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+}
+@media (max-width: 800px) { .phases-overview { grid-template-columns: 1fr; } }
+.phases-overview > div {
+  padding: 2rem 1.75rem;
+  border-right: 1px solid var(--rule);
+  position: relative;
+}
+.phases-overview > div:last-child { border-right: 0; }
+@media (max-width: 800px) {
+  .phases-overview > div { border-right: 0; border-bottom: 1px solid var(--rule); }
+  .phases-overview > div:last-child { border-bottom: 0; }
+}
+.phase-num {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 3.5rem;
+  line-height: 0.85;
+  color: var(--accent);
+  letter-spacing: -0.04em;
+  margin-bottom: 1rem;
+}
+.phase-label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.4rem;
+}
+.phases-overview h4 {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.5rem;
+  color: var(--ink);
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.01em;
+}
+.phases-overview p { font-size: 0.92rem; color: var(--ink-2); margin: 0; }
+.phases-overview .when {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--rule);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* ═══════════ PHASE DETAIL ═══════════ */
+.phase-detail {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  padding: clamp(1.75rem, 4vw, 3rem);
+  margin-top: 2rem;
+  border-left: 4px solid var(--accent);
+}
+.phase-detail-head {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--rule);
+}
+.phase-detail-num {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 2.5rem;
+  line-height: 1;
+  color: var(--accent);
+  letter-spacing: -0.03em;
+}
+.phase-detail-tag {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.3rem;
+}
+.phase-detail h3 {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 1.75rem;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.flow-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--ink-2);
+  background: var(--bg-2);
+  padding: 0.85rem 1rem;
+  margin: 1.25rem 0 1.5rem;
+  border-left: 2px solid var(--accent);
+  letter-spacing: 0.02em;
+  line-height: 1.6;
+}
+.flow-row .arrow { color: var(--accent); margin: 0 0.25rem; font-weight: 500; }
+.flow-row .pill {
+  background: var(--paper);
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 2px;
+  white-space: nowrap;
+}
+.phase-bullets {
+  list-style: none;
+  margin-top: 1rem;
+}
+.phase-bullets li {
+  padding: 0.7rem 0;
+  border-bottom: 1px dashed var(--rule);
+  display: flex;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  color: var(--ink-2);
+  line-height: 1.55;
+}
+.phase-bullets li:last-child { border-bottom: 0; }
+.phase-bullets li::before {
+  content: '→';
+  color: var(--accent);
+  flex-shrink: 0;
+  font-weight: 500;
+}
+.phase-bullets strong { color: var(--ink); font-weight: 600; }
+
+.designer-impact {
+  margin-top: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--accent-soft);
+  border-left: 3px solid var(--accent);
+}
+.designer-impact-label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-2);
+  font-weight: 500;
+  margin-bottom: 0.4rem;
+}
+.designer-impact p {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.1rem;
+  color: var(--ink);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ═══════════ PROTOTYPE DIAGRAM ═══════════ */
+.proto-diagram-wrap {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  padding: 2.5rem clamp(1rem, 3vw, 2.5rem);
+  margin-top: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+.proto-diagram-wrap::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+.proto-svg { width: 100%; height: auto; display: block; }
+.proto-caption {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--ink-2);
+}
+
+/* ═══════════ CURSOR DEEP DIVE ═══════════ */
+.deep-dive {
+  background: #0f1219;
+  color: var(--bg);
+  padding: clamp(2.5rem, 5vw, 4rem) clamp(1.75rem, 4vw, 3rem);
+  margin-top: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+.deep-dive::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--accent);
+}
+.dd-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+.deep-dive h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.25rem;
+  color: var(--bg);
+  font-variation-settings: "opsz" 144;
+}
+.deep-dive h3 em { font-style: italic; color: var(--accent); }
+.deep-dive p {
+  color: var(--bg);
+  opacity: 0.78;
+  margin-bottom: 1.25rem;
+  max-width: 44rem;
+  font-size: 1rem;
+}
+.dd-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255,255,255,0.15);
+}
+@media (max-width: 700px) { .dd-grid { grid-template-columns: 1fr; gap: 1.5rem; } }
+.dd-grid > div {}
+.dd-grid h4 {
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+}
+.dd-grid ul {
+  list-style: none;
+  font-size: 0.94rem;
+  color: var(--bg);
+  opacity: 0.85;
+}
+.dd-grid li {
+  padding: 0.4rem 0;
+  display: flex;
+  gap: 0.6rem;
+  line-height: 1.5;
+}
+.dd-grid li::before {
+  content: '+';
+  color: var(--accent);
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+/* ═══════════ BEFORE / AFTER ═══════════ */
+.beforeafter {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  margin-top: 2rem;
+  border: 1px solid var(--ink);
+}
+@media (max-width: 700px) { .beforeafter { grid-template-columns: 1fr; } }
+.ba-side {
+  padding: 2rem 1.75rem;
+  background: var(--paper);
+}
+.ba-side.before {
+  background: var(--bg-2);
+  border-right: 1px solid var(--rule);
+}
+@media (max-width: 700px) {
+  .ba-side.before { border-right: 0; border-bottom: 1px solid var(--rule); }
+}
+.ba-tag {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+.ba-side.before .ba-tag { color: var(--critical); }
+.ba-side.after .ba-tag { color: var(--good); }
+.ba-side h4 {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.5rem;
+  margin-bottom: 1.25rem;
+  color: var(--ink);
+}
+.ba-side ul {
+  list-style: none;
+}
+.ba-side li {
+  padding: 0.7rem 0;
+  border-bottom: 1px dashed var(--rule);
+  font-size: 0.92rem;
+  color: var(--ink-2);
+  line-height: 1.55;
+  display: flex;
+  gap: 0.6rem;
+}
+.ba-side.before li::before {
+  content: '✕';
+  color: var(--critical);
+  flex-shrink: 0;
+  font-weight: 500;
+}
+.ba-side.after li::before {
+  content: '✓';
+  color: var(--good);
+  flex-shrink: 0;
+  font-weight: 500;
+}
+.ba-side li:last-child { border-bottom: 0; }
+
+/* ═══════════ TOOL STACK ═══════════ */
+.tool-stack {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.85rem;
+  margin-top: 2rem;
+}
+@media (max-width: 900px) { .tool-stack { grid-template-columns: repeat(2, 1fr); } }
+.tool {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  padding: 1.1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.tool-status {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.tool-status.keep { color: var(--good); }
+.tool-status.cut { color: var(--critical); }
+.tool-status.new { color: var(--accent); }
+.tool-status.expand { color: var(--high); }
+.tool-name {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 1.05rem;
+  color: var(--ink);
+}
+.tool-role {
+  font-size: 0.83rem;
+  color: var(--muted);
+  line-height: 1.4;
+  margin-top: 0.25rem;
+}
+
+/* ═══════════ FIRST STEPS ═══════════ */
+.steps-list { margin-top: 2rem; }
+.step {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 1.5rem;
+  padding: 1.75rem 0;
+  border-top: 1px solid var(--rule);
+  align-items: start;
+}
+.step:first-child { border-top: 1px solid var(--ink); }
+.step:last-child { border-bottom: 1px solid var(--ink); }
+@media (max-width: 700px) {
+  .step { grid-template-columns: 1fr; gap: 0.6rem; padding: 1.5rem 0; }
+}
+.step-when {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
+.step-content h4 {
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+.step-content p {
+  font-size: 0.95rem;
+  color: var(--ink-2);
+  margin: 0;
+}
+.step-owner {
+  display: inline-block;
+  margin-top: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 0.25rem 0.55rem;
+  background: var(--bg-2);
+  border-radius: 2px;
+}
+
+/* ═══════════ FOOTER ═══════════ */
+footer {
+  margin-top: 5rem;
+  padding: 3rem 0 4rem;
+  border-top: 1px solid var(--ink);
+  background: var(--bg-2);
+}
+.footer-inner {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 4vw, 3rem);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+.footer-mark {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.4rem;
+  color: var(--ink);
+}
+.footer-meta {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  line-height: 1.7;
+  text-align: right;
+}
+
+/* fade-in animation */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.hero > * { animation: fadeUp 0.8s ease-out backwards; }
+.hero-eyebrow { animation-delay: 0.1s; }
+.hero-title { animation-delay: 0.2s; }
+.hero-deck { animation-delay: 0.35s; }
+.hero-meta { animation-delay: 0.5s; }
+
+::selection { background: var(--accent); color: var(--bg); }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="site-inner">
+    <div class="brand">
+      <span class="brand-mark"><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="7" fill="#ec4078"/><path d="M7.5 22 L7.5 10 L11 10 L13.5 14.5 L16 19 L18.5 14.5 L21 10 L24.5 10 L24.5 22 L22 22 L22 14.5 L18.5 19.5 L13.5 19.5 L10 14.5 L10 22 Z" fill="white"/></svg></span>
+      <span>Mermaid</span>
+    </div>
+    <div class="meta-line">Dops · Design Team · April 2026</div>
+  </div>
+</header>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-eyebrow">For the design team</div>
+    <h1 class="hero-title">The design<br>research<br><em>pipeline.</em></h1>
+    <p class="hero-deck">Three phases. One Jira field. Three prototype sources. Research that finally reaches the roadmap, without slowing a single sprint.</p>
+    <div class="hero-meta">
+      <span><strong>Audience</strong> &nbsp;3 designers</span>
+      <span><strong>Cadence</strong> &nbsp;Every sprint, every ship</span>
+      <span><strong>Turnaround</strong> &nbsp;24 hours</span>
+      <span><strong>Status</strong> &nbsp;Proposal</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ STATS BAR ═══════════ -->
+<div class="stats-bar">
+  <div class="stats-grid">
+    <div class="stat">
+      <div class="stat-num">3</div>
+      <div class="stat-label">Designers</div>
+      <div class="stat-sub">on the team</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">75<span style="font-size: 0.55em; opacity: 0.7;">hr</span></div>
+      <div class="stat-label">Reclaimed / mo</div>
+      <div class="stat-sub">across the team</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">24<span style="font-size: 0.55em; opacity: 0.7;">hr</span></div>
+      <div class="stat-label">Test turnaround</div>
+      <div class="stat-sub">async, no scheduling</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">5</div>
+      <div class="stat-label">Critical flows</div>
+      <div class="stat-sub">templated</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">3<span style="font-size: 0.55em; opacity: 0.7;"> in 1</span></div>
+      <div class="stat-label">Prototype sources</div>
+      <div class="stat-sub">one Jira field</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ THREE CONCERNS ═══════════ -->
+<section>
+  <div class="container">
+    <div class="section-marker">
+      <span class="section-num">01</span>
+      <span class="section-label">The three concerns &middot; addressed</span>
+    </div>
+    <h2 class="section-title">Three things<br>you said.<br><em>Three things this fixes.</em></h2>
+    <p style="max-width: 42rem; color: var(--ink-2);">Every concern raised in the design workshop maps to a specific automation in this pipeline. The intent isn't to add research — it's to take the operational weight off the three of you.</p>
+
+    <div class="concerns">
+      <div class="concern">
+        <div class="concern-said">Research will slow shipping.</div>
+        <div class="concern-fix-label">What changes</div>
+        <h4>Async tests, 24-hour turnaround</h4>
+        <p>Maze runs unmoderated tests on every prototype with 20–40 testers. No scheduling, no designer time, results back inside the same sprint. Faster than waiting for the next moderated session.</p>
+      </div>
+
+      <div class="concern">
+        <div class="concern-said">It eats designer bandwidth.</div>
+        <div class="concern-fix-label">What changes</div>
+        <h4>Designers judge results, not run ops</h4>
+        <p>Zapier handles the test launch. Notion stores the task scripts. Claude synthesizes the output. The only human steps that remain are the ones that actually need a designer's judgment.</p>
+      </div>
+
+      <div class="concern">
+        <div class="concern-said">My research never reaches the roadmap.</div>
+        <div class="concern-fix-label">What changes</div>
+        <h4>Auto-write to Vistaly + Jira</h4>
+        <p>Every test result becomes a Vistaly card and a Jira ticket with source citations. Posts to <code style="font-family: var(--mono); font-size: 0.85em; color: var(--accent);">#research</code>. Same repository as PM research — your work is finally cross-referenced with theirs.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ PHASES OVERVIEW ═══════════ -->
+<section>
+  <div class="container">
+    <div class="section-marker">
+      <span class="section-num">02</span>
+      <span class="section-label">The pipeline &middot; three phases</span>
+    </div>
+    <h2 class="section-title">Three moments<br>in <em>every design cycle.</em></h2>
+    <p style="max-width: 42rem; color: var(--ink-2);">Each phase is triggered by an action you already take — creating a Jira ticket, sharing a prototype URL, marking a feature done. Automation runs around those existing moments.</p>
+
+    <div class="phases-overview">
+      <div>
+        <div class="phase-num">i.</div>
+        <div class="phase-label">Phase 01</div>
+        <h4>Sprint discovery</h4>
+        <p>The moment a design ticket is created, automation surfaces what's already known and what's still unanswered.</p>
+        <div class="when">trigger · jira ticket created</div>
+      </div>
+      <div>
+        <div class="phase-num">ii.</div>
+        <div class="phase-label">Phase 02</div>
+        <h4>Prototype testing</h4>
+        <p>One Jira field accepts any prototype URL. Maze runs the test, Claude synthesizes results, Vistaly stores the card.</p>
+        <div class="when">trigger · prototype url pasted</div>
+      </div>
+      <div>
+        <div class="phase-num">iii.</div>
+        <div class="phase-label">Phase 03</div>
+        <h4>Post-ship validation</h4>
+        <p>Same Maze template runs on the live feature. Catches regressions vs the prototype baseline. Typeform surveys go live.</p>
+        <div class="when">trigger · feature ships</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ PHASE 01 ═══════════ -->
+<section>
+  <div class="container">
+    <div class="section-marker">
+      <span class="section-num">03</span>
+      <span class="section-label">Phase 01 &middot; in detail</span>
+    </div>
+    <h2 class="section-title">Sprint discovery.<br><em>What the team already knows.</em></h2>
+    <p style="max-width: 42rem; color: var(--ink-2);">When a designer creates a Jira ticket for a new feature area, the system automatically pulls relevant past research and surfaces unanswered questions. You open Figma already loaded with context.</p>
+
+    <div class="phase-detail">
+      <div class="phase-detail-head">
+        <div class="phase-detail-num">i.</div>
+        <div>
+          <div class="phase-detail-tag">Phase 01 · Trigger: Jira ticket created</div>
+          <h3>Sprint kickoff with context</h3>
+        </div>
+      </div>
+
+      <div class="flow-row">
+        <span class="pill">Jira ticket</span>
+        <span class="arrow">→</span>
+        <span class="pill">Vistaly lookup</span>
+        <span class="arrow">+</span>
+        <span class="pill">Question bank scan</span>
+        <span class="arrow">→</span>
+        <span class="pill">Slack #design-sprint</span>
+      </div>
+
+      <ul class="phase-bullets">
+        <li><strong>Vistaly lookup</strong> queries past research tagged to the relevant feature area. If the team already learned something about this surface, you see it before designing.</li>
+        <li><strong>Question bank</strong> (Notion) returns the 3–5 unanswered questions that match the ticket's tags. These become the brief for any test you run this sprint.</li>
+        <li><strong>Slack digest</strong> posts both into <code style="font-family: var(--mono); font-size: 0.88em; color: var(--accent);">#design-sprint</code> the moment the ticket is created — the designer opens Figma already knowing what's known and what's not.</li>
+      </ul>
+
+      <div class="designer-impact">
+        <div class="designer-impact-label">For the designer</div>
+        <p>~5 minutes of context instead of an afternoon of digging through old Figma files and Slack threads. You start designing with research in the room.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ PHASE 02 ═══════════ -->
+<section>
+  <div class="container">
+    <div class="section-marker">
+      <span class="section-num">04</span>
+      <span class="section-label">Phase 02 &middot; in detail</span>
+    </div>
+    <h2 class="section-title">Prototype testing.<br><em>One field. Three sources.</em></h2>
+    <p style="max-width: 42rem; color: var(--ink-2);">The core of the pipeline. The designer pastes one URL into one Jira field — regardless of whether the prototype is built in Figma, deployed via Cursor + Claude to Vercel, or exported as a Claude artifact to Netlify. The automation handles the rest.</p>
+
+    <div class="proto-diagram-wrap">
+      <svg class="proto-svg" viewBox="0 0 1100 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Prototype testing pipeline diagram">
+        <defs>
+          <marker id="dp-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#d92d52"/>
+          </marker>
+          <marker id="dp-arrow-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#1a1714"/>
+          </marker>
+          <linearGradient id="dpFlow" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#d92d52" stop-opacity="0.4"/>
+            <stop offset="100%" stop-color="#d92d52" stop-opacity="1"/>
+          </linearGradient>
+        </defs>
+
+        <!-- THREE PROTOTYPE SOURCES (top row) -->
+        <g>
+          <!-- Figma -->
+          <rect x="100" y="40" width="200" height="74" rx="3" fill="#fff" stroke="#1a1714" stroke-width="1"/>
+          <text x="200" y="62" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#807a72" letter-spacing="1.5">SOURCE A</text>
+          <text x="200" y="82" text-anchor="middle" font-family="Fraunces, serif" font-size="17" fill="#1a1714" font-style="italic" font-weight="500">Figma prototype</text>
+          <text x="200" y="102" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#807a72">figma.com/proto/...</text>
+
+          <!-- Vercel -->
+          <rect x="450" y="40" width="200" height="74" rx="3" fill="#fff" stroke="#1a1714" stroke-width="1"/>
+          <text x="550" y="62" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#807a72" letter-spacing="1.5">SOURCE B</text>
+          <text x="550" y="82" text-anchor="middle" font-family="Fraunces, serif" font-size="17" fill="#1a1714" font-style="italic" font-weight="500">Vercel preview</text>
+          <text x="550" y="102" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#807a72">cursor + claude · *.vercel.app</text>
+
+          <!-- Netlify -->
+          <rect x="800" y="40" width="200" height="74" rx="3" fill="#fff" stroke="#1a1714" stroke-width="1"/>
+          <text x="900" y="62" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#807a72" letter-spacing="1.5">SOURCE C</text>
+          <text x="900" y="82" text-anchor="middle" font-family="Fraunces, serif" font-size="17" fill="#1a1714" font-style="italic" font-weight="500">Netlify deploy</text>
+          <text x="900" y="102" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#807a72">claude artifact · netlify drop</text>
+        </g>
+
+        <!-- Converging arrows -->
+        <path d="M200,114 Q200,170 540,180" stroke="url(#dpFlow)" stroke-width="2" fill="none" marker-end="url(#dp-arrow)"/>
+        <path d="M550,114 L550,180" stroke="url(#dpFlow)" stroke-width="2" fill="none" marker-end="url(#dp-arrow)"/>
+        <path d="M900,114 Q900,170 560,180" stroke="url(#dpFlow)" stroke-width="2" fill="none" marker-end="url(#dp-arrow)"/>
+
+        <!-- ONE JIRA FIELD (the convergence point) -->
+        <rect x="350" y="195" width="400" height="64" rx="3" fill="#1a1714" stroke="#1a1714" stroke-width="1"/>
+        <text x="550" y="217" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#d92d52" letter-spacing="2">ONE TRIGGER · ZAPIER ROUTES BY URL PATTERN</text>
+        <text x="550" y="245" text-anchor="middle" font-family="Fraunces, serif" font-size="20" fill="#fff" font-style="italic" font-weight="500">Jira: Prototype URL</text>
+
+        <!-- Down arrow -->
+        <line x1="550" y1="259" x2="550" y2="294" stroke="#d92d52" stroke-width="2" marker-end="url(#dp-arrow)"/>
+
+        <!-- TASK SCRIPT -->
+        <rect x="350" y="300" width="400" height="64" rx="3" fill="#fff" stroke="#d92d52" stroke-width="1.5"/>
+        <text x="550" y="322" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#d92d52" letter-spacing="2">THE STEP MOST TEAMS SKIP</text>
+        <text x="550" y="350" text-anchor="middle" font-family="Fraunces, serif" font-size="18" fill="#1a1714" font-style="italic" font-weight="500">Task script · Notion bank or Claude draft</text>
+
+        <line x1="550" y1="364" x2="550" y2="399" stroke="#d92d52" stroke-width="2" marker-end="url(#dp-arrow)"/>
+
+        <!-- MAZE -->
+        <rect x="350" y="405" width="400" height="64" rx="3" fill="#d92d52" stroke="#d92d52"/>
+        <text x="550" y="427" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#fff" letter-spacing="2" opacity="0.85">EXECUTION · 24HR TURNAROUND</text>
+        <text x="550" y="455" text-anchor="middle" font-family="Fraunces, serif" font-size="20" fill="#fff" font-style="italic" font-weight="500">Maze · 20–40 testers</text>
+
+        <line x1="550" y1="469" x2="550" y2="504" stroke="#d92d52" stroke-width="2" marker-end="url(#dp-arrow)"/>
+
+        <!-- CLAUDE SYNTHESIS -->
+        <rect x="350" y="510" width="400" height="64" rx="3" fill="#fff" stroke="#1a1714" stroke-width="1.5"/>
+        <text x="550" y="532" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#807a72" letter-spacing="2">SYNTHESIS · SAME ENGINE AS PM RESEARCH</text>
+        <text x="550" y="560" text-anchor="middle" font-family="Fraunces, serif" font-size="18" fill="#1a1714" font-style="italic" font-weight="500">Claude API · tag · extract · cite</text>
+
+        <!-- Three outputs -->
+        <line x1="450" y1="574" x2="200" y2="650" stroke="#1a1714" stroke-width="1" marker-end="url(#dp-arrow-ink)"/>
+        <line x1="550" y1="574" x2="550" y2="640" stroke="#1a1714" stroke-width="1" marker-end="url(#dp-arrow-ink)"/>
+        <line x1="650" y1="574" x2="900" y2="650" stroke="#1a1714" stroke-width="1" marker-end="url(#dp-arrow-ink)"/>
+
+        <rect x="100" y="650" width="200" height="56" rx="3" fill="#fff" stroke="#1a1714" stroke-width="1"/>
+        <text x="200" y="672" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#807a72" letter-spacing="1.5">OUTPUT</text>
+        <text x="200" y="691" text-anchor="middle" font-family="Fraunces, serif" font-size="15" fill="#1a1714" font-style="italic" font-weight="500">Vistaly card</text>
+
+        <rect x="450" y="650" width="200" height="56" rx="3" fill="#fff" stroke="#1a1714" stroke-width="1"/>
+        <text x="550" y="672" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#807a72" letter-spacing="1.5">OUTPUT</text>
+        <text x="550" y="691" text-anchor="middle" font-family="Fraunces, serif" font-size="15" fill="#1a1714" font-style="italic" font-weight="500">Jira ticket · cited</text>
+
+        <rect x="800" y="650" width="200" height="56" rx="3" fill="#fff" stroke="#1a1714" stroke-width="1"/>
+        <text x="900" y="672" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#807a72" letter-spacing="1.5">OUTPUT</text>
+        <text x="900" y="691" text-anchor="middle" font-family="Fraunces, serif" font-size="15" fill="#1a1714" font-style="italic" font-weight="500">Slack #research</text>
+      </svg>
+      <div class="proto-caption">One trigger. One synthesis engine. Three outputs that feed the roadmap.</div>
+    </div>
+
+    <!-- The two sub-explanations -->
+    <div class="phase-detail" style="margin-top: 2rem;">
+      <div class="phase-detail-head">
+        <div class="phase-detail-num">a.</div>
+        <div>
+          <div class="phase-detail-tag">Phase 02 · Sub-system</div>
+          <h3>Three prototype sources, one Jira field</h3>
+        </div>
+      </div>
+      <p style="margin-bottom: 1.25rem; color: var(--ink-2);">The designer doesn't have to think about plumbing. Whatever you built, paste the URL into the <code style="font-family: var(--mono); font-size: 0.88em; color: var(--accent);">Prototype URL</code> field on the Jira ticket. Zapier reads the URL pattern and routes to the correct Maze template.</p>
+      <ul class="phase-bullets">
+        <li><strong>Figma prototype</strong> (<code style="font-family: var(--mono); font-size: 0.88em; color: var(--ink-2);">figma.com/proto/…</code>) — share the full prototype URL, not a single frame. Covers multi-frame flows. Routes to Maze's click-through template.</li>
+        <li><strong>Vercel preview</strong> (<code style="font-family: var(--mono); font-size: 0.88em; color: var(--ink-2);">*.vercel.app</code>) — for prototypes built with Cursor + Claude. Real working code, real interactions, real error states. Routes to the web prototype template.</li>
+        <li><strong>Netlify deploy</strong> for Claude artifacts. Artifacts are session-private — one <code style="font-family: var(--mono); font-size: 0.88em; color: var(--ink-2);">netlify drop</code> command turns them into a public URL. Same web prototype template as Vercel.</li>
+      </ul>
+      <div class="designer-impact">
+        <div class="designer-impact-label">For the designer</div>
+        <p>You build however you build. Paste, walk away, results in 24 hours.</p>
+      </div>
+    </div>
+
+    <div class="phase-detail" style="margin-top: 1.5rem;">
+      <div class="phase-detail-head">
+        <div class="phase-detail-num">b.</div>
+        <div>
+          <div class="phase-detail-tag">Phase 02 · Sub-system</div>
+          <h3>The task script — the step that's usually missing</h3>
+        </div>
+      </div>
+      <p style="margin-bottom: 1.25rem; color: var(--ink-2);">Without a task script, a Maze test is a prototype demo, not a usability test. Two paths cover every case:</p>
+      <ul class="phase-bullets">
+        <li><strong>Pre-built scripts</strong> for the 5 known critical flows: onboarding, first diagram, AI chat, export, upgrade. Stored in Notion. Zapier fetches the matching one based on the ticket's flow tag.</li>
+        <li><strong>Claude-drafted scripts</strong> for new flows. Claude reads the Jira ticket context and drafts 3 task statements. Posted to Slack for a 30-second human review before Maze fires.</li>
+        <li>Tasks are <strong>injected into Maze</strong> alongside the prototype URL in a single API call. No copy-paste, no tab switching.</li>
+      </ul>
+      <div class="designer-impact">
+        <div class="designer-impact-label">For the designer</div>
+        <p>You don't write task scripts unless the flow is genuinely new. And even then, the 30-second review is the only thing required.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ PHASE 03 ═══════════ -->
+<section>
+  <div class="container">
+    <div class="section-marker">
+      <span class="section-num">05</span>
+      <span class="section-label">Phase 03 &middot; in detail</span>
+    </div>
+    <h2 class="section-title">Post-ship<br>validation.<br><em>Catch regressions early.</em></h2>
+    <p style="max-width: 42rem; color: var(--ink-2);">Once a feature ships, the same Maze template runs again — this time on the live product. Compares to the prototype baseline. Catches the things that change between prototype and production.</p>
+
+    <div class="phase-detail">
+      <div class="phase-detail-head">
+        <div class="phase-detail-num">iii.</div>
+        <div>
+          <div class="phase-detail-tag">Phase 03 · Trigger: Jira → Done</div>
+          <h3>The same test, on the live thing</h3>
+        </div>
+      </div>
+
+      <div class="flow-row">
+        <span class="pill">Jira: Done</span>
+        <span class="arrow">→</span>
+        <span class="pill">Maze re-run on live URL</span>
+        <span class="arrow">+</span>
+        <span class="pill">Typeform triggers activate</span>
+        <span class="arrow">→</span>
+        <span class="pill">Claude · Vistaly · Slack</span>
+      </div>
+
+      <ul class="phase-bullets">
+        <li><strong>Same Maze template</strong> runs on the live feature URL. Comparing against the prototype baseline highlights anything that drifted between design and engineering.</li>
+        <li><strong>Typeform behavioral surveys</strong> activate on the new feature: 2 questions on first use, 1 question on a return visit, 1 on abandonment. Continuous signal between moderated sessions.</li>
+        <li><strong>Same synthesis</strong> through Claude → Vistaly → Slack. The post-ship card sits next to the pre-ship card in Vistaly so the comparison is visible without effort.</li>
+      </ul>
+
+      <div class="designer-impact">
+        <div class="designer-impact-label">For the designer</div>
+        <p>Predefined prompts, coldstart templates, AI chat — features with zero adoption — stop being mysteries. You see the post-ship reality within 24 hours of shipping, not in the next quarterly review.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ CURSOR + CLAUDE DEEP DIVE ═══════════ -->
+<section>
+  <div class="container">
+    <div class="section-marker">
+      <span class="section-num">06</span>
+      <span class="section-label">Deep dive · Cursor + Claude prototypes</span>
+    </div>
+    <h2 class="section-title">When the prototype<br>can also be the<br><em>handoff.</em></h2>
+    <p style="max-width: 42rem; color: var(--ink-2);">The Vercel-preview path is worth its own section because it changes how prototypes work in this team. A coded prototype isn't just a fancier Figma — it's a different kind of test, and a different relationship with engineering.</p>
+
+    <div class="deep-dive">
+      <div class="dd-eyebrow">Why coded prototypes</div>
+      <h3>Real inputs.<br>Real states.<br><em>Real handoff.</em></h3>
+      <p>Build the prototype in Cursor with Claude as a pair. Push to a Vercel preview URL. Maze tests it like any other web prototype — except now the tester is interacting with actual code, not a click-through illusion. They can type into real fields, hit real error states, see real loading patterns.</p>
+
+      <div class="dd-grid">
+        <div>
+          <h4>Richer test signal</h4>
+          <ul>
+            <li>Testers encounter actual interactions, not preset clicks</li>
+            <li>Edge cases surface that Figma click-throughs hide</li>
+            <li>Loading, error, and empty states get tested honestly</li>
+            <li>Form validation gets real-typed input</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Becomes the dev handoff</h4>
+          <ul>
+            <li>Engineering gets working code, not a Figma file to rebuild</li>
+            <li>Design tokens, spacing, animations all encoded</li>
+            <li>The prototype repository is the spec</li>
+            <li>Cuts the design → engineering rebuild step entirely</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ BEFORE / AFTER ═══════════ -->
+<section>
+  <div class="container">
+    <div class="section-marker">
+      <span class="section-num">07</span>
+      <span class="section-label">Before &amp; after &middot; for designers</span>
+    </div>
+    <h2 class="section-title">What changes<br>for <em>the three of you.</em></h2>
+
+    <div class="beforeafter">
+      <div class="ba-side before">
+        <div class="ba-tag">Today</div>
+        <h4>Gut-led, isolated, lost.</h4>
+        <ul>
+          <li>Design starts with a gut call — no research surfaced, no question bank</li>
+          <li>Validation happens after the design is conceived, not before</li>
+          <li>Setup overhead for any test eats designer hours</li>
+          <li>Findings live in Figma, sometimes Notion — almost never reach Vistaly</li>
+          <li>Research never crosses paths with PM or Growth findings</li>
+          <li>Zero-adoption features only become visible months after ship</li>
+        </ul>
+      </div>
+      <div class="ba-side after">
+        <div class="ba-tag">After</div>
+        <h4>Context-loaded, async, in the roadmap.</h4>
+        <ul>
+          <li>Sprint kickoff comes with prior research and open questions in Slack</li>
+          <li>Validation runs in parallel with design, not after</li>
+          <li>Setup is a single Jira field — no manual scheduling, no template writing</li>
+          <li>Every test result auto-creates a Vistaly card and a Jira ticket</li>
+          <li>Same repository as PM &amp; Growth — findings are cross-referenced</li>
+          <li>Post-ship Maze catches regressions within 24 hours</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ TOOL STACK ═══════════ -->
+<section>
+  <div class="container">
+    <div class="section-marker">
+      <span class="section-num">08</span>
+      <span class="section-label">Tool stack &middot; design slice</span>
+    </div>
+    <h2 class="section-title">Smaller stack.<br><em>Bigger leverage.</em></h2>
+    <p style="max-width: 42rem; color: var(--ink-2);">The design slice of the broader research operation. Two cuts, two expansions, two new tools.</p>
+
+    <div class="tool-stack">
+      <div class="tool">
+        <div class="tool-status keep">Keep · Central</div>
+        <div class="tool-name">Figma</div>
+        <div class="tool-role">Prototype source A. Click-through testing.</div>
+      </div>
+      <div class="tool">
+        <div class="tool-status expand">Expand</div>
+        <div class="tool-name">Maze</div>
+        <div class="tool-role">5 templates, API-triggered, both pre-ship and post-ship.</div>
+      </div>
+      <div class="tool">
+        <div class="tool-status keep">Keep · Credits</div>
+        <div class="tool-name">UserTesting</div>
+        <div class="tool-role">Credits only — for the predefined prompts deep dive.</div>
+      </div>
+      <div class="tool">
+        <div class="tool-status cut">Cut</div>
+        <div class="tool-name">Hotjar</div>
+        <div class="tool-role">Redundant with Heap. No design-team usage.</div>
+      </div>
+      <div class="tool">
+        <div class="tool-status new">New</div>
+        <div class="tool-name">Cursor</div>
+        <div class="tool-role">Coded prototypes with Claude. Becomes the dev handoff.</div>
+      </div>
+      <div class="tool">
+        <div class="tool-status new">New</div>
+        <div class="tool-name">Vercel</div>
+        <div class="tool-role">Auto-deploys Cursor prototypes to a preview URL.</div>
+      </div>
+      <div class="tool">
+        <div class="tool-status new">New</div>
+        <div class="tool-name">Netlify</div>
+        <div class="tool-role">One-command deploy for Claude artifact prototypes.</div>
+      </div>
+      <div class="tool">
+        <div class="tool-status keep">Keep · Output</div>
+        <div class="tool-name">Vistaly</div>
+        <div class="tool-role">Source of truth — finally receives design research.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FIRST STEPS ═══════════ -->
+<section>
+  <div class="container">
+    <div class="section-marker">
+      <span class="section-num">09</span>
+      <span class="section-label">First steps &middot; week 1 &amp; 2</span>
+    </div>
+    <h2 class="section-title">What we do<br><em>this week.</em></h2>
+    <p style="max-width: 42rem; color: var(--ink-2);">Nothing here requires a designer to take on a new ongoing job. Most actions are one-time setup or one-time decisions.</p>
+
+    <div class="steps-list">
+      <div class="step">
+        <div class="step-when">Mon · wk 1</div>
+        <div class="step-content">
+          <h4>Spot-check the Mixpanel events for our 5 flows</h4>
+          <p>One designer pairs with me for half a day to verify the events that should fire on onboarding, first diagram, AI chat, export, and upgrade. You know the UI behavior; I know the analytics layer. Half-day commitment.</p>
+          <span class="step-owner">Owner · 1 designer + research lead</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-when">Wed · wk 1</div>
+        <div class="step-content">
+          <h4>Submit your top 3 unanswered design research questions</h4>
+          <p>These seed the question bank. Tag them by theme — onboarding, conversion, AI features, retention, editor UX. Ten minutes per designer, max.</p>
+          <span class="step-owner">Owner · all 3 designers</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-when">Fri · wk 1</div>
+        <div class="step-content">
+          <h4>Sign-off on Hotjar cancellation</h4>
+          <p>If anyone is using Hotjar in a way that's not visible, raise it now. Otherwise, it gets cancelled Monday week 2 and ~$80/mo comes off the bill.</p>
+          <span class="step-owner">Owner · design team consensus</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-when">Mon · wk 2</div>
+        <div class="step-content">
+          <h4>Pick the first Maze template to build</h4>
+          <p>Recommendation: onboarding, given the 4-screen drop-off is the most urgent unanswered question. Open to alternatives — predefined prompts is also a strong candidate given zero-adoption signal.</p>
+          <span class="step-owner">Owner · design team + research lead</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-when">Wed · wk 2</div>
+        <div class="step-content">
+          <h4>Dry-run the Claude synthesis on an existing recording</h4>
+          <p>Pick one UserTesting recording from the last quarter. Claude runs the synthesis prompt on it. You judge whether the output is useful or noise, and we adjust the prompt before the pipeline goes live.</p>
+          <span class="step-owner">Owner · 1 designer + research lead</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-when">Fri · wk 2</div>
+        <div class="step-content">
+          <h4>First Maze template goes live</h4>
+          <p>Onboarding template wired to a Jira trigger. We test the full pipeline end-to-end on a non-critical ticket. After this point, every new ticket touching onboarding gets an automated test.</p>
+          <span class="step-owner">Owner · research lead</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-mark">— The design research pipeline.</div>
+    <div class="footer-meta">
+      A focused slice of the broader research ops overhaul<br>
+      For the design team · 3 designers · Mermaid Chart<br>
+      April 2026 · Internal proposal
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
