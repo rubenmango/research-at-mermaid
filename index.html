@@ -26,234 +26,50 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{
-  font-family:var(--body);
-  background:var(--bg);
-  color:var(--ink);
-  font-size:17px;
-  line-height:1.55;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  min-height:100vh;
-  position:relative;
-  overflow-x:hidden;
-}
+body{font-family:var(--body);background:var(--bg);color:var(--ink);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;min-height:100vh;position:relative;overflow-x:hidden}
 ::selection{background:var(--brand-pink);color:var(--bg)}
-
-/* ───── BRAND BAR ───── */
-header.bar{
-  position:absolute;
-  top:0;left:0;right:0;
-  display:flex;justify-content:space-between;align-items:center;
-  padding:28px clamp(28px, 4vw, 48px);
-  z-index:10;
-}
+header.bar{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:28px clamp(28px, 4vw, 48px);z-index:10}
 .brand-mark{display:flex;align-items:center;gap:10px}
 .brand-mark svg{width:32px;height:32px;display:block}
-.wordmark{
-  font-family:var(--display);
-  font-weight:600;
-  font-size:17px;
-  color:var(--brand-pink);
-  letter-spacing:-0.01em;
-}
+.wordmark{font-family:var(--display);font-weight:600;font-size:17px;color:var(--brand-pink);letter-spacing:-0.01em}
 .dops{font-family:var(--body);font-size:14px;color:var(--ink)}
-
-/* ───── HERO ───── */
-.wrap{
-  max-width:980px;
-  margin:0 auto;
-  padding:clamp(120px, 14vh, 180px) clamp(28px, 5vw, 64px) 80px;
-}
-.eyebrow{
-  font-family:var(--mono);
-  font-size:11px;
-  letter-spacing:0.18em;
-  text-transform:uppercase;
-  color:var(--brand-pink);
-  margin-bottom:1.5rem;
-  display:flex;
-  align-items:center;
-  gap:0.75rem;
-}
-.eyebrow::before{
-  content:'';width:32px;height:1px;background:var(--brand-pink);
-}
-h1{
-  font-family:var(--display);
-  font-weight:400;
-  font-size:clamp(2.75rem, 6vw, 4.75rem);
-  line-height:1.04;
-  letter-spacing:-0.025em;
-  font-variation-settings:"opsz" 144;
-  margin-bottom:1.25rem;
-  max-width:24ch;
-}
+.wrap{max-width:980px;margin:0 auto;padding:clamp(120px, 14vh, 180px) clamp(28px, 5vw, 64px) 80px}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--brand-pink);margin-bottom:1.5rem;display:flex;align-items:center;gap:0.75rem}
+.eyebrow::before{content:'';width:32px;height:1px;background:var(--brand-pink)}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(2.75rem, 6vw, 4.75rem);line-height:1.04;letter-spacing:-0.025em;font-variation-settings:"opsz" 144;margin-bottom:1.25rem;max-width:24ch}
 h1 em{font-style:italic;color:var(--brand-pink)}
-.deck{
-  font-family:var(--display);
-  font-weight:300;
-  font-size:clamp(1.1rem, 1.6vw, 1.35rem);
-  line-height:1.5;
-  color:var(--ink-2);
-  font-style:italic;
-  max-width:38rem;
-}
-.meta{
-  margin-top:2.5rem;
-  display:flex;flex-wrap:wrap;gap:1.75rem;
-  font-family:var(--mono);
-  font-size:11px;
-  color:var(--muted);
-  letter-spacing:0.06em;
-  text-transform:uppercase;
-}
+.deck{font-family:var(--display);font-weight:300;font-size:clamp(1.1rem, 1.6vw, 1.35rem);line-height:1.5;color:var(--ink-2);font-style:italic;max-width:38rem}
+.meta{margin-top:2.5rem;display:flex;flex-wrap:wrap;gap:1.75rem;font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase}
 .meta strong{color:var(--ink);font-weight:500}
-
-/* ───── SECTION DIVIDER ───── */
-.divider{
-  margin:clamp(48px, 7vw, 84px) 0 clamp(24px, 3vw, 36px);
-  display:flex;align-items:baseline;gap:1rem;
-  padding-bottom:1rem;
-  border-bottom:1px solid var(--rule);
-}
-.divider .num{
-  font-family:var(--display);
-  font-style:italic;
-  font-weight:400;
-  font-size:1.1rem;
-  color:var(--brand-pink);
-  font-variation-settings:"opsz" 144;
-}
-.divider .lbl{
-  font-family:var(--mono);
-  font-size:11px;
-  text-transform:uppercase;
-  letter-spacing:0.15em;
-  color:var(--muted);
-}
-
-/* ───── DOCUMENT LIST ───── */
+.divider{margin:clamp(48px, 7vw, 84px) 0 clamp(24px, 3vw, 36px);display:flex;align-items:baseline;gap:1rem;padding-bottom:1rem;border-bottom:1px solid var(--rule)}
+.divider .num{font-family:var(--display);font-style:italic;font-weight:400;font-size:1.1rem;color:var(--brand-pink);font-variation-settings:"opsz" 144}
+.divider .lbl{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:0.15em;color:var(--muted)}
 .docs{display:flex;flex-direction:column}
-.doc{
-  display:grid;
-  grid-template-columns:90px 1fr auto;
-  gap:1.75rem;
-  padding:1.85rem 0;
-  border-top:1px solid var(--rule);
-  align-items:center;
-  text-decoration:none;
-  color:inherit;
-  position:relative;
-  transition:padding-left .25s cubic-bezier(.4,0,.2,1);
-}
+.doc{display:grid;grid-template-columns:90px 1fr auto;gap:1.75rem;padding:1.85rem 0;border-top:1px solid var(--rule);align-items:center;text-decoration:none;color:inherit;position:relative;transition:padding-left .25s cubic-bezier(.4,0,.2,1)}
 .doc:first-child{border-top:1px solid var(--ink)}
 .doc:last-child{border-bottom:1px solid var(--ink)}
-.doc::after{
-  content:'';
-  position:absolute;
-  inset:0;
-  background:linear-gradient(90deg, rgba(236,64,120,.04), transparent 60%);
-  opacity:0;
-  transition:opacity .25s;
-  pointer-events:none;
-}
+.doc::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg, rgba(236,64,120,.04), transparent 60%);opacity:0;transition:opacity .25s;pointer-events:none}
 .doc:hover::after{opacity:1}
 .doc:hover{padding-left:.6rem}
 .doc:hover .arrow{transform:translateX(6px);color:var(--brand-pink)}
 .doc:hover .doc-title{color:var(--brand-pink)}
-.doc-num{
-  font-family:var(--display);
-  font-style:italic;
-  font-weight:400;
-  font-size:2.25rem;
-  line-height:0.85;
-  color:var(--muted);
-  letter-spacing:-0.02em;
-  font-variation-settings:"opsz" 144;
-}
+.doc-num{font-family:var(--display);font-style:italic;font-weight:400;font-size:2.25rem;line-height:0.85;color:var(--muted);letter-spacing:-0.02em;font-variation-settings:"opsz" 144}
 .doc-body{min-width:0}
-.doc-tag{
-  display:inline-block;
-  font-family:var(--mono);
-  font-size:10px;
-  letter-spacing:0.1em;
-  text-transform:uppercase;
-  color:var(--muted);
-  margin-bottom:0.45rem;
-  background:var(--bg-2);
-  padding:2px 7px;
-  border-radius:3px;
-}
-.doc-title{
-  font-family:var(--display);
-  font-weight:500;
-  font-size:1.5rem;
-  letter-spacing:-0.01em;
-  color:var(--ink);
-  line-height:1.15;
-  margin-bottom:0.5rem;
-  transition:color .2s;
-}
-.doc-desc{
-  font-family:var(--body);
-  font-size:0.96rem;
-  color:var(--ink-2);
-  line-height:1.55;
-  max-width:48rem;
-}
-.arrow{
-  font-family:var(--mono);
-  font-size:1.4rem;
-  color:var(--ink);
-  flex-shrink:0;
-  transition:transform .25s cubic-bezier(.4,0,.2,1), color .2s;
-  align-self:center;
-}
-
-/* ───── FOOTER ───── */
-footer{
-  margin-top:clamp(60px, 10vw, 100px);
-  padding-top:clamp(28px, 4vw, 40px);
-  border-top:1px solid var(--rule);
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-end;
-  flex-wrap:wrap;
-  gap:1.5rem;
-}
-.footer-mark{
-  font-family:var(--display);
-  font-style:italic;
-  font-weight:400;
-  font-size:1.2rem;
-  color:var(--ink);
-}
-.footer-meta{
-  font-family:var(--mono);
-  font-size:11px;
-  color:var(--muted);
-  letter-spacing:0.05em;
-  line-height:1.7;
-  text-align:right;
-}
-
-/* ───── ANIMATION ───── */
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(10px)}
-  to{opacity:1;transform:translateY(0)}
-}
+.doc-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.45rem;background:var(--bg-2);padding:2px 7px;border-radius:3px}
+.doc-tag.v2{background:#ec4078;color:#fff}
+.doc-title{font-family:var(--display);font-weight:500;font-size:1.5rem;letter-spacing:-0.01em;color:var(--ink);line-height:1.15;margin-bottom:0.5rem;transition:color .2s}
+.doc-desc{font-family:var(--body);font-size:0.96rem;color:var(--ink-2);line-height:1.55;max-width:48rem}
+.arrow{font-family:var(--mono);font-size:1.4rem;color:var(--ink);flex-shrink:0;transition:transform .25s cubic-bezier(.4,0,.2,1), color .2s;align-self:center}
+footer{margin-top:clamp(60px, 10vw, 100px);padding-top:clamp(28px, 4vw, 40px);border-top:1px solid var(--rule);display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1.5rem}
+.footer-mark{font-family:var(--display);font-style:italic;font-weight:400;font-size:1.2rem;color:var(--ink)}
+.footer-meta{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:0.05em;line-height:1.7;text-align:right}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .eyebrow,h1,.deck,.meta{animation:fadeUp .7s ease-out backwards}
 .eyebrow{animation-delay:.05s}
 h1{animation-delay:.15s}
 .deck{animation-delay:.3s}
 .meta{animation-delay:.45s}
-
-@media (max-width:640px){
-  .doc{grid-template-columns:60px 1fr 24px;gap:1rem}
-  .doc-num{font-size:1.6rem}
-  .doc-title{font-size:1.2rem}
-}
+@media (max-width:640px){.doc{grid-template-columns:60px 1fr 24px;gap:1rem}.doc-num{font-size:1.6rem}.doc-title{font-size:1.2rem}}
 </style>
 </head>
 <body>
@@ -273,12 +89,12 @@ h1{animation-delay:.15s}
 
   <div class="eyebrow">Research operations · Mermaid Chart</div>
   <h1>Research at <em>Mermaid.</em></h1>
-  <p class="deck">Internal documentation, decks, and interactive maps for the research operations overhaul. Four documents — pick one.</p>
+  <p class="deck">Internal documentation, decks, interactive maps, and the designer runbook for the research operations overhaul. Five documents — pick one.</p>
 
   <div class="meta">
-    <span><strong>Compiled</strong> &nbsp;April 2026</span>
+    <span><strong>Compiled</strong> &nbsp;April 2026 · revised May 2026</span>
     <span><strong>Author</strong> &nbsp;Ruben</span>
-    <span><strong>Status</strong> &nbsp;Internal proposal</span>
+    <span><strong>Status</strong> &nbsp;Internal proposal · v2</span>
   </div>
 
   <div class="divider">
@@ -288,8 +104,18 @@ h1{animation-delay:.15s}
 
   <div class="docs">
 
-    <a href="research_ops_deck.html" class="doc">
+    <a href="runbook.html" class="doc">
       <div class="doc-num">i.</div>
+      <div class="doc-body">
+        <div class="doc-tag v2">Start here · runbook</div>
+        <div class="doc-title">How to run a design test in 10 minutes</div>
+        <div class="doc-desc">The step-by-step runbook for the design team. Pick a Great Question template, paste the prototype URL, publish. Five common flows pre-baked; one-page checklist for new flows. Read this first if you've never used the pipeline.</div>
+      </div>
+      <div class="arrow">→</div>
+    </a>
+
+    <a href="research_ops_deck.html" class="doc">
+      <div class="doc-num">ii.</div>
       <div class="doc-body">
         <div class="doc-tag">Slide deck · 9 slides</div>
         <div class="doc-title">Research Ops Overhaul — the deck</div>
@@ -299,7 +125,7 @@ h1{animation-delay:.15s}
     </a>
 
     <a href="research_ops_pipeline.html" class="doc">
-      <div class="doc-num">ii.</div>
+      <div class="doc-num">iii.</div>
       <div class="doc-body">
         <div class="doc-tag">Long-form report</div>
         <div class="doc-title">Research Ops Pipeline — full report</div>
@@ -309,21 +135,21 @@ h1{animation-delay:.15s}
     </a>
 
     <a href="research_design_pipeline.html" class="doc">
-      <div class="doc-num">iii.</div>
+      <div class="doc-num">iv.</div>
       <div class="doc-body">
-        <div class="doc-tag">Design team focus</div>
+        <div class="doc-tag v2">Design team · v2</div>
         <div class="doc-title">Design Research Pipeline</div>
-        <div class="doc-desc">The design-team slice of the overhaul. Three phases: sprint discovery, prototype testing, post-ship validation. One Jira field, three prototype sources (Figma / Vercel / Netlify), one synthesis pipeline.</div>
+        <div class="doc-desc">The design-team slice of the overhaul, updated for Great Question. Three phases: sprint discovery, prototype testing, post-ship validation. Three prototype sources (Figma / Vercel / Netlify-GH Pages), five pre-baked GQ templates, one synthesis pipeline.</div>
       </div>
       <div class="arrow">→</div>
     </a>
 
     <a href="research_ops_nodes_v3.html" class="doc">
-      <div class="doc-num">iv.</div>
+      <div class="doc-num">v.</div>
       <div class="doc-body">
-        <div class="doc-tag">Interactive · click any node</div>
+        <div class="doc-tag v2">Interactive · v2</div>
         <div class="doc-title">Research Ops — node graph</div>
-        <div class="doc-desc">The pipeline as an explorable map. Toggle Before/After, filter by team, click any node for details, or enter presentation mode to walk through node by node. Light and dark themes.</div>
+        <div class="doc-desc">The pipeline as an explorable map, updated for Great Question. Toggle Before/After, filter by team, click any node for details, or enter presentation mode to walk through node by node. Light and dark themes.</div>
       </div>
       <div class="arrow">→</div>
     </a>
@@ -334,7 +160,7 @@ h1{animation-delay:.15s}
     <div class="footer-mark">— Research at Mermaid.</div>
     <div class="footer-meta">
       Compiled from internal session notes<br>
-      Product · Design · Growth · April 2026<br>
+      Product · Design · Growth · April 2026 · v2 May 2026<br>
       Internal proposal
     </div>
   </footer>

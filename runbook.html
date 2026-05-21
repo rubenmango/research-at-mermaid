@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Runbook — How to run a design test in 10 minutes</title>
+<meta name="description" content="Designer runbook for the Mermaid Chart research pipeline. Pick a Great Question template, paste the prototype URL, publish.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500;1,9..144,600&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#dde9d8;--bg-2:#d2e0cc;--paper:#ffffff;--ink:#0a0a0a;--ink-2:#2a2a2a;--muted:#6b6b6b;--rule:#b8c6b3;--rule-strong:#a3b59e;--brand-pink:#ec4078;--brand-pink-deep:#c92560;--display:'Fraunces',Georgia,serif;--body:'Geist',-apple-system,BlinkMacSystemFont,sans-serif;--mono:'JetBrains Mono',monospace}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{font-family:var(--body);background:var(--bg);color:var(--ink);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;min-height:100vh}
+::selection{background:var(--brand-pink);color:var(--bg)}
+header.bar{display:flex;justify-content:space-between;align-items:center;padding:28px clamp(28px,4vw,48px)}
+.brand-mark{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
+.brand-mark svg{width:28px;height:28px;display:block}
+.wordmark{font-family:var(--display);font-weight:600;font-size:15px;color:var(--brand-pink);letter-spacing:-0.01em}
+.back{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);text-decoration:none}
+.back:hover{color:var(--brand-pink)}
+.wrap{max-width:760px;margin:0 auto;padding:clamp(40px,8vh,80px) clamp(28px,5vw,48px) 80px}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--brand-pink);margin-bottom:1.25rem;display:flex;align-items:center;gap:.75rem}
+.eyebrow::before{content:'';width:32px;height:1px;background:var(--brand-pink)}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(2.25rem,5vw,3.75rem);line-height:1.05;letter-spacing:-0.02em;font-variation-settings:"opsz" 144;margin-bottom:1rem}
+h1 em{font-style:italic;color:var(--brand-pink)}
+.deck{font-family:var(--display);font-weight:300;font-size:clamp(1.05rem,1.5vw,1.25rem);line-height:1.5;color:var(--ink-2);font-style:italic;max-width:36rem;margin-bottom:2rem}
+.tldr{background:var(--paper);border:1px solid var(--rule);border-left:3px solid var(--brand-pink);padding:1.25rem 1.5rem;margin-bottom:2.5rem;border-radius:2px}
+.tldr-label{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--brand-pink);margin-bottom:.5rem}
+.tldr p{font-family:var(--display);font-style:italic;font-weight:400;font-size:1.1rem;color:var(--ink);line-height:1.55;margin:0}
+h2{font-family:var(--display);font-weight:500;font-size:1.6rem;letter-spacing:-0.01em;margin:2.5rem 0 1rem;padding-bottom:.5rem;border-bottom:1px solid var(--rule)}
+h2 .num{font-family:var(--display);font-style:italic;font-weight:400;color:var(--brand-pink);margin-right:.4rem}
+h3{font-family:var(--display);font-weight:500;font-size:1.15rem;margin:1.5rem 0 .5rem;color:var(--ink)}
+p{margin-bottom:1rem;color:var(--ink-2)}
+ul{padding-left:1.25rem;margin-bottom:1rem}
+li{padding:.25rem 0;color:var(--ink-2)}
+li strong{color:var(--ink)}
+ul li::marker{color:var(--brand-pink)}
+.step{background:var(--paper);border:1px solid var(--rule);padding:1.5rem;margin:1rem 0;border-radius:2px}
+.step-num{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--brand-pink);margin-bottom:.4rem}
+.step h3{margin-top:0}
+.step-time{font-family:var(--mono);font-size:11px;color:var(--muted);float:right}
+.callout{background:var(--bg-2);border:1px solid var(--rule);padding:1rem 1.25rem;margin:1rem 0;border-radius:2px;font-size:.95rem;color:var(--ink-2)}
+.callout strong{color:var(--ink)}
+a.link{color:var(--brand-pink);text-decoration:none;border-bottom:1px solid rgba(236,64,120,.4)}
+a.link:hover{border-bottom-color:var(--brand-pink)}
+code{font-family:var(--mono);font-size:.88em;background:var(--bg-2);padding:1px 6px;border-radius:3px;color:var(--ink)}
+.templates{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin:1rem 0}
+@media (max-width:640px){.templates{grid-template-columns:1fr}}
+.tpl{background:var(--paper);border:1px solid var(--rule);padding:.85rem 1rem;border-radius:2px;text-decoration:none;color:inherit;font-size:.9rem;transition:border-color .15s,color .15s}
+.tpl:hover{border-color:var(--brand-pink);color:var(--brand-pink)}
+.tpl-name{font-family:var(--display);font-weight:500;font-size:1rem;margin-bottom:.15rem}
+.tpl-sub{font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+footer{margin-top:4rem;padding-top:2rem;border-top:1px solid var(--rule);display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.05em}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <a href="index.html" class="brand-mark">
+    <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="7" fill="#ec4078"/>
+      <path d="M7.5 22 L7.5 10 L11 10 L13.5 14.5 L16 19 L18.5 14.5 L21 10 L24.5 10 L24.5 22 L22 22 L22 14.5 L18.5 19.5 L13.5 19.5 L10 14.5 L10 22 Z" fill="white"/>
+    </svg>
+    <span class="wordmark">Mermaid</span>
+  </a>
+  <a href="index.html" class="back">← All documents</a>
+</header>
+
+<div class="wrap">
+
+  <div class="eyebrow">Designer runbook · v2 · May 2026</div>
+  <h1>How to run a <em>design test</em><br>in 10 minutes.</h1>
+  <p class="deck">The minimum-viable path from "I have a prototype" to "I have user feedback in 24 hours." Five common flows are pre-baked. New flows take ~10 minutes once.</p>
+
+  <div class="tldr">
+    <div class="tldr-label">TL;DR</div>
+    <p>Host your prototype somewhere with a public URL → open the matching Great Question template → paste the URL into the website-test block → publish. Results land in 24 hours.</p>
+  </div>
+
+  <h2><span class="num">01</span> Before you start</h2>
+  <p>You need three things ready:</p>
+  <ul>
+    <li><strong>A prototype with a public URL.</strong> Figma share link, Vercel preview, Netlify drop, or GitHub Pages — any of these work. Claude artifact URLs are session-private; deploy them to Netlify or GH Pages first.</li>
+    <li><strong>Access to the Mermaid Great Question workspace.</strong> If you don't have it, ping <code>#design-ops</code>.</li>
+    <li><strong>The research question.</strong> One sentence: what do you want to learn? If you can't write it in one sentence, you're not ready to test yet.</li>
+  </ul>
+
+  <h2><span class="num">02</span> Pick the matching template</h2>
+  <p>Five templates live in the GQ workspace as drafts. Each has the research goal, task script, screener, and incentive already written. Open the one that matches what you're testing:</p>
+
+  <div class="templates">
+    <a href="https://greatquestion.co/studies/84736" target="_blank" class="tpl"><div class="tpl-name">Onboarding</div><div class="tpl-sub">First 5 minutes · $30</div></a>
+    <a href="https://greatquestion.co/studies/84737" target="_blank" class="tpl"><div class="tpl-name">First diagram</div><div class="tpl-sub">Under 3 min · $25</div></a>
+    <a href="https://greatquestion.co/studies/84738" target="_blank" class="tpl"><div class="tpl-name">AI chat</div><div class="tpl-sub">Help or hurdle · $30</div></a>
+    <a href="https://greatquestion.co/studies/84739" target="_blank" class="tpl"><div class="tpl-name">Export &amp; share</div><div class="tpl-sub">Flow check · $25</div></a>
+    <a href="https://greatquestion.co/studies/84740" target="_blank" class="tpl"><div class="tpl-name">Plan upgrade</div><div class="tpl-sub">Pay or walk · $35</div></a>
+  </div>
+
+  <div class="callout"><strong>None of these match?</strong> Skip to the "New flow" section below — ~10 minutes to build a fresh study with Claude drafting the task script.</div>
+
+  <h2><span class="num">03</span> Duplicate, paste, publish</h2>
+
+  <div class="step">
+    <span class="step-time">~30 sec</span>
+    <div class="step-num">Step 3a</div>
+    <h3>Duplicate the template</h3>
+    <p>In Great Question, open the template → click <em>Duplicate</em> → rename it with the date and feature (e.g. <code>Onboarding · 2026-05 · new welcome screen</code>).</p>
+  </div>
+
+  <div class="step">
+    <span class="step-time">~30 sec</span>
+    <div class="step-num">Step 3b</div>
+    <h3>Paste your prototype URL into the website-test block</h3>
+    <p>Build tab → find the website-test block → replace the placeholder URL with your prototype link. Don't change anything else. The task script, screener, and incentive are already set.</p>
+  </div>
+
+  <div class="step">
+    <span class="step-time">~1 min</span>
+    <div class="step-num">Step 3c</div>
+    <h3>Sanity-check and publish</h3>
+    <p>Review tab → confirm screener reads cleanly and the URL is right. Recruit tab → pick the participant source (panel by default) → publish.</p>
+  </div>
+
+  <div class="callout"><strong>That's the whole authoring loop.</strong> The first response usually lands within 24 hours.</div>
+
+  <h2><span class="num">04</span> When results land</h2>
+  <p>You'll get a Slack ping in <code>#research</code> when the first responses come in. From there:</p>
+  <ul>
+    <li><strong>Review the recordings</strong> in GQ. The transcript is auto-generated.</li>
+    <li><strong>Highlight the moments that matter</strong> — GQ's highlight feature clips them for the repo.</li>
+    <li><strong>The synthesis runs automatically</strong> — Claude tags themes, extracts quotes, creates a Vistaly card and a Jira ticket, posts a 5-bullet summary to <code>#research</code>. You don't write it up.</li>
+    <li><strong>Your job:</strong> read, decide, ship.</li>
+  </ul>
+
+  <h2><span class="num">05</span> New flow (no matching template)</h2>
+  <p>If none of the five templates fit, ~10 minutes:</p>
+  <ul>
+    <li><strong>Ask Claude</strong> (in Cowork) to draft three task statements for your feature. Give it the Jira ticket as context.</li>
+    <li><strong>Create a new unmoderated study</strong> in GQ. Title, research goal, slot cap of 12, $25–35 incentive.</li>
+    <li><strong>Add a website-test block</strong> with your prototype URL and the three Claude-drafted tasks.</li>
+    <li><strong>Attach the standard consent form and screener</strong> ("Have you used diagramming tools recently?" qualifies most cases).</li>
+    <li><strong>Publish.</strong> Same result loop as step 4.</li>
+  </ul>
+
+  <div class="callout"><strong>One-time templates worth saving.</strong> If the new flow is one you'll run again, save the study as a template in GQ — it joins the five pre-baked ones.</div>
+
+  <h2><span class="num">06</span> Common questions</h2>
+  <h3>Can I test on the live product instead of a prototype?</h3>
+  <p>Yes. The Phase 03 post-ship variant exists for exactly this — point the same template at <code>app.mermaidchart.com</code> instead of a prototype URL. Catches drift between design and engineering.</p>
+
+  <h3>What incentive should I use?</h3>
+  <p>The five templates have incentives baked in ($25–$35 depending on the test). For new flows, $25 is the floor and $40 is the ceiling unless the test is over 20 minutes or asks something unusual.</p>
+
+  <h3>How many participants?</h3>
+  <p>Cap at 12 by default. Past 8–10 responses you hit diminishing returns for unmoderated tests. Stop early if you're seeing the same pattern.</p>
+
+  <h3>Something looks wrong with my prototype URL.</h3>
+  <p>Test the URL in an incognito window first — if you can't access it logged out, neither can participants. For Figma, use the share link with view permissions set to "anyone with the link." For Vercel/Netlify, the preview URLs are public by default.</p>
+
+  <h3>Help, I broke something.</h3>
+  <p>Ping <code>#design-ops</code>. Or revert by deleting the duplicate and starting fresh — the original templates can't be damaged from a duplicate.</p>
+
+  <footer>
+    <div>Design team · 3 designers · Mermaid Chart</div>
+    <div>v2 · May 2026 · <a href="index.html" class="link">all documents</a></div>
+  </footer>
+
+</div>
+
+</body>
+</html>
