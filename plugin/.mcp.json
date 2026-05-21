@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "great-question": {
+      "url": "https://greatquestion.co/api/mcp/v1"
+    }
+  }
+}

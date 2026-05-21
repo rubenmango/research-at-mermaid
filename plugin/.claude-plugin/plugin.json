@@ -1,0 +1,12 @@
+{
+  "name": "mermaid-research-pipeline",
+  "version": "0.2.0",
+  "description": "The design research pipeline for Mermaid Chart. Five skills wrapping Great Question, Slack, Jira, Notion, GitHub, Drive, and Figma — run an unmoderated test in 10 minutes, draft a new flow, synthesize results, surface prior research at sprint start (now writes an R-OPS-G discovery doc and asks before posting), and check what's in flight.",
+  "author": {
+    "name": "Ruben Mangorrinha",
+    "email": "ruben@mermaidchart.com"
+  },
+  "homepage": "https://github.com/rubenmango/research-at-mermaid",
+  "repository": "https://github.com/rubenmango/research-at-mermaid",
+  "keywords": ["research", "design", "usability-testing", "mermaid", "great-question"]
+}
