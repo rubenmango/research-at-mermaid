@@ -42,6 +42,8 @@ ul li::marker{color:var(--brand-pink)}
 .step-time{font-family:var(--mono);font-size:11px;color:var(--muted);float:right}
 .callout{background:var(--bg-2);border:1px solid var(--rule);padding:1rem 1.25rem;margin:1rem 0;border-radius:2px;font-size:.95rem;color:var(--ink-2)}
 .callout strong{color:var(--ink)}
+.callout.new{border-left:3px solid var(--brand-pink);background:var(--paper)}
+.callout.new .new-tag{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--brand-pink);margin-bottom:.4rem;display:block}
 a.link{color:var(--brand-pink);text-decoration:none;border-bottom:1px solid rgba(236,64,120,.4)}
 a.link:hover{border-bottom-color:var(--brand-pink)}
 code{font-family:var(--mono);font-size:.88em;background:var(--bg-2);padding:1px 6px;border-radius:3px;color:var(--ink)}
@@ -69,13 +71,18 @@ footer{margin-top:4rem;padding-top:2rem;border-top:1px solid var(--rule);display
 
 <div class="wrap">
 
-  <div class="eyebrow">Designer runbook · v2 · May 2026</div>
+  <div class="eyebrow">Designer runbook · v2.1 · May 2026 · plugin v0.2.0</div>
   <h1>How to run a <em>design test</em><br>in 10 minutes.</h1>
   <p class="deck">The minimum-viable path from "I have a prototype" to "I have user feedback in 24 hours." Five common flows are pre-baked. New flows take ~10 minutes once.</p>
 
   <div class="tldr">
     <div class="tldr-label">TL;DR</div>
     <p>Host your prototype somewhere with a public URL → open the matching Great Question template → paste the URL into the website-test block → publish. Results land in 24 hours.</p>
+  </div>
+
+  <div class="callout new">
+    <span class="new-tag">New in v0.2.0 · sprint-discovery</span>
+    <strong>Before you test, ask Claude what we already know.</strong> Trigger phrases like <code>"sprint discovery for predefined prompts"</code> or <code>"what do we already know about onboarding?"</code>. Claude generates an <code>R-OPS-G-{topic}</code> Google Doc with a TL;DR, prior insights, strongest quotes, and the top unanswered questions — then asks you whether to post a heads-up to <code>#on-going-design-research</code> and/or open a Jira ticket on your team's board. You decide what gets broadcast. The doc is the source of truth either way.
   </div>
 
   <h2><span class="num">01</span> Before you start</h2>
@@ -161,9 +168,12 @@ footer{margin-top:4rem;padding-top:2rem;border-top:1px solid var(--rule);display
   <h3>Help, I broke something.</h3>
   <p>Ping <code>#design-ops</code>. Or revert by deleting the duplicate and starting fresh — the original templates can't be damaged from a duplicate.</p>
 
+  <h3>Where's the plugin changelog?</h3>
+  <p>The Cowork plugin <code>mermaid-research-pipeline</code> follows semver. v0.2.0 (2026-05-21) changes the <code>sprint-discovery</code> output flow — doc-first (<code>R-OPS-G-{topic}</code>), then asks you whether to also post Slack and/or open Jira. v0.1.0 (2026-05-20) was the initial five-skill scaffold. See the Obsidian project note for full rationale.</p>
+
   <footer>
     <div>Design team · 3 designers · Mermaid Chart</div>
-    <div>v2 · May 2026 · <a href="index.html" class="link">all documents</a></div>
+    <div>v2.1 · May 2026 · plugin v0.2.0 · <a href="index.html" class="link">all documents</a></div>
   </footer>
 
 </div>
