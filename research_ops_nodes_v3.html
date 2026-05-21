@@ -31,7 +31,6 @@ body{background:#080810;font-family:-apple-system,BlinkMacSystemFont,'Inter','Se
 .col-lbl{position:absolute;font-size:8px;font-weight:500;letter-spacing:.1em;color:rgba(255,255,255,.15);text-transform:uppercase}
 .team-sep{position:absolute;left:0;width:1600px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.18) 8%,rgba(255,255,255,.18) 92%,transparent);pointer-events:none}
 .team-lbl{position:absolute;left:14px;font-size:8px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;opacity:.55;pointer-events:none;background:#0b0b14;padding:0 8px 0 0}
-/* presentation mode */
 .cv-smooth{transition:transform .55s cubic-bezier(.4,0,.2,1)!important}
 .nd.pres-dim{opacity:.18!important;filter:saturate(.4);transition:opacity .35s,filter .35s}
 .nd.pres-active{opacity:1!important;border-color:var(--nc)!important;box-shadow:0 0 0 2px var(--nc),0 12px 40px rgba(0,0,0,.55);transform:translateY(-2px) scale(1.02);transition:all .35s}
@@ -61,7 +60,6 @@ body.present-mode.pres-single .pres-nav-next{display:none}
 .p-focus-btn{width:26px;height:26px;border-radius:6px;background:rgba(155,123,255,.13);border:1px solid rgba(155,123,255,.32);color:#bda6ff;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-right:6px;padding:0;transition:background .15s}
 .p-focus-btn:hover{background:rgba(155,123,255,.25);color:#d4c5ff}
 
-/* ───── Panel content classes (used by openPanel JS) ───── */
 .pp-head{padding:18px 18px 14px;border-bottom:0.5px solid rgba(255,255,255,.07)}
 .pp-row{display:flex;align-items:center;gap:11px;margin-bottom:12px}
 .pp-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -83,8 +81,6 @@ body.present-mode.pres-single .pres-nav-next{display:none}
 .pp-impact-value{font-size:11px;color:rgba(255,255,255,.5);text-align:right}
 .pp-open-btn{display:flex;align-items:center;justify-content:space-between;margin:14px 18px 0;padding:11px 14px;border-radius:9px;color:#e2ddd4;font-size:12px;font-weight:500;text-decoration:none;transition:background .15s}
 
-/* ═══════════════════ LIGHT MODE ═══════════════════ */
-/* Editor-style light theme: white bg, mint cross-grid */
 body.light{background:#ffffff}
 body.light #nw{background:#ffffff}
 body.light #nw.before-bg{background:#fdf4f4}
@@ -117,7 +113,6 @@ body.light .state-banner.banner-after{background:#e6f5ec;border-color:rgba(34,14
 body.light .col-lbl{color:rgba(0,0,0,.32)}
 body.light .team-sep{background:linear-gradient(90deg,transparent,rgba(0,0,0,.13) 8%,rgba(0,0,0,.13) 92%,transparent)}
 body.light .team-lbl{background:#ffffff}
-/* Nodes go light on light bg (matches the editor reference) */
 body.light .nd{background:#ffffff;border-color:rgba(0,0,0,.1);box-shadow:0 1px 2px rgba(0,0,0,.04),0 4px 12px rgba(0,0,0,.06)}
 body.light .nd-title{color:#0a0a0a}
 body.light .nd-sub{color:rgba(0,0,0,.45)}
@@ -126,7 +121,6 @@ body.light .nd:hover{box-shadow:0 0 0 2px rgba(124,92,255,.32),0 8px 24px rgba(0
 body.light .nd.hi{box-shadow:0 0 0 2px var(--nc),0 12px 32px rgba(0,0,0,.18)}
 body.light .nd.pres-active{box-shadow:0 0 0 2px var(--nc),0 16px 44px rgba(0,0,0,.22)}
 body.light .nd.pres-dim{filter:saturate(.5) brightness(.95)}
-/* Side panel goes light too */
 body.light #panel{background:#ffffff;border-left-color:rgba(0,0,0,.08)}
 body.light #panel::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15)}
 body.light .pp-head{border-bottom-color:rgba(0,0,0,.08)}
@@ -144,14 +138,12 @@ body.light .pp-impact-value{color:rgba(0,0,0,.6)}
 body.light .pp-open-btn{color:#0a0a0a}
 body.light .p-focus-btn{color:#7253d9;background:rgba(124,92,255,.1);border-color:rgba(124,92,255,.32)}
 body.light .p-focus-btn:hover{background:rgba(124,92,255,.18);color:#5b3eb8}
-/* Present bar in light mode */
 body.light #present-bar{background:rgba(255,255,255,.96);border-color:rgba(0,0,0,.1);color:#0a0a0a;box-shadow:0 8px 32px rgba(0,0,0,.12)}
 body.light .pres-counter{color:rgba(0,0,0,.6)}
 body.light .pres-divider{background:rgba(0,0,0,.1)}
 body.light .pres-btn{background:rgba(0,0,0,.05);border-color:rgba(0,0,0,.1);color:rgba(0,0,0,.65)}
 body.light .pres-btn:hover{background:rgba(0,0,0,.1);color:#000}
 body.light .pres-label,body.light .pres-mode-tag{color:rgba(0,0,0,.45)}
-/* Brand mark in topbar */
 .brand-block{display:flex;align-items:center;gap:12px}
 .brand-mark-svg{width:28px;height:28px;flex-shrink:0;display:block}
 .brand-text-wrap{display:flex;flex-direction:column}
@@ -211,7 +203,7 @@ body.light .pres-label,body.light .pres-mode-tag{color:rgba(0,0,0,.45)}
         </svg>
         <div class="brand-text-wrap">
           <div class="tb-title">Research ops pipeline</div>
-          <div class="tb-sub">Mermaid · click any node to open · drag to pan · scroll to zoom</div>
+          <div class="tb-sub">Mermaid · v2 (May 2026) — Maze swapped for Great Question · click any node · drag to pan · scroll to zoom</div>
         </div>
       </div>
       <div class="switcher">
@@ -259,6 +251,7 @@ const LOGOS={
   vistaly:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px"><rect width="32" height="32" rx="7" fill="#2563EB"/><path d="M8 10l8 13 8-13" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 10l5 8 5-8" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/></svg>`,
   notion:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px"><rect width="32" height="32" rx="7" fill="#F5F5F0"/><path d="M9 8.5h3.5l9 12V8.5h2V23.5h-3.5L11 11.5v12H9V8.5z" fill="#1A1A18"/></svg>`,
   maze:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px"><rect width="32" height="32" rx="7" fill="#E8452A"/><rect x="6" y="6" width="20" height="20" rx="3" stroke="white" stroke-width="1.5" fill="none"/><path d="M10 10h6v5h-3v5h6v-3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`,
+  greatquestion:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px"><rect width="32" height="32" rx="7" fill="#5046E5"/><path d="M12 13a4 4 0 1 1 6 3.4c-.9.5-1.5 1.2-1.5 2.1V20" stroke="white" stroke-width="2.2" stroke-linecap="round" fill="none"/><circle cx="16.5" cy="23.5" r="1.3" fill="white"/></svg>`,
   typeform:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px"><rect width="32" height="32" rx="7" fill="#1C1C1E"/><path d="M9 14h14M16 9v14" stroke="white" stroke-width="2.2" stroke-linecap="round"/></svg>`,
   jira:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px"><rect width="32" height="32" rx="7" fill="#0052CC"/><path d="M16 4l12 12-12 12L4 16 16 4z" fill="#2684FF"/><path d="M16 4L8 12l8 8 8-8L16 4z" fill="#0052CC"/><path d="M16 4l-4 12 4 4 4-4L16 4z" fill="white" opacity="0.9"/></svg>`,
   slack:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px"><rect width="32" height="32" rx="7" fill="#1A1A1A"/><path d="M11.5 9a2 2 0 0 0-4 0v6a2 2 0 0 0 4 0V9z" fill="#E01E5A"/><path d="M24.5 15a2 2 0 0 1 0 4h-6a2 2 0 0 1 0-4h6z" fill="#E01E5A"/><path d="M20.5 9a2 2 0 0 0-4 0v6a2 2 0 0 0 4 0V9z" fill="#2EB67D"/><path d="M24.5 11a2 2 0 0 1 0 4h-2a2 2 0 0 1 0-4h2z" fill="#2EB67D"/><path d="M11.5 17a2 2 0 0 0-4 0v6a2 2 0 0 0 4 0v-6z" fill="#36C5F0"/><path d="M7.5 20a2 2 0 0 0 0 4h6a2 2 0 0 0 0-4h-6z" fill="#36C5F0"/><path d="M20.5 17a2 2 0 0 0-4 0v6a2 2 0 0 0 4 0v-6z" fill="#ECB22E"/><path d="M20.5 20a2 2 0 0 0 0 4h2a2 2 0 0 0 0-4h-2z" fill="#ECB22E"/></svg>`,
@@ -281,62 +274,62 @@ const W=172;
 const TINFO={
   mixpanel:{url:'https://mixpanel.com',m:'Fix events first — everything downstream depends on this',role:'Starting point for the entire PM research stream. Cohort selection here determines who gets interviewed. Currently unreliable — fixing this is action 01 and a prerequisite for all quantitative decisions.'},
   apollo:{url:'https://apollo.io',m:'Automates outreach to ~20 target users/month',role:'Turns a Mixpanel cohort into a personalized email sequence without manual work. Removes the biggest scheduling bottleneck. After setup, outreach runs passively — no PM action needed.'},
-  zapier:{url:'https://zapier.com',m:'Replaces ~4 hrs/week of manual scheduling ops',role:'The central automation layer connecting every tool. Already installed but not deployed. This is the unlock — without Zapier, every step between Mixpanel and a Jira ticket requires a human. With it, the pipeline runs on its own.'},
-  figma:{url:'https://figma.com',m:'Prototype share link goes into Jira Prototype URL field',role:'Used in Phase 2 of the design workflow. The key change: instead of tagging individual frames, the designer shares the full prototype link. This covers multi-frame flows and eliminates the need for a Figma webhook server.'},
-  'jira-proto':{url:'https://mermaidchart.atlassian.net',m:'One Jira field routes all three prototype types',role:'The unified trigger for Phase 2 testing. Designer pastes any prototype URL (Figma, Vercel, Netlify) into this single Jira field. Zapier reads the URL pattern and routes to the right Maze template. One action for the designer regardless of how they built the prototype.'},
-  vistaly:{url:'https://vistaly.com',m:'Single source of truth — all teams converge here',role:'The destination for all research output. Every PM interview, Maze test result, Typeform response, and A/B experiment routes here through Claude synthesis. First time Product and Design see each other\'s findings in one place.'},
-  notion:{url:'https://notion.so',m:'Question bank: 50+ questions tagged by theme',role:'Stores the shared question bank and Maze task script templates. Zapier queries it at sprint start to surface relevant questions, and at test trigger to inject pre-written task scripts into Maze. Prevents every test from starting from scratch.'},
-  maze:{url:'https://maze.co',m:'24hr turnaround, 20–40 testers per run',role:'Runs unmoderated usability tests on both Figma click-throughs and real coded prototypes. Auto-triggered by Zapier with the prototype URL and task script injected. Results feed directly into Claude synthesis — no manual download, no copy-paste.'},
+  zapier:{url:'https://zapier.com',m:'Replaces ~4 hrs/week of manual scheduling ops',role:'The central automation layer connecting every tool. Already installed but not deployed. Handles the PM stream end-to-end (cohort → outreach → Calendly → Zoom → gift card). Cannot patch GQ test blocks because GQ Zapier only supports candidate CRUD today — the designer still does the URL paste manually for Phase 02.'},
+  figma:{url:'https://figma.com',m:'Prototype share link pastes into the matching GQ template',role:'Used in Phase 2 of the design workflow. The key change: instead of tagging individual frames, the designer shares the full prototype link. This covers multi-frame flows. The link goes directly into the Great Question website-test block.'},
+  'jira-proto':{url:'https://mermaidchart.atlassian.net',m:'One Jira field captures the URL for any prototype source',role:'The unified ticket field for Phase 2 testing. Designer pastes any prototype URL (Figma, Vercel, Netlify/GH Pages) here. Then opens the matching pre-baked Great Question template, pastes the URL into the website-test block, and publishes. ~2 minutes per test, one template per critical flow.'},
+  vistaly:{url:'https://vistaly.com',m:'Single source of truth — all teams converge here',role:'The destination for all research output. Every PM interview, GQ test result, Typeform response, and A/B experiment routes here through Claude synthesis. First time Product and Design see each other\'s findings in one place. GQ\'s native repo holds transcripts and highlights alongside.'},
+  notion:{url:'https://notion.so',m:'Question bank: 50+ questions tagged by theme',role:'Stores the shared question bank for sprint kickoff. Task scripts now live INSIDE the 5 pre-baked GQ templates rather than being fetched at run time, so Notion\'s job here is lighter than v1. Zapier queries Notion at sprint start to surface relevant questions for the design ticket.'},
+  greatquestion:{url:'https://greatquestion.co',m:'24hr turnaround, 20–40 testers, native repo + transcripts',role:'Replaces Maze. Runs unmoderated usability tests on Figma click-throughs and real coded prototypes. Designer duplicates the matching pre-baked template (5 exist as drafts: onboarding, first diagram, AI chat, export, upgrade), pastes the prototype URL into the website-test block, hits publish. Recordings, transcripts, highlights captured natively and feed directly into Claude synthesis.'},
   typeform:{url:'https://typeform.com',m:'5 behavioral event triggers in-product',role:'Creates a continuous signal between moderated sessions. Micro-surveys triggered by real product behavior (first diagram, export, abandoned upgrade) give Growth and Product data between research cycles without scheduling a single interview.'},
   jira:{url:'https://mermaidchart.atlassian.net',m:'Auto-created tickets with source citations',role:'Receives auto-created research tickets from Claude synthesis. Each ticket includes the source interview or test, verbatim quotes, and a confidence level. No manual writeup required from any team — research findings land in the sprint backlog automatically.'},
-  slack:{url:'https://slack.com',m:'#research — 5-bullet summary after every session',role:'The broadcast layer. Every research output — PM interview, Maze result, Typeform response — posts a 5-bullet summary to #research. PMs see design findings without asking. Designers see PM interview data. Growth sees qualitative context for their A/B results.'},
+  slack:{url:'https://slack.com',m:'#research — 5-bullet summary after every session',role:'The broadcast layer. Every research output — PM interview, GQ test result, Typeform response — posts a 5-bullet summary to #research. PMs see design findings without asking. Designers see PM interview data. Growth sees qualitative context for their A/B results.'},
   zoom:{url:'https://zoom.us',m:'Transcript auto-captured, synthesis triggered post-call',role:'The interview execution layer. When a Zoom call ends, the cloud recording triggers Zapier which sends the transcript to Claude API for synthesis. The human action (running the interview) is preserved; everything after is automated.'},
   statsig:{url:'https://statsig.com',m:'A/B results cross-referenced with qualitative data',role:'Currently siloed in Confluence with no connection to interview data. In the new pipeline, Statsig experiment results route to Claude synthesis and are cross-referenced with interview quotes and Typeform responses. For the first time, Growth can see why an experiment moved (or didn\'t move) a metric.'},
   calendly:{url:'https://calendly.com',m:'Booking auto-creates Google Meet link and reminders',role:'Converts an Apollo outreach response into a confirmed interview slot. The booking link is embedded in the email sequence — when a user clicks and books, Calendly auto-creates the Meet link, sends reminders, and triggers the post-interview gift card automation.'},
-  claude:{url:'https://claude.ai',m:'Tags themes, extracts quotes, flags severity, creates Vistaly cards',role:'The synthesis engine for all research inputs. Same prompt, same taxonomy, same output format whether processing a PM interview transcript, a Maze test result, or a Statsig experiment. Creates the unified research pool in Vistaly that makes cross-team findings visible for the first time.'},
+  claude:{url:'https://claude.ai',m:'Tags themes, extracts quotes, flags severity, creates Vistaly cards',role:'The synthesis engine for all research inputs. Same prompt, same taxonomy, same output format whether processing a PM interview transcript, a Great Question test result, or a Statsig experiment. Creates the unified research pool in Vistaly that makes cross-team findings visible for the first time.'},
   confluence:{url:'https://mermaidchart.atlassian.net',m:'Experiment docs — being unified into Vistaly',role:'Currently the only home for Growth experiment results. In the new pipeline, Confluence is kept for structured experiment charters but results are cross-referenced into Vistaly so they appear alongside interview and survey data.'},
-  cursor:{url:'https://cursor.sh',m:'Real code prototype → richer test signal than click-through',role:'Used in Phase 2 of the design workflow as an alternative to Figma prototyping. Cursor + Claude produces a working coded prototype deployed to a Vercel preview URL. Maze tests on real code give more reliable usability signal than click-throughs — testers encounter actual error states and real interaction patterns.'},
-  netlify:{url:'https://netlify.com',m:'30-second deploy for Claude artifact prototypes',role:'Used when the prototype was built as a Claude HTML artifact. Claude artifact URLs are session-private and can\'t be shared with Maze testers. Deploying to Netlify (one command: netlify drop) creates a public URL that feeds into the same Zapier trigger as Vercel previews.'},
-  vercel:{url:'https://vercel.com',m:'Auto-generates preview URL on every Cursor push',role:'Vercel is the deployment target for Cursor + Claude prototypes. Every git push auto-generates a preview URL — no manual deploy step. That URL is pasted into the Jira Prototype URL field to trigger the Maze test. Vercel can also post the preview URL to Slack automatically, removing even the paste step.'},
-  'task-script':{url:'https://notion.so',m:'5 pre-built templates + Claude drafts for new flows',role:'The step that was missing from the original flow. Without task scripts, a Maze test is a prototype demo, not a usability test. This node fetches the matching task script from Notion for the 5 known flows, or triggers Claude to draft 3 tasks from the Jira ticket context for new features. Tasks are injected into Maze alongside the prototype URL in a single API call.'},
+  cursor:{url:'https://cursor.sh',m:'Real code prototype → richer test signal than click-through',role:'Used in Phase 2 of the design workflow as an alternative to Figma prototyping. Cursor + Claude produces a working coded prototype deployed to a Vercel preview URL. Great Question tests on real code give more reliable usability signal than click-throughs — testers encounter actual error states and real interaction patterns.'},
+  netlify:{url:'https://netlify.com',m:'30-second deploy for Claude artifact prototypes',role:'Used when the prototype was built as a Claude HTML artifact. Claude artifact URLs are session-private and can\'t be shared with testers. Deploying to Netlify (one command: netlify drop) or pushing to GitHub Pages creates a public URL that pastes into the Great Question template the same way as a Vercel preview.'},
+  vercel:{url:'https://vercel.com',m:'Auto-generates preview URL on every Cursor push',role:'Vercel is the deployment target for Cursor + Claude prototypes. Every git push auto-generates a preview URL — no manual deploy step. That URL is pasted into the matching pre-baked Great Question template to launch the unmoderated test. Vercel can also post the preview URL to Slack automatically, removing even the paste-from-Jira step.'},
+  'task-script':{url:'https://greatquestion.co',m:'5 pre-baked GQ templates · live in the workspace',role:'The step that was missing from the original flow. Without task scripts, an unmoderated test is a prototype demo, not a usability test. The 5 pre-baked GQ templates (onboarding, first diagram, AI chat, export, upgrade) already have task scripts written inside the template — no Notion fetch, no API inject. For new flows, Claude drafts 3 tasks from the Jira ticket context. Designer pastes them into a fresh GQ unmoderated study. ~10 minutes for entirely new flows, ~2 minutes for the 5 common ones.'},
 };
 
 const AN=[
   {id:'mixpanel',x:40, y:70, w:W,   t:'Mixpanel',       s:'Behavioral cohorts',    c:'Product',    col:'#378ADD',ic:'mixpanel', b:'trigger',st:'ok',  tip:'Segments users by funnel stage and behavior. Source for PM interview recruitment. Zapier exports cohort automatically.',url:'https://mixpanel.com'},
-  {id:'jira-ds', x:40, y:280,w:W,   t:'Jira ticket',    s:'Design sprint start',   c:'Design',     col:'#1D9E75',ic:'jira',     b:'trigger',st:'ok',  tip:'Creating a design ticket fires the Phase 1 discovery chain: Vistaly lookup + question bank surfaced to Slack.',url:'https://mermaidchart.atlassian.net'},
-  {id:'jira-proto',x:40, y:590,w:W,  t:'Jira: Prototype URL', s:'One field · three sources', c:'Design', col:'#1D9E75',ic:'jira', b:'trigger',st:'setup',tip:'Designer pastes prototype URL into the Jira "Prototype URL" field — regardless of source (Figma, Vercel, Netlify). Zapier reads the URL pattern and routes to the correct Maze template. One trigger for all prototype types.',url:'https://mermaidchart.atlassian.net'},
+  {id:'jira-ds', x:40, y:280,w:W,   t:'Jira ticket',    s:'Design sprint start',   c:'Design',     col:'#1D9E75',ic:'jira',     b:'trigger',st:'ok',  tip:'Creating a design ticket fires the Phase 1 discovery chain: Vistaly + GQ repo lookup + question bank surfaced to Slack.',url:'https://mermaidchart.atlassian.net'},
+  {id:'jira-proto',x:40, y:590,w:W,  t:'Jira: Prototype URL', s:'One field · three sources', c:'Design', col:'#1D9E75',ic:'jira', b:'trigger',st:'setup',tip:'Designer pastes the prototype URL into this Jira field (regardless of source: Figma, Vercel, Netlify, GH Pages), then opens the matching pre-baked Great Question template, pastes the URL into the website-test block, and publishes. ~2 minutes per test.',url:'https://mermaidchart.atlassian.net'},
 
-  {id:'figma-src', x:290, y:620,w:W,  t:'Figma prototype', s:'figma.com/proto/…', c:'Design', col:'#1D9E75',ic:'figma',   b:'trigger',st:'ok',  tip:'Designer links frames in Figma and shares the prototype URL. Covers the entire multi-frame flow — not a single frame. Zapier detects figma.com/proto pattern and fires the Maze click-through template.',url:'https://figma.com'},
-  {id:'vercel-src',x:290, y:780,w:W,  t:'Vercel preview',  s:'*.vercel.app',      c:'Design', col:'#9B7BFF',ic:'vercel',  b:'trigger',st:'setup',tip:'Cursor+Claude prototype pushed to Vercel. Preview URL auto-generated on every push. Zapier detects *.vercel.app or *.netlify.app and fires the Maze web prototype template — testers use real code.',url:'https://vercel.com'},
-  {id:'netlify-src',x:290, y:940,w:W, t:'Claude artifact', s:'Export → Netlify',  c:'Design', col:'#BA7517',ic:'netlify',  b:'trigger',st:'setup',tip:'Claude artifact downloaded as HTML, deployed to Netlify in one command (netlify drop). Public URL pasted into Jira field. Same Maze web template as Vercel. Note: Claude artifact URLs are session-private — the deploy step is required.',url:'https://netlify.com'},
-  {id:'ship',    x:40, y:1120,w:W,   t:'Feature ships',  s:'Jira → Done',           c:'Design',     col:'#888780',ic:'jira',     b:'trigger',st:'ok',  tip:'Jira status change to Done triggers post-ship Maze test and activates Typeform behavioral surveys.',url:'https://mermaidchart.atlassian.net'},
+  {id:'figma-src', x:290, y:620,w:W,  t:'Figma prototype', s:'figma.com/proto/…', c:'Design', col:'#1D9E75',ic:'figma',   b:'trigger',st:'ok',  tip:'Designer links frames in Figma and shares the prototype URL. Covers the entire multi-frame flow — not a single frame. URL pastes straight into the Great Question website-test block.',url:'https://figma.com'},
+  {id:'vercel-src',x:290, y:780,w:W,  t:'Vercel preview',  s:'*.vercel.app',      c:'Design', col:'#9B7BFF',ic:'vercel',  b:'trigger',st:'setup',tip:'Cursor+Claude prototype pushed to Vercel. Preview URL auto-generated on every push. URL pastes into the Great Question website-test block — testers interact with real code, not a click-through illusion.',url:'https://vercel.com'},
+  {id:'netlify-src',x:290, y:940,w:W, t:'Claude artifact', s:'Netlify / GH Pages',c:'Design', col:'#BA7517',ic:'netlify',  b:'trigger',st:'setup',tip:'Claude artifact downloaded as HTML, deployed to Netlify (netlify drop) or pushed to GitHub Pages. Public URL pastes into the same Great Question template as a Vercel preview. The deploy step is required because Claude artifact URLs are session-private.',url:'https://netlify.com'},
+  {id:'ship',    x:40, y:1120,w:W,   t:'Feature ships',  s:'Jira → Done',           c:'Design',     col:'#888780',ic:'jira',     b:'trigger',st:'ok',  tip:'Jira status change to Done triggers a post-ship Great Question test on the live URL and activates Typeform behavioral surveys.',url:'https://mermaidchart.atlassian.net'},
   {id:'statsig', x:40, y:1340,w:W,   t:'Statsig A/B',    s:'Experiment result',     c:'Growth',     col:'#BA7517',ic:'statsig',  b:'trigger',st:'ok',  tip:'A/B results from Growth experiments. Cross-referenced with interview quotes and Typeform responses by Claude.',url:'https://statsig.com'},
   {id:'apollo',  x:290, y:70, w:W,   t:'Apollo',         s:'Email enrichment',      c:'Automation', col:'#E04E25',ic:'apollo',   b:'auto',   st:'ok',  tip:'Enriches Mixpanel cohort → personalized email sequence → Calendly scheduling link embedded automatically.',url:'https://apollo.io'},
-  {id:'vcheck',  x:290, y:280,w:W,   t:'Vistaly lookup', s:'Past research query',   c:'Automation', col:'#7F77DD',ic:'vistaly',  b:'auto',   st:'ok',  tip:'Queries Vistaly for cards tagged with the relevant feature area. Surfaces what the team already knows before design starts.',url:'https://vistaly.com'},
+  {id:'vcheck',  x:290, y:280,w:W,   t:'Vistaly + GQ lookup', s:'Past research query',   c:'Automation', col:'#7F77DD',ic:'vistaly',  b:'auto',   st:'ok',  tip:'Queries Vistaly cards AND Great Question\'s native insights/highlights for the relevant feature area. Surfaces what the team already knows before design starts.',url:'https://vistaly.com'},
   {id:'qbank',   x:290, y:440,w:W,   t:'Question bank',  s:'Notion · by theme',     c:'Automation', col:'#7F77DD',ic:'notion',   b:'auto',   st:'setup',tip:'Notion database of research questions tagged by theme. 3-5 most relevant questions auto-surfaced per sprint.',url:'https://notion.so'},
-  {id:'maze',    x:800, y:620,w:W,   t:'Maze test',      s:'Click-through · 20-40',  c:'Design',     col:'#1D9E75',ic:'maze',     b:'auto',   st:'ok',  tip:'Maze API auto-triggered with Figma prototype URL. Fast click-through testing. 24-hour turnaround within same sprint.',url:'https://maze.co'},
+  {id:'gq',      x:800, y:620,w:W,   t:'Great Question', s:'Unmoderated · 20-40',   c:'Design',     col:'#1D9E75',ic:'greatquestion',b:'auto',   st:'setup',tip:'Great Question unmoderated test launched from the matching pre-baked template. Designer duplicated the template, pasted the prototype URL, and published. Recordings, transcripts, highlights captured natively. 24-hour turnaround within same sprint.',url:'https://greatquestion.co'},
   {id:'cursor',  x:800, y:780,w:W,   t:'Cursor + Claude',s:'Working prototype',     c:'Design',     col:'#1D9E75',ic:'cursor',   b:'auto',   st:'setup',tip:'Designer builds a real coded prototype in Cursor using Claude. Real inputs, real state, real errors. Deploys to a preview URL — testers interact with actual code, not click-through. Preview URL can become the handoff directly to engineering.',url:'https://cursor.sh'},
-  {id:'maze-ps', x:290, y:1120,w:W,   t:'Maze post-ship', s:'Live feature test',     c:'Design',     col:'#1D9E75',ic:'maze',     b:'auto',   st:'ok',  tip:'Same Maze template run on the live feature after shipping. Catches regressions vs the prototype baseline.',url:'https://maze.co'},
+  {id:'gq-ps',   x:290, y:1120,w:W,   t:'GQ post-ship',  s:'Live feature test',     c:'Design',     col:'#1D9E75',ic:'greatquestion',b:'auto',   st:'setup',tip:'Same Great Question template re-run on the live feature URL after shipping. Compares against the prototype baseline. Catches anything that drifted between design and engineering.',url:'https://greatquestion.co'},
   {id:'typeform',x:290, y:1340,w:W,   t:'Typeform',       s:'Behavioral triggers',   c:'Growth',     col:'#BA7517',ic:'typeform', b:'auto',   st:'setup',tip:'In-app micro-surveys: first diagram created, 3-day return, export action, abandoned upgrade, 7-day anniversary.',url:'https://typeform.com'},
-  {id:'zapier',  x:540, y:70, w:166, t:'Zapier',         s:'Orchestration layer',   c:'Automation', col:'#E04E25',ic:'zapier',   b:'auto',   st:'ok',  tip:'Central automation hub. Chains: cohort export → Apollo outreach → Calendly booking → Zoom → gift card. 4 hrs/week → 15 min review.',url:'https://zapier.com'},
+  {id:'zapier',  x:540, y:70, w:166, t:'Zapier',         s:'Orchestration layer',   c:'Automation', col:'#E04E25',ic:'zapier',   b:'auto',   st:'ok',  tip:'Central automation hub for the PM interview chain (cohort → Apollo → Calendly → Zoom → gift card). Cannot patch Great Question test blocks — GQ\'s Zapier integration is candidate-CRUD only today. 4 hrs/week → 15 min review.',url:'https://zapier.com'},
   {id:'calendly',x:800, y:70,w:W,   t:'Calendly',       s:'Auto-schedule',         c:'Automation', col:'#888780',ic:'calendly', b:'auto',   st:'ok',  tip:'Booking link auto-embedded in email. Zoom link auto-created on booking. Reminder emails and gift card fully automated.',url:'https://calendly.com'},
   {id:'s-digest',x:540, y:350,w:W,   t:'Slack digest',   s:'#design-sprint brief',  c:'Automation', col:'#7F77DD',ic:'slack',    b:'auto',   st:'ok',  tip:'Research digest + open questions posted to Slack when design ticket is created. Designer opens Figma with context.',url:'https://slack.com'},
-  {id:'task-script',x:540, y:760,w:W, t:'Task script',     s:'Notion bank · Claude draft', c:'Automation', col:'#7F77DD',ic:'notion',   b:'auto',   st:'setup',tip:'Zapier fetches the matching task script from the Notion template bank (5 pre-built flows). If the feature is new, Claude drafts 3 tasks from the Jira ticket context and posts them to Slack for a 30-second human review. Tasks injected into Maze alongside the prototype URL.',url:'https://notion.so'},
+  {id:'task-script',x:540, y:760,w:W, t:'Task script',     s:'Pre-baked in GQ template', c:'Automation', col:'#7F77DD',ic:'greatquestion',   b:'auto',   st:'setup',tip:'The 5 pre-baked GQ templates have task scripts written inside them already (onboarding, first diagram, AI chat, export, upgrade) — no Notion fetch, no API inject. For new flows, Claude drafts 3 tasks from the Jira ticket context and posts them to Slack for a 30-second human review. Designer pastes them into a fresh GQ study.',url:'https://greatquestion.co'},
   {id:'tf-route',x:540, y:1340,w:W,   t:'Typeform → Notion',s:'Zapier router',       c:'Automation', col:'#BA7517',ic:'notion',   b:'auto',   st:'ok',  tip:'Survey responses routed via Zapier to Notion research repo, tagged with user cohort and timestamp.',url:'https://notion.so'},
   {id:'zoom',    x:1060, y:70,w:W,   t:'Zoom interview', s:'Transcript captured',   c:'Product',    col:'#378ADD',ic:'zoom',     b:'auto',   st:'ok',  tip:'Interview recorded. Transcript auto-captured. Zapier triggers Claude synthesis immediately after call ends.',url:'https://zoom.us'},
-  {id:'claude',  x:1060, y:630,w:166, t:'Claude API',     s:'Synthesis agent',       c:'AI',         col:'#9B7BFF',ic:'claude',   b:'auto',   st:'ok',  tip:'Same prompt for all inputs: tags themes, extracts quotes, flags issues with severity, auto-creates Vistaly card + Jira ticket, posts Slack summary.',url:'https://claude.ai'},
-  {id:'vistaly', x:1310, y:450,w:166, t:'Vistaly',        s:'Unified research pool', c:'Output',     col:'#22c55e',ic:'vistaly',  b:'output', st:'ok',  tip:'Single source of truth. All teams, same taxonomy, full history. Cross-referenceable: A/B result + interview + survey = one card.',url:'https://vistaly.com'},
+  {id:'claude',  x:1060, y:630,w:166, t:'Claude API',     s:'Synthesis agent',       c:'AI',         col:'#9B7BFF',ic:'claude',   b:'auto',   st:'ok',  tip:'Same prompt for all inputs: tags themes, extracts quotes, flags issues with severity, auto-creates Vistaly card + GQ insight + Jira ticket, posts Slack summary.',url:'https://claude.ai'},
+  {id:'vistaly', x:1310, y:450,w:166, t:'Vistaly',        s:'Unified research pool', c:'Output',     col:'#22c55e',ic:'vistaly',  b:'output', st:'ok',  tip:'Single source of truth. All teams, same taxonomy, full history. Cross-referenceable: A/B result + interview + survey = one card. GQ\'s own repo (insights, highlights, reels) sits alongside.',url:'https://vistaly.com'},
   {id:'jira-out',x:1310, y:630,w:W,   t:'Jira card',      s:'Auto-created + cited',  c:'Output',     col:'#378ADD',ic:'jira',     b:'output', st:'ok',  tip:'Auto-created with source citation and confidence level. No manual writeup required from any team.',url:'https://mermaidchart.atlassian.net'},
   {id:'slack-out',x:1310, y:790,w:W,  t:'Slack #research',s:'5-bullet summary',      c:'Output',     col:'#7F77DD',ic:'slack',    b:'output', st:'ok',  tip:'Broadcast to all teams after every session. PMs see design findings. Designers see PM interview data.',url:'https://slack.com'},
 ];
 const AE=[
   {f:'mixpanel',t:'apollo',c:'#378ADD'},{f:'mixpanel',t:'zapier',c:'#378ADD'},
   {f:'jira-ds', t:'vcheck',c:'#1D9E75'},{f:'jira-ds', t:'qbank', c:'#1D9E75'},
-  {f:'jira-proto',t:'figma-src',c:'#1D9E75'},{f:'jira-proto',t:'vercel-src',c:'#9B7BFF'},{f:'jira-proto',t:'netlify-src',c:'#BA7517'},{f:'figma-src',t:'task-script',c:'#1D9E75'},{f:'vercel-src',t:'task-script',c:'#9B7BFF'},{f:'netlify-src',t:'task-script',c:'#BA7517'},{f:'task-script',t:'maze',c:'#7F77DD'},{f:'task-script',t:'cursor',c:'#7F77DD'},{f:'cursor',  t:'claude', c:'#1D9E75'},{f:'ship',    t:'maze-ps',c:'#888780'},
+  {f:'jira-proto',t:'figma-src',c:'#1D9E75'},{f:'jira-proto',t:'vercel-src',c:'#9B7BFF'},{f:'jira-proto',t:'netlify-src',c:'#BA7517'},{f:'figma-src',t:'task-script',c:'#1D9E75'},{f:'vercel-src',t:'task-script',c:'#9B7BFF'},{f:'netlify-src',t:'task-script',c:'#BA7517'},{f:'task-script',t:'gq',c:'#7F77DD'},{f:'task-script',t:'cursor',c:'#7F77DD'},{f:'cursor',  t:'claude', c:'#1D9E75'},{f:'ship',    t:'gq-ps',c:'#888780'},
   {f:'ship',    t:'typeform',c:'#888780'},{f:'statsig', t:'claude',c:'#BA7517'},
   {f:'apollo',  t:'zapier', c:'#E04E25'},{f:'vcheck',  t:'s-digest',c:'#7F77DD'},
-  {f:'qbank',   t:'s-digest',c:'#7F77DD'},{f:'maze',   t:'claude', c:'#1D9E75'},
-  {f:'maze-ps', t:'claude', c:'#1D9E75'},{f:'typeform',t:'tf-route',c:'#BA7517'},
+  {f:'qbank',   t:'s-digest',c:'#7F77DD'},{f:'gq',     t:'claude', c:'#1D9E75'},
+  {f:'gq-ps',   t:'claude', c:'#1D9E75'},{f:'typeform',t:'tf-route',c:'#BA7517'},
   {f:'zapier',  t:'calendly',c:'#E04E25'},{f:'calendly',t:'zoom',  c:'#888780'},
   {f:'zoom',    t:'claude', c:'#378ADD'},{f:'claude',  t:'vistaly',c:'#9B7BFF'},
   {f:'claude',  t:'jira-out',c:'#9B7BFF'},{f:'claude', t:'slack-out',c:'#9B7BFF'},
@@ -352,7 +345,7 @@ const BN=[
   {id:'gut-b',  x:40, y:290,w:W,   t:'Gut decision',   s:'No research basis',      c:'Design',   col:'#e24b4a',ic:'manual',   b:'broken',  st:'bad', tip:'Designers start without research. The most expensive problem: decisions made with no user data.'},
   {id:'figma-b',x:240,y:290,w:W,   t:'Figma',          s:'Design by assumption',   c:'Design',   col:'#888780',ic:'figma',    b:'manual',  st:'warn',tip:'Design happens without validated assumptions. Problems discovered late in the process, requiring expensive rework.',url:'https://figma.com'},
   {id:'ut-b',   x:450,y:290,w:W,   t:'UserTesting',    s:'Credits only, ad-hoc',   c:'Research', col:'#BA7517',ic:'manual',   b:'warn',    st:'warn',tip:'Credits exist but no systematic process. Used sporadically. Results never synthesized or shared.'},
-  {id:'maze-b', x:660,y:290,w:W,   t:'Maze',           s:'Sporadic, no API',       c:'Research', col:'#BA7517',ic:'maze',     b:'warn',    st:'warn',tip:'Used occasionally, no API triggers. Results not fed back into roadmap. No shared templates.',url:'https://maze.co'},
+  {id:'maze-b', x:660,y:290,w:W,   t:'Maze',           s:'Sporadic, no API',       c:'Research', col:'#BA7517',ic:'maze',     b:'warn',    st:'warn',tip:'Used occasionally, no API triggers. Results not fed back into roadmap. No shared templates. Being replaced by Great Question in v2.',url:'https://maze.co'},
   {id:'dead-b', x:870,y:290,w:W,   t:'Figma — dead end',s:'No handoff',            c:'Output',   col:'#e24b4a',ic:'figma',    b:'broken',  st:'bad', tip:'Design research stays in Figma. Never reaches Vistaly or the product roadmap. Findings are lost.',url:'https://figma.com'},
   {id:'stat-b', x:40, y:490,w:W,   t:'Statsig A/B',    s:'Results in Confluence',  c:'Growth',   col:'#BA7517',ic:'statsig',  b:'warn',    st:'warn',tip:'A/B test results documented in Confluence only. Never cross-referenced with qualitative data.',url:'https://statsig.com'},
   {id:'conf-b', x:240,y:490,w:W,   t:'Confluence',     s:'Siloed, not shared',     c:'Output',   col:'#888780',ic:'confluence',b:'warn',   st:'warn',tip:'Experiment results in Confluence, interviews in Notion, designs in Figma. 3 silos, 0 shared context.',url:'https://mermaidchart.atlassian.net'},
@@ -514,8 +507,8 @@ function openPanel(n){
   const modeColor=isAfter?'#22c55e':'#f87171';
   const modeBg=isAfter?'rgba(34,197,94,.07)':'rgba(226,75,74,.08)';
   const modeBorder=isAfter?'rgba(34,197,94,.2)':'rgba(226,75,74,.2)';
-  const modeLabel=isAfter?'After \u2014 target state':'Before \u2014 current state';
-  const title=n.t.replace(' \u26a0','');
+  const modeLabel=isAfter?'After — target state':'Before — current state';
+  const title=n.t.replace(' ⚠','');
 
   const roleSection=ti.role
     ? '<div class="pp-section"><div class="pp-section-label">How it fits the pipeline</div><div class="pp-section-body">'+ti.role+'</div></div>'
@@ -535,15 +528,15 @@ function openPanel(n){
     +'<div class="pp-icon" style="background:'+n.col+'18;border:1px solid '+n.col+'28">'+iconSvg+'</div>'
     +'<div class="pp-meta">'
     +'<div class="pp-title">'+title+'</div>'
-    +'<div class="pp-cat">'+n.c+' \u00b7 '+n.s+'</div>'
+    +'<div class="pp-cat">'+n.c+' · '+n.s+'</div>'
     +'</div>'
     +'<button class="p-focus-btn" onclick="focusOnNode(\''+n.id+'\')" title="Focus on this node (presentation spotlight)"><svg viewBox="0 0 14 14" fill="none" style="width:13px;height:13px"><circle cx="7" cy="7" r="2.5" stroke="currentColor" stroke-width="1.5"/><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1" opacity=".55"/></svg></button>'
-    +'<button class="pp-close" onclick="closePanel()">\u2715</button>'
+    +'<button class="pp-close" onclick="closePanel()">✕</button>'
     +'</div>'
     +'<div class="pp-status">'
     +'<span class="pp-status-dot" style="background:'+stColor+'"></span>'
     +'<span class="pp-status-txt" style="color:'+stColor+'">'+stTxt+'</span>'
-    +'<span class="pp-status-divider">\u00b7</span>'
+    +'<span class="pp-status-divider">·</span>'
     +'<span class="pp-mode-badge" style="background:'+modeBg+';border-color:'+modeBorder+';color:'+modeColor+'">'+modeLabel+'</span>'
     +'</div>'
     +'</div>'
@@ -576,7 +569,7 @@ function setMode(m){
   } else {
     cN=AN;cE=AE;nw.classList.remove('before-bg');
     banner.className='state-banner banner-after';
-    banner.textContent='Automated pipeline — one synthesis layer · one unified output pool';
+    banner.textContent='Automated pipeline — Great Question runs tests · Claude synthesizes · one unified output pool';
     buildNodes(AN);
     [{x:44,l:'Triggers'},{x:294,l:'Data layer'},{x:544,l:'Automation'},{x:804,l:'Execution'},{x:1064,l:'Synthesis'},{x:1314,l:'Outputs'}].forEach(c=>addColLabel(c.x,14,c.l));
     addTeamSeparators([
@@ -661,7 +654,6 @@ window.addEventListener('mouseup',()=>{drag=false;nw.classList.remove('pan');});
 nw.addEventListener('wheel',e=>{
   e.preventDefault();
   if(presentMode) return;
-  // multiplicative zoom — gentler, scale-aware
   const factor=Math.exp(-e.deltaY*0.0008);
   const ns=Math.max(minScale,Math.min(maxScale,scale*factor));
   if(ns===scale) return;
@@ -699,11 +691,9 @@ function fitView(){
 
 window.addEventListener('resize',()=>{recomputeBounds();applyT();});
 
-/* ────────── PRESENTATION MODE ────────── */
 let presentMode=false, presentIdx=0, presentOrder=[];
 
 function buildPresentOrder(){
-  // If a category filter is locked, only present the visible (reachable) nodes
   if(lockedCat){
     const reach=getReachableIds(lockedCat);
     presentOrder=cN.filter(n=>reach.has(n.id)).map(n=>n.id);
@@ -725,7 +715,6 @@ function enterPresent(opts){
   }
   presentIdx=0;
   document.body.classList.add('present-mode');
-  // open panel space so layout settles before focus
   document.getElementById('panel').classList.remove('closed');
   setTimeout(()=>focusPresentNode(),50);
 }
@@ -764,14 +753,12 @@ function focusPresentNode(){
   const id=presentOrder[presentIdx];
   const n=nMap[id];
   if(!n||!n.el) return;
-  // dim/highlight
   document.querySelectorAll('.nd').forEach(el=>{
     el.classList.remove('pres-active');
     el.classList.add('pres-dim');
   });
   n.el.classList.remove('pres-dim');
   n.el.classList.add('pres-active');
-  // zoom to node
   const targetScale=1.5;
   const v=getViewport();
   const nodeW=n.w||W;
@@ -784,15 +771,12 @@ function focusPresentNode(){
   cv.style.transform=`translate(${ox}px,${oy}px) scale(${scale})`;
   document.getElementById('zm-lbl').textContent=Math.round(scale*100)+'%';
   setTimeout(()=>cv.classList.remove('cv-smooth'),600);
-  // open side panel
   openPanel(n);
-  // update counter
   const counter=document.getElementById('pres-counter');
   if(counter) counter.textContent=`${presentIdx+1} / ${presentOrder.length}`;
 }
 
 document.addEventListener('keydown',e=>{
-  // Allow P key to enter presentation mode anytime
   if(!presentMode && (e.key==='p'||e.key==='P')){
     if(document.activeElement&&['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
     enterPresent();
@@ -808,7 +792,6 @@ document.addEventListener('keydown',e=>{
   }
 });
 
-// Click-to-advance in present mode (anywhere except buttons / panel / nodes)
 nw.addEventListener('click',e=>{
   if(!presentMode) return;
   if(e.target.closest('.nd')||e.target.closest('#panel')||e.target.closest('#present-bar')||e.target.closest('#topbar')) return;
@@ -819,7 +802,6 @@ nw.addEventListener('click',e=>{
   }
 });
 
-// Restore theme BEFORE first render to avoid flash of dark
 try{
   const saved=localStorage.getItem('mc-nodes-theme');
   if(saved==='light') document.body.classList.add('light');
@@ -828,7 +810,6 @@ try{
 setMode('before');
 fitView();
 
-/* ────────── THEME TOGGLE ────────── */
 function toggleTheme(){
   const isLight=document.body.classList.toggle('light');
   try{localStorage.setItem('mc-nodes-theme',isLight?'light':'dark');}catch(e){}
@@ -839,7 +820,6 @@ function updateThemeIcon(){
   const btn=document.getElementById('btn-theme');
   if(!btn) return;
   const isLight=document.body.classList.contains('light');
-  // Sun icon when in dark (clicking goes to light), moon icon when in light (clicking goes to dark)
   btn.innerHTML=isLight
     ? '<svg viewBox="0 0 16 16" fill="none" style="width:14px;height:14px"><path d="M13.5 9.2A5.6 5.6 0 0 1 6.8 2.5a.4.4 0 0 0-.5-.5 6.5 6.5 0 1 0 7.7 7.7.4.4 0 0 0-.5-.5z" fill="currentColor"/></svg>'
     : '<svg viewBox="0 0 16 16" fill="none" style="width:14px;height:14px"><circle cx="8" cy="8" r="3.2" fill="currentColor"/><g stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><line x1="8" y1="1" x2="8" y2="2.6"/><line x1="8" y1="13.4" x2="8" y2="15"/><line x1="1" y1="8" x2="2.6" y2="8"/><line x1="13.4" y1="8" x2="15" y2="8"/><line x1="3.05" y1="3.05" x2="4.2" y2="4.2"/><line x1="11.8" y1="11.8" x2="12.95" y2="12.95"/><line x1="3.05" y1="12.95" x2="4.2" y2="11.8"/><line x1="11.8" y1="4.2" x2="12.95" y2="3.05"/></g></svg>';
