@@ -57,7 +57,7 @@ section{margin-top:44px}
 /* area health strip */
 .areas{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:14px 0 4px}
 .area{border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;background:var(--card)}
-.area a{text-decoration:none}
+a.area{text-decoration:none;display:block}
 .area .nm{font-weight:600;font-size:14px;display:flex;justify-content:space-between;align-items:baseline}
 .area .pct{font-variant-numeric:tabular-nums;font-size:20px;font-weight:700;letter-spacing:-.02em}
 .area .own{color:var(--muted);font-size:12px;margin-top:2px}
@@ -116,6 +116,28 @@ ul.plain li{margin:4px 0}
 .vcard h4{margin:0 0 6px;font-size:13.5px;font-weight:600}
 .vcard ul{margin:0;padding-left:16px;font-size:13.5px;color:var(--muted)}
 .vcard code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;color:var(--ink);background:var(--gray-bg);padding:1px 5px;border-radius:3px}
+/* charts */
+.charts2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.chart{margin:0;border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px 8px;background:var(--card);min-width:0}
+.chart figcaption{display:flex;flex-direction:column;gap:2px;margin-bottom:6px}
+.chart figcaption b{font-size:13.5px;font-weight:600}
+.chart figcaption span{font-size:12.5px;color:var(--muted);line-height:1.45}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart .grid line{stroke:var(--line-soft);stroke-width:1}
+.chart .axis text{fill:var(--muted);font-size:10.5px;font-variant-numeric:tabular-nums}
+.chart .lbl{fill:var(--ink);font-size:10.5px;font-weight:600;font-variant-numeric:tabular-nums}
+.chart .lbl.mut{fill:var(--muted);font-weight:500}
+.chart .ln{fill:none;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.chart .ar{opacity:.12}
+.chart .pt{stroke:#fff;stroke-width:2}
+.chart .sbar{shape-rendering:crispEdges}
+.chart .hit{fill:transparent}
+.chart .cross{stroke:var(--faint);stroke-dasharray:3 3;pointer-events:none}
+.clegend{display:flex;flex-wrap:wrap;gap:10px 14px;font-size:12px;color:var(--muted);margin:4px 0 2px}
+.clegend span{display:inline-flex;align-items:center;gap:6px}
+.clegend i{width:10px;height:10px;border-radius:2px;display:inline-block}
+.ctip{position:fixed;pointer-events:none;background:var(--ink);color:#fff;font-size:12px;line-height:1.45;padding:6px 9px;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.15);z-index:9;display:none;max-width:240px;font-variant-numeric:tabular-nums}
+.ctip b{color:#fff}
 /* delta */
 .delta{border:1px dashed var(--line);border-radius:var(--radius);padding:14px 18px;color:var(--muted);background:var(--tint)}
 .runs{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:8px}
@@ -124,6 +146,7 @@ footer{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);color:v
 footer p{margin:6px 0}
 code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}
 @media (max-width:760px){
+  .charts2{grid-template-columns:1fr}
   .meta,.kpis{grid-template-columns:repeat(2,1fr)}
   .kpi:nth-child(2){border-right:0}.kpi:nth-child(1),.kpi:nth-child(2){border-bottom:1px solid var(--line-soft)}
   .areas{grid-template-columns:repeat(2,1fr)}
@@ -166,11 +189,27 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}
     <p><b>Escalate today:</b> SSO login shows <b>62 successes vs 6,551 failures</b> in 28 days. Either enterprise SSO is broken or the failure event over-fires — and the data can't tell you which.</p>
   </div>
 
+  <!-- ===== SIGNALS ===== -->
+  <section id="signals">
+    <div class="sechead"><div><span class="kicker">Signals · Mixpanel EU</span><h2>What the auth data says</h2></div><span class="pill">28 days to 2026-09-08</span></div>
+    <p class="sec-sub">Signups are healthy and rising — which is exactly why aggregate volume can't be the smoke alarm. The trouble is only visible once auth is split by method, and signup can't be split at all.</p>
+    <div class="charts2">
+      <figure class="chart"><figcaption><b>SSO login · success vs failed, weekly</b><span>62 successes against 6,551 failures. Success rate 0.4–1.9 %.</span></figcaption><div id="c-sso"></div></figure>
+      <figure class="chart"><figcaption><b>Signups per day · <code>User Sign Up @server</code></b><span>Weekday 7–9 k, weekend 3.5–5.7 k. No regression. Sep 8 is a partial day.</span></figcaption><div id="c-signup"></div></figure>
+      <figure class="chart"><figcaption><b>Logins per day by method</b><span>Google ≈ 13 k · GitHub ≈ 2.3 k · Email ≈ 380. Email is ~2.3 % of logins.</span></figcaption><div id="c-method"></div></figure>
+      <figure class="chart"><figcaption><b>Email login · success vs ERROR, daily</b><span>Error events track successes 1:1 every day — real failure rate or an over-firing event.</span></figcaption><div id="c-email"></div></figure>
+    </div>
+  </section>
+
   <!-- ===== HEALTH BY AREA ===== -->
   <section id="health">
     <div class="sechead"><div><span class="kicker">Health by area</span><h2>Where the checks fail</h2></div><span class="pill">pass rate over a fixed checklist</span></div>
     <p class="sec-sub">Each area has a fixed list of yes/no checks scored from the trace. The list does not change between runs, so the percentage is a trend, not a grade. Owner is the team that gets the tickets.</p>
     <div class="areas" id="areas"></div>
+    <div class="charts2" style="margin-top:18px">
+      <figure class="chart"><figcaption><b>Tickets by priority, per team</b><span>31 defects. App team carries the most P0/P1; Editor is thin because little was exercised.</span></figcaption><div id="c-prio"></div></figure>
+      <figure class="chart"><figcaption><b>Time to value · seconds the user waits</b><span>~24 s of machine time from "New diagram" to an applied AI edit — and 3 of the 4 waits give no feedback.</span></figcaption><div id="c-time"></div></figure>
+    </div>
   </section>
 
   <!-- ===== TICKETS BY TEAM ===== -->
@@ -396,6 +435,105 @@ document.getElementById("heat").innerHTML = h;
 const max = run.words[0][1];
 document.getElementById("words").innerHTML = run.words.map(([w,n])=>`<div class="w"><span class="t">${w}</span><span class="b"><i style="width:${Math.round(100*n/max)}%"></i></span><span class="n">${n}</span></div>`).join("");
 document.getElementById("desc").innerHTML = run.descriptors.map(([w,n])=>`<span class="pill">${w}${n>1?` ×${n}`:""}</span>`).join("");
+
+// ---------------- charts (inline SVG, no library) ----------------
+const TIP = document.body.appendChild(Object.assign(document.createElement("div"),{className:"ctip"}));
+const showTip = (e,html)=>{TIP.innerHTML=html;TIP.style.display="block";const w=TIP.offsetWidth,h=TIP.offsetHeight;let x=e.clientX+12,y=e.clientY-h-10;if(x+w>innerWidth-8)x=e.clientX-w-12;if(y<8)y=e.clientY+14;TIP.style.left=x+"px";TIP.style.top=y+"px";};
+const hideTip = ()=>TIP.style.display="none";
+const fmt = n => n>=1000 ? (n/1000).toFixed(n>=10000?0:1).replace(/\.0$/,"")+"k" : String(n);
+const fmtFull = n => n.toLocaleString("en-US");
+const niceMax = m => { const p=Math.pow(10,Math.floor(Math.log10(m))); const s=m/p; const n = s<=1?1:s<=2?2:s<=2.5?2.5:s<=5?5:10; return n*p; };
+const SER = { google:"#5B4FC4", github:"#B8862B", email:"#1B7FA6", good:"#448361", bad:"#C4554D" };
+
+// Mixpanel EU, project 2954792 — pulled 2026-09-08
+const D = {
+  signups: [["08-09",4856],["08-10",7461],["08-11",7785],["08-12",7536],["08-13",7341],["08-14",5485],["08-15",3357],["08-16",4571],["08-17",7256],["08-18",8019],["08-19",8039],["08-20",7453],["08-21",5732],["08-22",3488],["08-23",5050],["08-24",7671],["08-25",8041],["08-26",7953],["08-27",7480],["08-28",5736],["08-29",4113],["08-30",5627],["08-31",8108],["09-01",8241],["09-02",8354],["09-03",8022],["09-04",6583],["09-05",4388],["09-06",6096],["09-07",8849],["09-08",3503]],
+  days21: ["08-18","08-19","08-20","08-21","08-22","08-23","08-24","08-25","08-26","08-27","08-28","08-29","08-30","08-31","09-01","09-02","09-03","09-04","09-05","09-06","09-07"],
+  google: [13134,13639,12793,9168,5800,9031,12989,13216,13514,12902,9395,6682,9459,13738,13812,13575,13196,10568,7250,10714,15441],
+  github: [2154,2357,2258,1479,1006,1487,2324,2342,2245,2169,1518,1028,1636,2268,2516,2177,2235,1670,1170,1768,2830],
+  emailOk:[343,360,334,230,130,212,357,436,369,371,225,134,185,342,405,403,378,256,130,263,377],
+  emailErr:[359,417,300,175,71,203,355,351,360,373,221,132,169,357,366,362,347,232,148,224,415],
+  sso: [["Aug 10",12,3229],["Aug 17",12,983],["Aug 24",15,1017],["Aug 31",22,1112],["Sep 7*",1,210]],
+  prio: [["Website",1,2,3,1],["Onboarding",1,3,1,1],["Editor",0,1,1,0],["AI",1,0,3,1],["App",2,4,2,1]],
+  time: [["New diagram → editor",3.5,"none"],["Prompt → first render",10,"\"Loading diagram…\""],["Edit → AI response",9,"none"],["Apply → canvas",1,"none"]]
+};
+
+function lineChart(el, labels, series, opts={}){
+  const W=520,H=190,L=40,R=12,T=10,B=26, iw=W-L-R, ih=H-T-B;
+  const max = niceMax(Math.max(...series.flatMap(s=>s.v))*1.05);
+  const x=i=>L+iw*i/(labels.length-1), y=v=>T+ih*(1-v/max);
+  const ticks=[0,.25,.5,.75,1].map(t=>t*max);
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${opts.aria||""}">`;
+  s+=`<g class="grid">${ticks.map(t=>`<line x1="${L}" x2="${W-R}" y1="${y(t)}" y2="${y(t)}"/>`).join("")}</g>`;
+  s+=`<g class="axis">${ticks.map(t=>`<text x="${L-6}" y="${y(t)+3.5}" text-anchor="end">${fmt(t)}</text>`).join("")}`;
+  const step=Math.ceil(labels.length/6);
+  s+=labels.map((l,i)=> i%step===0 || i===labels.length-1 ? `<text x="${x(i)}" y="${H-8}" text-anchor="middle">${l}</text>`:"").join("")+`</g>`;
+  series.forEach(sr=>{
+    const d=sr.v.map((v,i)=>`${i?"L":"M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join("");
+    if(sr.area) s+=`<path class="ar" fill="${sr.c}" d="${d}L${x(sr.v.length-1)},${y(0)}L${x(0)},${y(0)}Z"/>`;
+    s+=`<path class="ln" stroke="${sr.c}" d="${d}"/>`;
+    const li=sr.v.length-1; s+=`<circle class="pt" r="3.5" fill="${sr.c}" cx="${x(li)}" cy="${y(sr.v[li])}"/>`;
+    s+=`<text class="lbl" x="${x(li)-6}" y="${y(sr.v[li])-7}" text-anchor="end">${fmt(sr.v[li])}</text>`;
+  });
+  s+=`<line class="cross" id="cx" y1="${T}" y2="${T+ih}" x1="0" x2="0" style="display:none"/>`;
+  s+=`<rect class="hit" x="${L}" y="${T}" width="${iw}" height="${ih}"/></svg>`;
+  el.innerHTML=s+(series.length>1?`<div class="clegend">${series.map(sr=>`<span><i style="background:${sr.c}"></i>${sr.n}</span>`).join("")}</div>`:"");
+  const svg=el.querySelector("svg"), hit=svg.querySelector(".hit"), cx=svg.querySelector("#cx");
+  hit.addEventListener("mousemove",e=>{const r=svg.getBoundingClientRect();const px=(e.clientX-r.left)*W/r.width;const i=Math.max(0,Math.min(labels.length-1,Math.round((px-L)/iw*(labels.length-1))));cx.setAttribute("x1",x(i));cx.setAttribute("x2",x(i));cx.style.display="";showTip(e,`<b>${opts.prefix||""}${labels[i]}</b><br>${series.map(sr=>`${sr.n}: <b>${fmtFull(sr.v[i])}</b>`).join("<br>")}`);});
+  hit.addEventListener("mouseleave",()=>{cx.style.display="none";hideTip();});
+}
+
+function groupedBars(el, rows, keys, colors, opts={}){
+  // rows: [label, v1, v2]; log scale option for wildly different magnitudes
+  const W=520,H=190,L=40,R=12,T=10,B=26, iw=W-L-R, ih=H-T-B;
+  const vals=rows.flatMap(r=>r.slice(1)).filter(v=>v>0);
+  const log=!!opts.log, max = log ? Math.pow(10,Math.ceil(Math.log10(Math.max(...vals)))) : niceMax(Math.max(...vals)*1.05);
+  const y = v => log ? T+ih*(1-(v<=0?0:Math.log10(v)/Math.log10(max))) : T+ih*(1-v/max);
+  const ticks = log ? Array.from({length:Math.log10(max)+1},(_,i)=>Math.pow(10,i)) : [0,.25,.5,.75,1].map(t=>t*max);
+  const gw=iw/rows.length, bw=Math.min(28,(gw-16)/keys.length);
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${opts.aria||""}"><g class="grid">${ticks.map(t=>`<line x1="${L}" x2="${W-R}" y1="${y(t)}" y2="${y(t)}"/>`).join("")}</g>`;
+  s+=`<g class="axis">${ticks.map(t=>`<text x="${L-6}" y="${y(t)+3.5}" text-anchor="end">${fmt(t)}</text>`).join("")}${rows.map((r,i)=>`<text x="${L+gw*i+gw/2}" y="${H-8}" text-anchor="middle">${r[0]}</text>`).join("")}</g>`;
+  rows.forEach((r,i)=>{ keys.forEach((k,j)=>{ const v=r[j+1]; const x0=L+gw*i+gw/2-(bw*keys.length+2*(keys.length-1))/2+j*(bw+2); const y0=y(v), h=Math.max(0,y(log?1:0)-y0);
+    s+=`<rect class="sbar" x="${x0}" y="${y0}" width="${bw}" height="${h}" rx="3" fill="${colors[j]}" data-t="${r[0]} · ${k}: ${fmtFull(v)}"/>`;
+    s+=`<text class="lbl ${j===0?'':'mut'}" x="${x0+bw/2}" y="${y0-4}" text-anchor="middle">${fmtFull(v)}</text>`; }); });
+  s+=`</svg>`;
+  el.innerHTML=s+`<div class="clegend">${keys.map((k,j)=>`<span><i style="background:${colors[j]}"></i>${k}</span>`).join("")}${log?`<span style="margin-left:auto">log scale</span>`:""}</div>`;
+  el.querySelectorAll(".sbar").forEach(b=>{b.addEventListener("mousemove",e=>showTip(e,`<b>${b.dataset.t}</b>`));b.addEventListener("mouseleave",hideTip);});
+}
+
+function stackedH(el, rows, keys, colors, opts={}){
+  const W=520, rowH=26, gap=8, L=84, R=40, T=6; const H=T+rows.length*(rowH+gap)+4;
+  const max=Math.max(...rows.map(r=>r.slice(1).reduce((a,b)=>a+b,0)));
+  const iw=W-L-R, x=v=>L+iw*v/max;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${opts.aria||""}">`;
+  rows.forEach((r,i)=>{ const y0=T+i*(rowH+gap); let acc=0; s+=`<text class="axis" x="${L-8}" y="${y0+rowH/2+4}" text-anchor="end" style="fill:var(--ink);font-size:12px">${r[0]}</text>`;
+    r.slice(1).forEach((v,j)=>{ if(!v) return; const x0=x(acc), w=x(acc+v)-x(acc)-2; s+=`<rect class="sbar" x="${x0}" y="${y0}" width="${Math.max(0,w)}" height="${rowH}" rx="3" fill="${colors[j]}" data-t="${r[0]} · ${keys[j]}: ${v}"/>`; if(w>14) s+=`<text class="lbl" x="${x0+w/2}" y="${y0+rowH/2+4}" text-anchor="middle" style="fill:${j<2?'#fff':'var(--ink)'}">${v}</text>`; acc+=v; });
+    s+=`<text class="lbl mut" x="${x(acc)+6}" y="${y0+rowH/2+4}">${acc}</text>`; });
+  s+=`</svg>`;
+  el.innerHTML=s+`<div class="clegend">${keys.map((k,j)=>`<span><i style="background:${colors[j]}"></i>${k}</span>`).join("")}</div>`;
+  el.querySelectorAll(".sbar").forEach(b=>{b.addEventListener("mousemove",e=>showTip(e,`<b>${b.dataset.t}</b>`));b.addEventListener("mouseleave",hideTip);});
+}
+
+function timeStrip(el, rows){
+  const W=520, rowH=22, gap=10, L=150, R=48, T=6; const H=T+rows.length*(rowH+gap)+18;
+  const max=12, iw=W-L-R, x=v=>L+iw*v/max;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Seconds waited per step"><g class="grid">${[0,3,6,9,12].map(t=>`<line x1="${x(t)}" x2="${x(t)}" y1="${T}" y2="${H-18}"/>`).join("")}</g>`;
+  s+=`<g class="axis">${[0,3,6,9,12].map(t=>`<text x="${x(t)}" y="${H-4}" text-anchor="middle">${t}s</text>`).join("")}</g>`;
+  rows.forEach((r,i)=>{ const y0=T+i*(rowH+gap); const fb=r[2]!=="none"; const c=fb?SER.good:SER.bad;
+    s+=`<text x="${L-8}" y="${y0+rowH/2+4}" text-anchor="end" style="fill:var(--ink);font-size:12px">${r[0]}</text>`;
+    s+=`<rect class="sbar" x="${x(0)}" y="${y0}" width="${x(r[1])-x(0)}" height="${rowH}" rx="3" fill="${c}" opacity="${fb?.85:.75}" data-t="${r[0]}: ${r[1]} s · feedback: ${r[2]}"/>`;
+    s+=`<text class="lbl" x="${x(r[1])+6}" y="${y0+rowH/2+4}">${r[1]} s</text>`; });
+  s+=`</svg>`;
+  el.innerHTML=s+`<div class="clegend"><span><i style="background:${SER.good}"></i>shows a loading state</span><span><i style="background:${SER.bad}"></i>no feedback while waiting</span></div>`;
+  el.querySelectorAll(".sbar").forEach(b=>{b.addEventListener("mousemove",e=>showTip(e,`<b>${b.dataset.t}</b>`));b.addEventListener("mouseleave",hideTip);});
+}
+
+groupedBars(document.getElementById("c-sso"), D.sso, ["SSO login succeeded","SSO login failed"], [SER.good,SER.bad], {log:true, aria:"Weekly SSO login successes versus failures"});
+lineChart(document.getElementById("c-signup"), D.signups.map(d=>d[0]), [{n:"Signups",v:D.signups.map(d=>d[1]),c:SER.google,area:true}], {aria:"Daily signups, 30 days"});
+lineChart(document.getElementById("c-method"), D.days21, [{n:"Google",v:D.google,c:SER.google},{n:"GitHub",v:D.github,c:SER.github},{n:"Email",v:D.emailOk,c:SER.email}], {aria:"Daily logins by method, 21 days"});
+lineChart(document.getElementById("c-email"), D.days21, [{n:"Email login",v:D.emailOk,c:SER.good},{n:"Email login ERROR",v:D.emailErr,c:SER.bad}], {aria:"Daily email login successes versus errors"});
+stackedH(document.getElementById("c-prio"), D.prio, ["P0","P1","P2","P3"], ["#C4554D","#D9893B","#B7B5AF","#DDDCD8"], {aria:"Tickets by priority per team"});
+timeStrip(document.getElementById("c-time"), D.time);
 
 // delta
 const overall = r => Math.round(100*r.areas.reduce((s,a)=>s+a.pass,0)/r.areas.reduce((s,a)=>s+a.total,0));
