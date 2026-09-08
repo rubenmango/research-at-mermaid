@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Synthetic User Pulse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>
+:root{
+  --ink:#37352F; --muted:#787774; --faint:#9B9A97;
+  --line:#E9E9E7; --line-soft:#EDEDEC; --bg:#FFFFFF; --card:#FFFFFF; --tint:#F7F6F3;
+  --pink:#AD1A72; --purple:#5B4FC4;
+  --green:#448361; --green-bg:#EDF3EC;
+  --amber:#9F6B17; --amber-bg:#FBF3DB;
+  --red:#C4554D;   --red-bg:#FBE4E2;
+  --gray-bg:#F1F1EF;
+  --radius:6px;
+  color-scheme: light;
+}
+*{box-sizing:border-box}
+html,body{background:var(--bg);color:var(--ink)}
+body{margin:0;font:16px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,"Apple Color Emoji",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--faint);text-underline-offset:2px}
+a.action{color:var(--purple);text-decoration-color:transparent}
+a:focus-visible,button:focus-visible{outline:2px solid var(--purple);outline-offset:2px;border-radius:3px}
+.wrap{max-width:820px;margin:0 auto;padding:0 24px 80px}
+.topbar{display:flex;align-items:center;gap:10px;padding:22px 0 8px;color:var(--muted);font-size:12.5px;letter-spacing:.06em;text-transform:uppercase}
+.topbar .sq{width:10px;height:10px;background:var(--ink);border-radius:2px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin:18px 0 10px}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:2px 9px;border-radius:4px;font-size:12.5px;font-weight:500;background:var(--gray-bg);color:var(--muted);white-space:nowrap}
+.pill.green{background:var(--green-bg);color:var(--green)}
+.pill.amber{background:var(--amber-bg);color:var(--amber)}
+.pill.red{background:var(--red-bg);color:var(--red)}
+.pill.purple{background:#EEEDFB;color:var(--purple)}
+.pill.pink{background:#F9E4F0;color:var(--pink)}
+.pill.dot::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
+h1{font-size:34px;line-height:1.2;font-weight:700;letter-spacing:-.01em;margin:6px 0 10px;text-wrap:balance}
+h2{font-size:23px;line-height:1.3;font-weight:700;margin:0 0 4px;text-wrap:balance}
+h3{font-size:16px;font-weight:600;margin:22px 0 8px}
+.sub{color:var(--muted);font-size:17px;margin:0 0 18px;max-width:62ch}
+.meta{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:12px 0;font-size:13px;color:var(--muted)}
+.meta b{display:block;color:var(--ink);font-weight:600;font-size:13.5px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin:22px 0 6px}
+.kpi{padding:16px 18px;border-right:1px solid var(--line-soft)}
+.kpi:last-child{border-right:0}
+.kpi .n{font-size:30px;font-weight:700;letter-spacing:-.02em;line-height:1.1;font-variant-numeric:tabular-nums}
+.kpi .l{color:var(--muted);font-size:12.5px;margin-top:4px}
+.kpi .d{font-size:12.5px;color:var(--faint);margin-top:2px}
+.callout{background:var(--tint);border:1px solid var(--line-soft);border-left:3px solid var(--pink);border-radius:var(--radius);padding:14px 18px;margin:18px 0}
+.callout.red{border-left-color:var(--red)}
+.callout.green{border-left-color:var(--green)}
+.callout p{margin:6px 0}
+section{margin-top:44px}
+.sechead{display:flex;align-items:baseline;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line-soft);padding-bottom:8px;margin-bottom:14px;flex-wrap:wrap}
+.kicker{color:var(--faint);font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:2px}
+.sec-sub{color:var(--muted);margin:0 0 14px;max-width:66ch}
+/* area health strip */
+.areas{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:14px 0 4px}
+.area{border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;background:var(--card)}
+.area a{text-decoration:none}
+.area .nm{font-weight:600;font-size:14px;display:flex;justify-content:space-between;align-items:baseline}
+.area .pct{font-variant-numeric:tabular-nums;font-size:20px;font-weight:700;letter-spacing:-.02em}
+.area .own{color:var(--muted);font-size:12px;margin-top:2px}
+.bar{height:6px;background:var(--gray-bg);border-radius:3px;margin:10px 0 6px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:3px}
+.bar i.red{background:var(--red)}.bar i.amber{background:var(--amber)}.bar i.green{background:var(--green)}
+.area .cnt{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
+/* tables */
+.tbl{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin:12px 0}
+.tbl .scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:640px}
+th{background:var(--tint);color:var(--muted);font-size:12.5px;font-weight:500;text-align:left;padding:8px 12px;border-bottom:1px solid var(--line-soft);white-space:nowrap}
+td{padding:9px 12px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td.p{white-space:nowrap;width:44px}
+td.id{white-space:nowrap;color:var(--muted);font-size:12.5px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;width:1%}
+td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;width:1%}
+td .fix{display:block;color:var(--muted);font-size:13px;margin-top:3px}
+.prio{display:inline-block;padding:1px 7px;border-radius:4px;font-size:12px;font-weight:600;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.P0{background:var(--red-bg);color:var(--red)}.P1{background:var(--amber-bg);color:var(--amber)}.P2{background:var(--gray-bg);color:var(--muted)}.P3{background:var(--gray-bg);color:var(--faint)}
+.ok{color:var(--green)}
+ul.plain{margin:8px 0 0;padding-left:18px}
+ul.plain li{margin:4px 0}
+/* personas */
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.pcard{border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;background:var(--card)}
+.pcard:hover{border-color:var(--faint)}
+.pcard .who{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:6px}
+.pcard .who b{font-size:14.5px}
+.pcard .who small{color:var(--faint);font-size:12px}
+.pcard .pwords{color:var(--muted);font-size:13px;margin:6px 0 8px;font-style:italic}
+.pcard q{font-size:13.5px;line-height:1.55;display:block;color:var(--ink)}
+.pcard q::before,.pcard q::after{content:none}
+.pcard .trial{margin-top:10px;font-size:12.5px;color:var(--muted)}
+/* heatmap */
+.heat{display:grid;grid-template-columns:minmax(230px,2fr) repeat(6,1fr);gap:4px;font-size:12.5px;align-items:center}
+.heat .h{color:var(--muted);text-align:center;font-size:11.5px;padding-bottom:2px}
+.heat .r{color:var(--ink);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.heat .c{height:26px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums;font-size:12px;color:var(--ink)}
+.s0{background:var(--gray-bg);color:var(--faint)}
+.s1{background:#E3EEE6;color:var(--green)}.s2{background:#EDEDEC}.s3{background:#F7EBC9;color:var(--amber)}.s4{background:#F6D5D2;color:var(--red)}.s5{background:var(--red);color:#fff}
+.legend{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:12.5px;margin-top:10px}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+/* words */
+.words{display:grid;grid-template-columns:1fr 1fr;gap:6px 28px;margin-top:10px}
+.w{display:grid;grid-template-columns:110px 1fr 28px;align-items:center;gap:10px;font-size:13.5px}
+.w .t{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px}
+.w .b{height:8px;background:var(--gray-bg);border-radius:4px;overflow:hidden}
+.w .b i{display:block;height:100%;background:var(--purple);border-radius:4px;opacity:.75}
+.w .n{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums;font-size:12.5px}
+.desc{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+/* voice */
+.voice{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.vcard{border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px}
+.vcard h4{margin:0 0 6px;font-size:13.5px;font-weight:600}
+.vcard ul{margin:0;padding-left:16px;font-size:13.5px;color:var(--muted)}
+.vcard code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;color:var(--ink);background:var(--gray-bg);padding:1px 5px;border-radius:3px}
+/* delta */
+.delta{border:1px dashed var(--line);border-radius:var(--radius);padding:14px 18px;color:var(--muted);background:var(--tint)}
+.runs{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:8px}
+.runs b{color:var(--ink)}
+footer{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13.5px}
+footer p{margin:6px 0}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}
+@media (max-width:760px){
+  .meta,.kpis{grid-template-columns:repeat(2,1fr)}
+  .kpi:nth-child(2){border-right:0}.kpi:nth-child(1),.kpi:nth-child(2){border-bottom:1px solid var(--line-soft)}
+  .areas{grid-template-columns:repeat(2,1fr)}
+  .pgrid,.voice,.words{grid-template-columns:1fr}
+  .heat{grid-template-columns:minmax(120px,1.4fr) repeat(6,1fr)}
+}
+@media (prefers-reduced-motion:no-preference){.bar i{transition:width .5s ease}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="topbar"><span class="sq"></span> Mermaid Chart · Research · Synthetic users · mermaid.ai</div>
+
+  <div class="pills">
+    <span class="pill pink dot">Run 01 · Baseline</span>
+    <span class="pill">2026-09-08</span>
+    <span class="pill">6 personas · 1 real trace</span>
+    <span class="pill amber dot">Warm start — existing account</span>
+    <span class="pill">Every 2 weeks</span>
+  </div>
+  <h1>Synthetic User Pulse</h1>
+  <p class="sub">One cold walk of mermaid.ai — landing → signup → first diagram → AI edit → share → paywall — replayed to six synthetic personas. Findings are split by owning team so each row can become a ticket.</p>
+  <div class="meta">
+    <div>Method<b>Real trace + 6 persona agents</b></div>
+    <div>Success metric<b>Trial intent · friction recurring across personas</b></div>
+    <div>Surface<b>mermaid.ai prod, logged out + Basic account</b></div>
+    <div>Data<b>Browser trace · Mixpanel EU 2954792</b></div>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="n">29%</div><div class="l">Product health · 14 of 48 checks pass</div><div class="d">Fixed checklist; diffable from run 02</div></div>
+    <div class="kpi"><div class="n">0 / 6</div><div class="l">Personas who would start the trial</div><div class="d">All six: "Not yet"</div></div>
+    <div class="kpi"><div class="n">31</div><div class="l">Defects logged · 8 things working</div><div class="d">6 rated blocker by ≥1 persona</div></div>
+    <div class="kpi"><div class="n">100%</div><div class="l">AI output accuracy · 2 of 2 generations</div><div class="d">Auto-title accuracy 1 of 2</div></div>
+  </div>
+
+  <div class="callout red">
+    <p><b>Headline.</b> The AI is the part that works — a correct sequence diagram with the failure branch in ~10 s, honest credit accounting, a follow-up question in the right place. Everything around it makes the AI look like it failed: a marketing hero box that silently eats input, a "New diagram" button dead for 3 s, and an AI edit that lands in chat behind a button called <em>Edit</em> while the canvas doesn't move. Every persona described the product with a word like <em>flaky</em>, <em>unfinished</em> or <em>untrustworthy</em>; none would start the trial.</p>
+    <p><b>Escalate today:</b> SSO login shows <b>62 successes vs 6,551 failures</b> in 28 days. Either enterprise SSO is broken or the failure event over-fires — and the data can't tell you which.</p>
+  </div>
+
+  <!-- ===== HEALTH BY AREA ===== -->
+  <section id="health">
+    <div class="sechead"><div><span class="kicker">Health by area</span><h2>Where the checks fail</h2></div><span class="pill">pass rate over a fixed checklist</span></div>
+    <p class="sec-sub">Each area has a fixed list of yes/no checks scored from the trace. The list does not change between runs, so the percentage is a trend, not a grade. Owner is the team that gets the tickets.</p>
+    <div class="areas" id="areas"></div>
+  </section>
+
+  <!-- ===== TICKETS BY TEAM ===== -->
+  <section id="website">
+    <div class="sechead"><div><span class="kicker">Tickets · Website</span><h2>Marketing site &amp; pricing</h2></div><span class="pill red dot">2 / 11 checks pass</span></div>
+    <div class="tbl"><div class="scroll"><table>
+      <thead><tr><th>P</th><th>Evidence</th><th>Finding</th><th>Personas hit</th></tr></thead>
+      <tbody>
+        <tr><td class="p"><span class="prio P0">P0</span></td><td class="id">W-01 W-02 W-03 W-10</td><td>Some <code>/_web/immutable/chunks/*.js</code> return <b>HTTP 401</b> to anonymous visitors (verified from two independent clients; sibling chunks in the same directory return 200). The page never hydrates: the hero prompt box has <b>no input element at all</b> and swallows typed text, the "What do you need to figure out?" preview panel renders blank, and on <code>/app/sign-up</code> the Turnstile widget never initialises. Site-wide (~23 more on <code>/pricing</code>). Signup volume is healthy, so this hits a <b>subset</b> of visitors — most likely deploy skew on cached HTML.<span class="fix">Fix: resolve the edge/origin hash skew · return 404 not 401 for unknown asset paths · show a visible error state when hydration fails instead of an inert box.</span></td><td class="n">6 / 6</td></tr>
+        <tr><td class="p"><span class="prio P1">P1</span></td><td class="id">W-06 D-03</td><td>Free-tier cap contradicts itself on <code>/pricing</code>: Basic card says <b>"3 Diagrams"</b>, compare table says <b>"Up to 6"</b>. The app's quota chip says <b>3 of 3</b>, so the table is wrong. This is the number gating the reverse-trial lever.<span class="fix">Fix: one source of truth for plan limits feeding card, table and app.</span></td><td class="n">6 / 6</td></tr>
+        <tr><td class="p"><span class="prio P1">P1</span></td><td class="id">W-04</td><td>Primary nav items expose as <code>menuitem</code> with <b>no accessible name</b>; hero submit is an unnamed button; intent chips use <code>role="radio"</code> outside a radiogroup. Combined with W-02 the hero is unusable by keyboard or screen reader.<span class="fix">Fix: aria-labels on nav and icon controls; chips as buttons or a real radiogroup. Part of a cross-team a11y epic with D-06 / AI-06.</span></td><td class="n">1 / 6</td></tr>
+        <tr><td class="p"><span class="prio P2">P2</span></td><td class="id">W-07</td><td>Basic card says "Limited AI" / "Limited diagram size"; the table says <b>15 credits</b> and <b>60</b>. The card hides the two numbers a free user needs.<span class="fix">Fix: put "15 AI credits · 60-line diagrams" on the card.</span></td><td class="n">2 / 6</td></tr>
+        <tr><td class="p"><span class="prio P2">P2</span></td><td class="id">W-08</td><td>Enterprise AI credits read <b>"Unlimited*"</b> — no footnote anywhere on the page.<span class="fix">Fix: publish the footnote or drop the asterisk.</span></td><td class="n">1 / 6</td></tr>
+        <tr><td class="p"><span class="prio P2">P2</span></td><td class="id">W-09</td><td>Plus (€8/user/mo) CTA reads <b>"Get started for free"</b>; the actually-free Basic tier reads "Get started".<span class="fix">Fix: label each CTA for what the tier is.</span></td><td class="n">1 / 6</td></tr>
+        <tr><td class="p"><span class="prio P3">P3</span></td><td class="id">W-05</td><td>Cookiebot banner appears on the signup page (not the homepage) with Preferences / Statistics / Marketing all <b>defaulting ON</b>.<span class="fix">Fix: default optional categories off; don't interrupt at peak signup intent.</span></td><td class="n">—</td></tr>
+      </tbody></table></div></div>
+    <p class="ok" style="font-size:13.5px;margin:6px 0 0">Working: deep links preserve destination through login (<code>/app/login?redirect=…</code>); Google / GitHub / SSO entry points are present and deep-linkable.</p>
+  </section>
+
+  <section id="onboarding">
+    <div class="sechead"><div><span class="kicker">Tickets · Onboarding</span><h2>Signup &amp; first run</h2></div><span class="pill red dot">2 / 10 checks pass</span></div>
+    <div class="tbl"><div class="scroll"><table>
+      <thead><tr><th>P</th><th>Evidence</th><th>Finding</th><th>Personas hit</th></tr></thead>
+      <tbody>
+        <tr><td class="p"><span class="prio P0">P0</span></td><td class="id">ACCESS</td><td>Cloudflare Turnstile <b>hard-fails inside embedded Chromium</b> (<code>Error: 600010</code>, UI: "Failed to validate. Please check your internet connection"). Same environment class as managed corporate browsers and in-app webviews. It also blocks this test from ever running unattended.<span class="fix">Ask: Turnstile off for a flagged test account or test email domain, or a staging URL on Cloudflare's always-pass sitekey. Then test Turnstile in managed browsers with a fallback path.</span></td><td class="n">1 / 6</td></tr>
+        <tr><td class="p"><span class="prio P1">P1</span></td><td class="id">O-07 O-06</td><td>First tip promises <b>"watch the diagram update in real time."</b> Edits actually land as proposals in chat (AI-03). The first tip on the product misdescribes its own behaviour.<span class="fix">Fix: rewrite to "review the proposed change and apply it" — or make AI-03 true.</span></td><td class="n">5 / 6</td></tr>
+        <tr><td class="p"><span class="prio P1">P1</span></td><td class="id">O-08</td><td>Once text is entered, a dropdown labelled only <b>"Redux"</b> appears by the submit arrow — the theme picker, with no "Theme" label. Read as a framework setting by one persona; as the exact ungovernable per-user styling a Steward is there to prevent.<span class="fix">Fix: "Theme: Redux" + palette icon; add "Save as team theme"; org-level default the picker inherits.</span></td><td class="n">5 / 6</td></tr>
+        <tr><td class="p"><span class="prio P1">P1</span></td><td class="id">O-05</td><td>Guided-hint anchors fail on the empty editor: <code>Reference element not found for template-toolbar</code> / <code>ai-chat-btn</code>.<span class="fix">Fix: gate hints on target presence, or render the anchors in the empty state.</span></td><td class="n">—</td></tr>
+        <tr><td class="p"><span class="prio P2">P2</span></td><td class="id">O-01 O-02 O-03</td><td>Signup/login fields are <b>placeholder-only</b> (no <code>label</code>, <code>id</code> or <code>aria-label</code>); confirm-password field is redundant next to the show/hide toggle; Terms of Use + T&amp;C linked at consent but <b>no privacy policy</b>.<span class="fix">Fix: real labels; drop confirm-password; link privacy policy / DPA at the point of consent.</span></td><td class="n">3 / 6</td></tr>
+        <tr><td class="p"><span class="prio P3">P3</span></td><td class="id">O-09</td><td>Post-generation URL carries <code>?shouldShowPopup=true&amp;entryPoint=Dashboard</code> — a permalink someone will paste into a spec.<span class="fix">Fix: strip control-flow params after use.</span></td><td class="n">2 / 6</td></tr>
+      </tbody></table></div></div>
+    <p class="ok" style="font-size:13.5px;margin:6px 0 0">Working: the empty editor ("What do you want to diagram?" · Generate / Paste Mermaid code · Upload) drew 3 delights; the Create → Edit with AI → Share tip sequence from the June report is live; the contextual follow-up arrives <em>after</em> first render, as recommended.</p>
+  </section>
+
+  <section id="editor">
+    <div class="sechead"><div><span class="kicker">Tickets · Editor</span><h2>Canvas &amp; sharing</h2></div><span class="pill amber dot">3 / 5 checks pass · thin coverage</span></div>
+    <div class="tbl"><div class="scroll"><table>
+      <thead><tr><th>P</th><th>Evidence</th><th>Finding</th><th>Personas hit</th></tr></thead>
+      <tbody>
+        <tr><td class="p"><span class="prio P1">P1</span></td><td class="id">E-01</td><td>Share → "Use invite link" defaults to <b>Can edit</b>. A link pasted into Slack grants edit to whoever forwards it. Public link correctly defaults to No access.<span class="fix">Fix: default invite links to Can view; org-level setting to enforce it.</span></td><td class="n">6 / 6</td></tr>
+        <tr><td class="p"><span class="prio P2">P2</span></td><td class="id">E-02 AI-06</td><td>Header icon buttons (comments, save, history, title) and the Generate / Paste toggle have <b>no accessible names</b>. The pan/zoom cluster is the one well-labelled group in the product.<span class="fix">Fix: aria-labels across the header and toggles.</span></td><td class="n">1 / 6</td></tr>
+      </tbody></table></div></div>
+    <p style="font-size:13.5px;color:var(--muted);margin:6px 0 0">Not exercised this run: code panel round-trip, node-level AI, templates gallery, export, version history, comments. Collaborator and Maintainer both rated this absence a 5 — it is their whole job.</p>
+  </section>
+
+  <section id="ai">
+    <div class="sechead"><div><span class="kicker">Tickets · AI</span><h2>Generation &amp; edit loop</h2></div><span class="pill amber dot">5 / 9 checks pass</span></div>
+    <div class="tbl"><div class="scroll"><table>
+      <thead><tr><th>P</th><th>Evidence</th><th>Finding</th><th>Personas hit</th></tr></thead>
+      <tbody>
+        <tr><td class="p"><span class="prio P0">P0</span></td><td class="id">AI-03</td><td>Chat edit ("add a rate-limit check… return 429"): response in ~9 s, credit charged, summary says <b>"Here's the updated signup sequence"</b> — and the <b>canvas does not change</b>. The updated diagram exists only as a preview inside the chat; the button that applies it is labelled <b>"Edit"</b>. Every persona read this as "the edit failed." The updated diagram itself was correct.<span class="fix">Fix: apply to canvas by default with Undo, or label the action "Apply to diagram" and state "proposal — not yet applied" in the response. Consider a diff preview before the credit is spent.</span></td><td class="n">6 / 6</td></tr>
+        <tr><td class="p"><span class="prio P2">P2</span></td><td class="id">AI-01</td><td>Auto-title drifted from <b>"Email Signup Verification"</b> (accurate) to <b>"Email Password Flow"</b> (less accurate) with no explanation. Titles are the search key later.<span class="fix">Fix: keep the first title unless the user changes it; let titles be pinned.</span></td><td class="n">4 / 6</td></tr>
+        <tr><td class="p"><span class="prio P2">P2</span></td><td class="id">AI-04</td><td>Three placeholders for one AI input: "Describe it, or paste anything here." · "Describe what to add or change" · "Describe your idea".<span class="fix">Fix: one string per state, one owner.</span></td><td class="n">2 / 6</td></tr>
+        <tr><td class="p"><span class="prio P2">P2</span></td><td class="id">AI-06</td><td>The AI chat's attach and <b>send</b> buttons have no accessible name.<span class="fix">Fix: aria-labels.</span></td><td class="n">1 / 6</td></tr>
+        <tr><td class="p"><span class="prio P3">P3</span></td><td class="id">AI-05</td><td>First chat message switches the editor to a split view; applying the edit snaps back to full canvas.<span class="fix">Watch: disorienting on first encounter; not a bug.</span></td><td class="n">—</td></tr>
+      </tbody></table></div></div>
+    <p class="ok" style="font-size:13.5px;margin:6px 0 0">Working: first generation faithful to a 287-char prompt including the failure branch, rendered in ~10 s; credits 15 → 14 → 13 visibly and correctly; post-render follow-up ("password strength… retry limits… error messages?") in the right order; three suggested next edits after each response.</p>
+  </section>
+
+  <section id="app">
+    <div class="sechead"><div><span class="kicker">Tickets · Dashboard &amp; App</span><h2>Dashboard, paywall, auth telemetry</h2></div><span class="pill red dot">2 / 13 checks pass</span></div>
+    <div class="tbl"><div class="scroll"><table>
+      <thead><tr><th>P</th><th>Evidence</th><th>Finding</th><th>Personas hit</th></tr></thead>
+      <tbody>
+        <tr><td class="p"><span class="prio P0">P0</span></td><td class="id">A-01</td><td><b>SSO login: 62 successes vs 6,551 failures in 28 days</b> (weekly success 0.4 %–1.9 %). SSO is the headline Enterprise differentiator. Either SSO is broken, or <code>User SSO Login Failed</code> over-fires (e.g. an is-this-an-SSO-domain probe) and enterprise auth telemetry is unreadable. Both readings are serious.<span class="fix">Ask the owning engineer what the event fires on. Split it by cause. Publish a real SSO success rate.</span></td><td class="n">5 / 6</td></tr>
+        <tr><td class="p"><span class="prio P0">P0</span></td><td class="id">D-04</td><td>Cap-hit paywall: <b>"Trial Plusfree for 7 days"</b> (typo), <b>"15% off" with no price shown</b>, "You hit a limit" without naming it, and <b>"Collaborate with comments and sharing"</b> sold as a Plus benefit while Share works on Basic in the same session. This is the screen that decides conversion.<span class="fix">Fix: the space · show €/user/mo · "You've used 3 of 3 diagrams" · list only gated benefits.</span></td><td class="n">6 / 6</td></tr>
+        <tr><td class="p"><span class="prio P1">P1</span></td><td class="id">A-03</td><td><code>User Sign Up @server</code> — "Official event for user sign up" — has <b>no auth-method property</b>. Only custom property is <code>area</code> = <code>"authentication"</code>. Login is segmented by method; signup is not. A method-specific signup failure is invisible by construction.<span class="fix">Fix: add <code>method</code> / <code>provider</code> to the signup event.</span></td><td class="n">1 / 6</td></tr>
+        <tr><td class="p"><span class="prio P1">P1</span></td><td class="id">A-02</td><td><code>User Email Login ERROR</code> tracks ~1:1 with <code>User Email Login</code> every day (Sep 7: 377 vs 415). Real ~50 % failure rate or an over-firing error event.<span class="fix">Fix: same triage as A-01.</span></td><td class="n">—</td></tr>
+        <tr><td class="p"><span class="prio P1">P1</span></td><td class="id">D-01</td><td>"New diagram" → editor takes <b>2.8–3.5 s</b> with no spinner, no disabled state. Users double-click and get stray documents.<span class="fix">Fix: disable + pending state on click.</span></td><td class="n">5 / 6</td></tr>
+        <tr><td class="p"><span class="prio P1">P1</span></td><td class="id">D-02</td><td>Footer counter reads <b>"0 Items"</b> with 1, 2 and 3 diagrams on screen. Wrong in every state.<span class="fix">Fix: bind the count to the rendered list.</span></td><td class="n">4 / 6</td></tr>
+        <tr><td class="p"><span class="prio P2">P2</span></td><td class="id">D-05</td><td>Four labels for one upsell: "Try Plus free" · "Start my trial" · "Start your free trial" · "Start my free trial".<span class="fix">Fix: one string.</span></td><td class="n">4 / 6</td></tr>
+        <tr><td class="p"><span class="prio P2">P2</span></td><td class="id">D-06</td><td>Sidebar nav (Dashboard / Personal / Shared with you / Mermaid Flow) exposes as unnamed buttons; 8+ unnamed buttons on the page; "New diagram" and "new diagram" both present.<span class="fix">Fix: accessible names; a11y epic.</span></td><td class="n">1 / 6</td></tr>
+        <tr><td class="p"><span class="prio P3">P3</span></td><td class="id">D-07 D-08</td><td>Console hygiene: intermittent <b>HTTP 429</b> on an app resource, duplicate Statsig clients, <code>web-share</code> Permissions-Policy warning, CSP report-only <code>unsafe-eval</code>, a stray "Deleting Diagram …" string in body text, login redirect faithfully 404-ing on <code>/app/diagrams</code>.<span class="fix">Fix: backlog.</span></td><td class="n">1 / 6</td></tr>
+      </tbody></table></div></div>
+    <p class="ok" style="font-size:13.5px;margin:6px 0 0">Working: quota chip accurate at every step (0 → 3 of 3); banner copy changes at cap ("Start your free trial for unlimited editable diagrams"); signup volume healthy at ~7–9 k/weekday with no regression through this morning.</p>
+  </section>
+
+  <!-- ===== PERSONAS ===== -->
+  <section id="personas">
+    <div class="sechead"><div><span class="kicker">Personas</span><h2>Six verdicts, zero trials</h2></div><span class="pill">same trace, separate contexts</span></div>
+    <p class="sec-sub">Editor personas are partially served; all three App personas are a blind spot — the run never opened a team space, a shared diagram, or an admin surface. Friction that recurs across ≥ 3 personas is treated as universal.</p>
+    <div class="pgrid" id="pgrid"></div>
+
+    <h3>Severity heatmap · persona × finding</h3>
+    <div class="heat" id="heat"></div>
+    <div class="legend"><span><i class="s0"></i>no opinion</span><span><i class="s1"></i>1 fine</span><span><i class="s2"></i>2</span><span><i class="s3"></i>3</span><span><i class="s4"></i>4</span><span><i class="s5"></i>5 blocker</span></div>
+  </section>
+
+  <!-- ===== LANGUAGE ===== -->
+  <section id="language">
+    <div class="sechead"><div><span class="kicker">Language</span><h2>The words the personas used</h2></div><span class="pill">from in-character reactions</span></div>
+    <p class="sec-sub">Frequency across all six logs, stop-words removed. <em>nothing</em> at 13 and <em>wrong</em>, <em>broken</em>, <em>assume</em> together outnumber any positive term. <em>plusfree</em> appears six times — every persona repeated the typo back.</p>
+    <div class="words" id="words"></div>
+    <h3>Three-word descriptors</h3>
+    <div class="desc" id="desc"></div>
+  </section>
+
+  <!-- ===== BRAND VOICE ===== -->
+  <section id="voice">
+    <div class="sechead"><div><span class="kicker">Brand voice</span><h2>Does it sound like one product?</h2></div><span class="pill amber dot">one voice, breaks at the paywall</span></div>
+    <p class="sec-sub">Website and editor share a register the Editor personas recognised as theirs. The paywall drops out of it, and no surface anywhere speaks to the person who <em>inherits</em> a diagram or the person who has to <em>approve</em> the tool.</p>
+    <div class="voice">
+      <div class="vcard"><h4>Holds</h4><ul>
+        <li><code>You already think in systems. Now you can diagram them just as fast.</code></li>
+        <li><code>What do you want to diagram?</code> · <code>Describe it, or paste anything here.</code></li>
+        <li><code>Built something good? Show it off</code> — right nudge, right moment</li>
+      </ul></div>
+      <div class="vcard"><h4>Breaks</h4><ul>
+        <li><code>You hit a limit. Plus removes all of them</code> — "a different, sloppier company wrote it"</li>
+        <li><code>Trial Plusfree for 7 days</code> — on the screen that asks for a card</li>
+        <li><code>Your one-time 15% offer</code> with no number — "a consumer coupon, not a vendor"</li>
+      </ul></div>
+      <div class="vcard"><h4>Drifts</h4><ul>
+        <li>4 labels for one upsell action</li>
+        <li>3 placeholders for one AI input</li>
+        <li>"3 Diagrams" · "Up to 6" · "3 of 3" for one limit</li>
+      </ul></div>
+      <div class="vcard"><h4>Never speaks to</h4><ul>
+        <li>The reader: "nobody wrote a sentence for me" — Knowledge Consumer</li>
+        <li>The approver: "nothing anywhere says your admin controls or your org" — Steward</li>
+        <li>The maintainer: "not one string speaks to someone checking whether an existing diagram is still true"</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <!-- ===== DELTA ===== -->
+  <section id="delta">
+    <div class="sechead"><div><span class="kicker">Delta</span><h2>Change since last run</h2></div><span class="pill">next run ≈ 2026-09-22</span></div>
+    <div class="delta" id="deltabox"></div>
+  </section>
+
+  <!-- ===== NOT COVERED ===== -->
+  <section id="coverage">
+    <div class="sechead"><div><span class="kicker">Coverage</span><h2>Not covered this run</h2></div></div>
+    <ul class="plain">
+      <li><b>True cold first-run after signup.</b> Account creation is done by a human; Turnstile then blocked email login in the test browser. The logged-in half ran on an existing account with an emptied personal space — no onboarding wizard fired.</li>
+      <li><b>Returning-user dashboard / memory between sessions.</b> Device link dropped before <code>/app/dashboard</code> was reached.</li>
+      <li><b>Team spaces, Create Organization, Shared with you, search.</b> The App personas' entire world — the reason all three verdicts read "blind spot".</li>
+      <li><b>Templates &amp; Diagram types, export, version history, comments, code round-trip, Mermaid Flow.</b></li>
+    </ul>
+  </section>
+
+  <!-- ===== METHOD ===== -->
+  <section id="method">
+    <div class="sechead"><div><span class="kicker">Method &amp; caveats</span><h2>How to read this</h2></div></div>
+    <p style="max-width:66ch">One real trace of the production product was captured in a browser (screens, copy, DOM, console, network), then replayed to each of the six persona agents in isolation so all six judged an identical flow. Quantitative auth figures come from Mixpanel EU. Synthetic personas are a fast directional pass anchored in real customer quotes — the reliable signal is friction that recurs across several personas, not any single verdict. Confirm the recurring seams with live users.</p>
+    <div class="callout"><p><b>To make the biweekly run unattended:</b> the test needs a way past Cloudflare Turnstile — a flagged test account/domain, or a staging URL on the always-pass sitekey. Without it every run needs a human to sign in.</p></div>
+  </section>
+
+  <footer>
+    <p><b>Sources.</b> <a href="https://app.notion.com/p/372bd9ed97e581e9b33ed4b935081e58">Synthetic User Personas (Notion)</a> · <a href="https://app.notion.com/p/388bd9ed97e5814aa9c8ea4ad0d3a81a">June 2026 onboarding report</a> · Mixpanel EU: <a href="https://eu.mixpanel.com/project/2954792/view/3476256/app/insights#kaW8F6F4JtXb">SSO success vs failed</a>, <a href="https://eu.mixpanel.com/project/2954792/view/3476256/app/insights#Vd22gSBVXi3D">login by method</a>, <a href="https://eu.mixpanel.com/project/2954792/view/3476256/app/insights#8e534b15">daily signups</a>.</p>
+    <p>Run 01 · 2026-09-08 · evidence log <code>evidence-run-2026-09-08.md</code> and six persona logs live beside this page in <code>research-at-mermaid</code>.</p>
+  </footer>
+</div>
+
+<script>
+// ---- Run data. Append a new object per run; the page renders the latest and diffs against the previous.
+const RUNS = [
+  {
+    id: "01", date: "2026-09-08", label: "Baseline",
+    areas: [
+      { key:"website",    name:"Website",         owner:"Web / Marketing eng", pass:2, total:11 },
+      { key:"onboarding", name:"Onboarding",      owner:"Growth",              pass:2, total:10 },
+      { key:"editor",     name:"Editor",          owner:"Editor team",         pass:3, total:5  },
+      { key:"ai",         name:"AI",              owner:"AI team",             pass:5, total:9  },
+      { key:"app",        name:"Dashboard & App", owner:"App team",            pass:2, total:13 }
+    ],
+    personas: [
+      { n:"01", name:"Sensemaker",    set:"Editor · Now",   verdict:"Partially served", cls:"amber", words:"capable, flaky, half-finished", trial:"Not yet", q:"The AI is good enough to win me — so stop making its results look like failures." },
+      { n:"02", name:"Collaborator",  set:"Editor · Soon",  verdict:"Partially served", cls:"amber", words:"promising, unfinished, unaccountable", trial:"Not yet", q:"Until I can see who changed what and comment on a box, the diagram is still a snapshot — and I can't put a snapshot in a PR." },
+      { n:"03", name:"Maintainer",    set:"Editor · Soon",  verdict:"Blind spot",       cls:"red",   words:"generative, unversioned, untrustworthy", trial:"Not yet", q:"It shows me what it made but never when, from where, or what changed." },
+      { n:"04", name:"Knowledge Consumer", set:"App · Q2 primary", verdict:"Blind spot", cls:"red", words:"solo, author-first, uncatalogued", trial:"Not yet", q:"Run the next pass as someone who inherits diagrams — right now 'Shared with you' is a sidebar button with no name and no evidence behind it." },
+      { n:"05", name:"Knowledge Steward", set:"App · Q2 secondary", verdict:"Blind spot", cls:"red", words:"individual-first, ungoverned, unproven", trial:"Not yet", q:"Until there is an org layer with an audit log and an SSO metric you can actually read, I have nothing to show my security team." },
+      { n:"06", name:"Knowledge Contributor", set:"App · editor-served", verdict:"Partially served", cls:"amber", words:"capable, unstyled, unfinished", trial:"Not yet", q:"Generation is solved; you hid the theme behind one unlabelled word and never let me save it — the reuse story is the gap." }
+    ],
+    // severity per finding per persona (0 = no opinion). Order: Sensemaker, Collaborator, Maintainer, Consumer, Steward, Contributor
+    heat: [
+      ["AI-03 edit lands as proposal",      [5,4,5,0,0,4]],
+      ["D-04 paywall copy / price",         [3,4,3,3,3,4]],
+      ["A-01 SSO 1% success",               [0,5,5,5,5,0]],
+      ["W-02 hero box inert",               [5,2,2,2,3,3]],
+      ["W-06 3 vs 6 diagrams",              [2,3,4,2,2,3]],
+      ["E-01 invite link = edit",           [1,2,3,3,4,2]],
+      ["D-01 New diagram dead 3s",          [4,2,3,0,0,2]],
+      ["O-07 'real time' promise",          [3,3,4,0,0,2]],
+      ["O-08 'Redux' unlabelled",           [2,0,1,0,4,4]],
+      ["D-02 '0 Items' counter",            [0,2,4,4,0,0]],
+      ["D-05 four upsell labels",           [1,2,0,0,0,2]],
+      ["AI-01 generation quality",          [1,0,2,1,0,1]]
+    ],
+    words: [["diagram",22],["edit",19],["link",19],["free",14],["nothing",13],["trial",12],["team",11],["tell",10],["time",10],["seconds",9],["clicked",8],["button",8],["change",8],["wrong",7],["credit",7],["share",7],["invite",7],["assume",6],["plusfree",6],["broken",5]],
+    descriptors: [["capable",2],["unfinished",2],["flaky",1],["half-finished",1],["promising",1],["unaccountable",1],["generative",1],["unversioned",1],["untrustworthy",1],["solo",1],["author-first",1],["uncatalogued",1],["individual-first",1],["ungoverned",1],["unproven",1],["unstyled",1]],
+    trialYes: 0, defects: 31, working: 8
+  }
+];
+
+const run = RUNS[RUNS.length-1], prev = RUNS[RUNS.length-2];
+const pct = a => Math.round(100*a.pass/a.total);
+const tone = p => p>=70?"green":p>=40?"amber":"red";
+
+// areas
+document.getElementById("areas").innerHTML = run.areas.map(a=>{
+  const p=pct(a); const d = prev ? (p - pct(prev.areas.find(x=>x.key===a.key))) : null;
+  return `<a class="area" href="#${a.key}"><div class="nm"><span>${a.name}</span><span class="pct">${p}%</span></div>
+  <div class="own">${a.owner}</div><div class="bar"><i class="${tone(p)}" style="width:${p}%"></i></div>
+  <div class="cnt">${a.pass} of ${a.total} pass${d===null?"":` · ${d>=0?"+":""}${d} pts`}</div></a>`;}).join("");
+
+// personas
+document.getElementById("pgrid").innerHTML = run.personas.map(p=>`<div class="pcard">
+  <div class="who"><b>${p.name}</b><small>${p.set}</small></div>
+  <span class="pill ${p.cls} dot">${p.verdict}</span>
+  <div class="pwords">${p.words}</div>
+  <q>${p.q}</q>
+  <div class="trial">Start the trial? <b>${p.trial}</b></div></div>`).join("");
+
+// heatmap
+const heads = ["Sense","Collab","Maint","Consum","Steward","Contrib"];
+let h = `<div></div>${heads.map(x=>`<div class="h">${x}</div>`).join("")}`;
+run.heat.forEach(([lbl,vals])=>{ h += `<div class="r" title="${lbl}">${lbl}</div>` + vals.map(v=>`<div class="c s${v}" title="${lbl}: ${v||"no opinion"}">${v||""}</div>`).join(""); });
+document.getElementById("heat").innerHTML = h;
+
+// words
+const max = run.words[0][1];
+document.getElementById("words").innerHTML = run.words.map(([w,n])=>`<div class="w"><span class="t">${w}</span><span class="b"><i style="width:${Math.round(100*n/max)}%"></i></span><span class="n">${n}</span></div>`).join("");
+document.getElementById("desc").innerHTML = run.descriptors.map(([w,n])=>`<span class="pill">${w}${n>1?` ×${n}`:""}</span>`).join("");
+
+// delta
+const overall = r => Math.round(100*r.areas.reduce((s,a)=>s+a.pass,0)/r.areas.reduce((s,a)=>s+a.total,0));
+const box = document.getElementById("deltabox");
+if(!prev){
+  box.innerHTML = `<b style="color:var(--ink)">Baseline.</b> This is run ${run.id}. From run 02 this panel shows: health change per area, findings fixed, findings new, and any persona whose verdict moved. Re-run the same flow, append a run object to <code>RUNS</code>, and the diff renders itself.
+  <div class="runs"><span>Overall <b>${overall(run)}%</b></span><span>Trial intent <b>${run.trialYes} / ${run.personas.length}</b></span><span>Defects <b>${run.defects}</b></span><span>Working <b>${run.working}</b></span></div>`;
+} else {
+  const d = overall(run)-overall(prev);
+  box.innerHTML = `<b style="color:var(--ink)">Overall ${overall(run)}% (${d>=0?"+":""}${d} pts vs run ${prev.id}).</b> Trial intent ${run.trialYes}/${run.personas.length} (was ${prev.trialYes}). Defects ${run.defects} (was ${prev.defects}).
+  <div class="runs">${run.areas.map(a=>{const pa=prev.areas.find(x=>x.key===a.key);const dd=pct(a)-pct(pa);return `<span>${a.name} <b>${dd>=0?"+":""}${dd}</b></span>`}).join("")}</div>`;
+}
+</script>
+
+</body>
+</html>
