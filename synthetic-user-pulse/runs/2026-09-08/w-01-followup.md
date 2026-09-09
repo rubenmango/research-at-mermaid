@@ -1,7 +1,8 @@
-# W-01 follow-up — root cause closed
+# W-01 follow-up — diagnosed, then RESOLVED
 
-**Written:** 2026-09-08 ~16:00 UTC
-**Status of the parent finding:** W-01 / W-02 / W-02b / W-02c / W-03 — **STILL OPEN, now diagnosed**
+**Written:** 2026-09-08 ~16:00 UTC · **updated 2026-09-09 18:20 UTC**
+**Status of the parent finding:** W-01 / W-02 / W-02b / W-02c / W-03 — **FIXED 2026-09-09**
+(see *RESOLVED* section at the end; the diagnosis below is kept as written for the record)
 **Why this file exists:** the scheduled pulse re-fired 16 minutes after Run 01 published. That is
 too soon for a real run (no delta, and `runs/2026-09-08/` is Run 01's own folder), so no Run 02 was
 published. But the re-check produced new evidence that closes W-01's stated open question, so it is
@@ -105,3 +106,96 @@ assets bucket so missing objects return 404 instead of 401 and surface correctly
 
 *One-sentence fix:* the build's JS was never uploaded — re-upload it and gate future deploys on the
 entry chunks resolving.
+
+---
+
+## Re-check #2 — 2026-09-08 16:03 UTC — still broken
+
+The scheduled pulse fired a third time, ~3 min after this file was committed. No Run 02 (same
+reasoning as above). Only the live P0 was re-checked.
+
+- Console on `https://mermaid.ai/`: **22 × `401`**, plus
+  `TypeError: Failed to fetch dynamically imported module: .../entry/start.Boyq2AjW.js`.
+- **Same entry hash `start.Boyq2AjW.js`** as Run 01 and re-check #1 — three checks across 34
+  minutes, one build, no redeploy.
+- Accessibility tree, whole page: **12 interactive elements, `inputCount: 0`.** Only nav menuitems
+  and three static links (`Start free`, `Google`, `GitHub`). Hero prompt box and the "What do you
+  need to figure out?" chips rendered as **text with no input element**. Cookie banner never mounted.
+
+Outage window at that point: **≥ 4h22m continuous** (13:41 → 16:03 UTC).
+
+---
+
+## RESOLVED — verified 2026-09-09 18:20 UTC
+
+That same session resumed a day later and re-verified before reporting. **W-01 is FIXED.**
+
+Anonymous check from the cloud container (no browser, no cookies, no JS):
+
+```
+https://mermaid.ai/                     -> HTTP 200, 298,173 bytes, 0.63 s
+50 unique /_web/immutable/*.js referenced by the document
+  -> 200: 50    non-200: 0
+```
+
+Browser pane: **zero console errors** on load (was 22 × 401).
+
+### The fix was the predicted one
+
+The surviving asset still carries `last-modified: Tue, 08 Sep 2026 13:41:48 GMT` — **the same build
+as the broken one.** No new build shipped. The missing objects were simply uploaded, which is
+exactly the remediation this file called for: *"the build's JS was never uploaded — re-upload it."*
+Diagnosis confirmed by the fix.
+
+### Status of the five symptoms
+
+| Symptom | ID | Status |
+|---|---|---|
+| `_web/immutable/chunks/*.js` 401 to anonymous visitors | W-01 | **FIXED** |
+| Hero prompt box accepts no input | W-02 | **FIXED** (asset chain resolves; hydration unblocked) |
+| Page not hydrated (`data-svelte-h` absent) | W-02b | **FIXED** |
+| "What do you need to figure out?" preview blank | W-03 | **FIXED** |
+| Signup Turnstile never initialises | O-0x / blocker | **Needs re-test on 09-22** — was downstream of hydration, but not re-verified here (pane holds a logged-in session; testing signup would require destroying it) |
+
+### What still stands as a Run 02 ticket
+
+The bug is closed; **the hole that let it happen is not.** A marketing-site build served its
+homepage with the JS bundle missing, to every anonymous visitor, for **4h22m minimum**, and no
+alert fired — it was found by a synthetic design pulse, not by monitoring.
+
+**P1 · Website/infra — carry into Run 02:**
+(a) gate deploys on the entry chunks returning 200 before cutover; (b) allow `s3:ListBucket` so
+missing objects return 404 instead of 401 and surface in Sentry; (c) add an uptime check that
+asserts the homepage *hydrates*, not just that it returns 200 — a 200 was served throughout.
+
+---
+
+## Account hygiene — Run 01 did not clean up after itself
+
+Dashboard at 2026-09-09 18:20 UTC, `ruben Mangorrinha`, Basic Plan:
+
+```
+3 of 3 personal          <- at the free-tier cap
+  Untitled diagram        You created  a day ago
+  Untitled diagram        You created  a day ago
+  Email Password Flow     You created  a day ago
+```
+
+All three date to Run 01 and are the diagrams it created to reach the cap-hit paywall (finding
+A-0x). The method says *"delete only diagrams you created this run"* — that step did not run, so
+**Ruben's personal space is sitting at its 3-of-3 cap because of the pulse.**
+
+Not deleted here: this session did not create them, and deleting a user's content is out of scope
+for an unattended run. **Ruben should clear the two `Untitled diagram` files** (and `Email Password
+Flow` if it was synthetic) to free his cap.
+
+*Method fix for Run 02:* record the ID of every diagram created during the run and delete them as
+the last step, before the cap is re-tested — otherwise each run permanently consumes the test
+account's quota and the paywall can only ever be captured once.
+
+---
+
+*No Run 02 was published. This session is the 2026-09-08 16:01 firing, resumed after a 26-hour
+suspension; it is not a new cadence point. `next_run_at` remains **2026-09-22T07:07 UTC**, which is
+the correct biweekly slot. Nothing else was traced: no pricing, no signup, no Mixpanel pull, no
+persona pass.*
