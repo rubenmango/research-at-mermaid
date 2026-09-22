@@ -162,41 +162,42 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}
   <div class="topbar"><span class="sq"></span> Mermaid Chart · Research · Synthetic users · mermaid.ai</div>
 
   <div class="pills">
-    <span class="pill pink dot">Run 01 · Baseline</span>
-    <span class="pill">2026-09-08</span>
+    <span class="pill pink dot">Run 02 · Infra fixed, AI regressed</span>
+    <span class="pill">2026-09-22</span>
     <span class="pill">6 personas · 1 real trace</span>
-    <span class="pill amber dot">Warm start — existing account</span>
+    <span class="pill amber dot">Logged-in only · 8 checks unverifiable</span>
     <span class="pill">Every 2 weeks</span>
   </div>
   <h1>Synthetic User Pulse</h1>
-  <p class="sub">One cold walk of mermaid.ai — landing → signup → first diagram → AI edit → share → paywall — replayed to six synthetic personas. Findings are split by owning team so each row can become a ticket.</p>
+  <p class="sub">One real walk of mermaid.ai — pricing → signup → returning dashboard → cap paywall → AI generation → AI edit → share — replayed to six synthetic personas. Findings are split by owning team so each row can become a ticket.</p>
   <div class="meta">
     <div>Method<b>Real trace + 6 persona agents</b></div>
     <div>Success metric<b>Trial intent · friction recurring across personas</b></div>
-    <div>Surface<b>mermaid.ai prod, logged out + Basic account</b></div>
+    <div>Surface<b>mermaid.ai prod, Basic account at 3/3 cap</b></div>
     <div>Data<b>Browser trace · Mixpanel EU 2954792</b></div>
   </div>
 
   <div class="kpis">
-    <div class="kpi"><div class="n">29%</div><div class="l">Product health · 14 of 48 checks pass</div><div class="d">Fixed checklist; diffable from run 02</div></div>
-    <div class="kpi"><div class="n">0 / 6</div><div class="l">Personas who would start the trial</div><div class="d">All six: "Not yet"</div></div>
-    <div class="kpi"><div class="n">31</div><div class="l">Defects logged · 8 things working</div><div class="d">6 rated blocker by ≥1 persona</div></div>
-    <div class="kpi"><div class="n">100%</div><div class="l">AI output accuracy · 2 of 2 generations</div><div class="d">Auto-title accuracy 1 of 2</div></div>
+    <div class="kpi"><div class="n">23%</div><div class="l">Product health · 11 of 48 checks pass</div><div class="d">Down 6 pts. Ceiling 40% — 8 checks unverifiable</div></div>
+    <div class="kpi"><div class="n">0 / 6</div><div class="l">Personas who would start the trial</div><div class="d">All six now "Blind spot" — three fell from "Partially served"</div></div>
+    <div class="kpi"><div class="n">28</div><div class="l">Defects logged · 12 things working</div><div class="d">5 P0 · 8 rated blocker by ≥1 persona</div></div>
+    <div class="kpi"><div class="n">0%</div><div class="l">AI output reaching the canvas · 0 of 2</div><div class="d">Both generations correct; neither applied</div></div>
   </div>
 
   <div class="callout red">
-    <p><b>Headline.</b> The AI is the part that works — a correct sequence diagram with the failure branch in ~10 s, honest credit accounting, a follow-up question in the right place. Everything around it makes the AI look like it failed: a marketing hero box that silently eats input, a "New diagram" button dead for 3 s, and an AI edit that lands in chat behind a button called <em>Edit</em> while the canvas doesn't move. Every persona described the product with a word like <em>flaky</em>, <em>unfinished</em> or <em>untrustworthy</em>; none would start the trial.</p>
-    <p><b>Escalate today:</b> SSO login shows <b>62 successes vs 6,551 failures</b> in 28 days. Either enterprise SSO is broken or the failure event over-fires — and the data can't tell you which.</p>
+    <p><b>Headline.</b> Run 01's dominant bug is fixed — the site redeployed, all 42 assets return 200, the page hydrates and Turnstile initialises. And the one thing Run 01 called working, the AI, regressed underneath it. This run spent two credits, got two correct diagrams, and ended on a <b>blank canvas</b>: generation and edit both land as previews behind a button labelled <em>Edit</em>, nothing reaches the document, the file is still called "Untitled diagram", and after a reload there is no visible control that reopens the chat. Health <b>23%</b> (11 of 48), down from 29%. All six personas moved to <em>Blind spot</em>; three fell from <em>Partially served</em>.</p>
+    <p><b>Escalate today:</b> <b>AI-03</b> — AI output never reaches the canvas, credit charged first, with no pending state for ~40 s. And <b>D-09</b>: two empty diagrams from Run 01 still consume 2 of the 3 free slots, so the cap converts on an accident, not on value.</p>
+    <p><b>Read the score honestly:</b> 8 of the 48 checks could not be tested this run and are scored as failures. The pane holds a session that cannot be rebuilt unattended, so the logged-out walk was impossible; the account sits at 3/3, so nothing could be created. The true figure is somewhere between <b>11 and 19 of 48</b>.</p>
   </div>
 
   <!-- ===== SIGNALS ===== -->
   <section id="signals">
-    <div class="sechead"><div><span class="kicker">Signals · Mixpanel EU</span><h2>What the auth data says</h2></div><span class="pill">28 days to 2026-09-08</span></div>
+    <div class="sechead"><div><span class="kicker">Signals · Mixpanel EU</span><h2>What the auth data says</h2></div><span class="pill">28 days to 2026-09-21</span></div>
     <p class="sec-sub">Signups are healthy and rising — which is exactly why aggregate volume can't be the smoke alarm. The trouble is only visible once auth is split by method, and signup can't be split at all.</p>
     <div class="charts2">
-      <figure class="chart"><figcaption><b>SSO login · success vs failed, weekly</b><span>62 successes against 6,551 failures. Success rate 0.4–1.9 %.</span></figcaption><div id="c-sso"></div></figure>
-      <figure class="chart"><figcaption><b>Signups per day · <code>User Sign Up @server</code></b><span>Weekday 7–9 k, weekend 3.5–5.7 k. No regression. Sep 8 is a partial day.</span></figcaption><div id="c-signup"></div></figure>
-      <figure class="chart"><figcaption><b>Logins per day by method</b><span>Google ≈ 13 k · GitHub ≈ 2.3 k · Email ≈ 380. Email is ~2.3 % of logins.</span></figcaption><div id="c-method"></div></figure>
+      <figure class="chart"><figcaption><b>SSO login · success vs failed, weekly</b><span>84 successes against 4,333 failures. The drop is the Aug 10 outlier week leaving the window — not a fix.</span></figcaption><div id="c-sso"></div></figure>
+      <figure class="chart"><figcaption><b>Signups per day · <code>User Sign Up @server</code></b><span>Weekday 8–9.2 k, weekend 4.1–5 k. Up ~5 % on Run 01. No regression.</span></figcaption><div id="c-signup"></div></figure>
+      <figure class="chart"><figcaption><b>Logins per day by method</b><span>Google ≈ 15 k · GitHub ≈ 2.7 k · Email ≈ 420. Email is still ~2.3 % of logins.</span></figcaption><div id="c-method"></div></figure>
       <figure class="chart"><figcaption><b>Email login · success vs ERROR, daily</b><span>Error events track successes 1:1 every day — real failure rate or an over-firing event.</span></figcaption><div id="c-email"></div></figure>
     </div>
   </section>
@@ -207,90 +208,89 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}
     <p class="sec-sub">Each area has a fixed list of yes/no checks scored from the trace. The list does not change between runs, so the percentage is a trend, not a grade. Owner is the team that gets the tickets.</p>
     <div class="areas" id="areas"></div>
     <div class="charts2" style="margin-top:18px">
-      <figure class="chart"><figcaption><b>Tickets by priority, per team</b><span>31 defects. App team carries the most P0/P1; Editor is thin because little was exercised.</span></figcaption><div id="c-prio"></div></figure>
-      <figure class="chart"><figcaption><b>Time to value · seconds the user waits</b><span>~24 s of machine time from "New diagram" to an applied AI edit — and 3 of the 4 waits give no feedback.</span></figcaption><div id="c-time"></div></figure>
+      <figure class="chart"><figcaption><b>Tickets by priority, per team</b><span>28 defects. AI and App carry all five P0s. Editor stays thin — still barely exercised.</span></figcaption><div id="c-prio"></div></figure>
+      <figure class="chart"><figcaption><b>Time to value · seconds the user waits</b><span>~66 s of machine time for one generation plus one edit — and the 40 s edit wait shows nothing at all.</span></figcaption><div id="c-time"></div></figure>
     </div>
   </section>
 
   <!-- ===== TICKETS BY TEAM ===== -->
   <section id="website">
-    <div class="sechead"><div><span class="kicker">Tickets · Website</span><h2>Marketing site &amp; pricing</h2></div><span class="pill red dot">2 / 11 checks pass</span></div>
+    <div class="sechead"><div><span class="kicker">Tickets · Website</span><h2>Marketing site &amp; pricing</h2></div><span class="pill amber dot">4 / 11 checks pass · +2</span></div>
     <div class="tbl"><div class="scroll"><table>
       <thead><tr><th>P</th><th>Evidence</th><th>Finding</th><th>Personas hit</th></tr></thead>
       <tbody>
-        <tr><td class="p"><span class="prio P0">P0</span></td><td class="id">W-01 W-02 W-03 W-10</td><td>Some <code>/_web/immutable/chunks/*.js</code> return <b>HTTP 401</b> to anonymous visitors (verified from two independent clients; sibling chunks in the same directory return 200). The page never hydrates: the hero prompt box has <b>no input element at all</b> and swallows typed text, the "What do you need to figure out?" preview panel renders blank, and on <code>/app/sign-up</code> the Turnstile widget never initialises. Site-wide (~23 more on <code>/pricing</code>). Signup volume is healthy, so this hits a <b>subset</b> of visitors — most likely deploy skew on cached HTML.<span class="fix">Fix: resolve the edge/origin hash skew · return 404 not 401 for unknown asset paths · show a visible error state when hydration fails instead of an inert box.</span></td><td class="n">6 / 6</td></tr>
-        <tr><td class="p"><span class="prio P1">P1</span></td><td class="id">W-06 D-03</td><td>Free-tier cap contradicts itself on <code>/pricing</code>: Basic card says <b>"3 Diagrams"</b>, compare table says <b>"Up to 6"</b>. The app's quota chip says <b>3 of 3</b>, so the table is wrong. This is the number gating the reverse-trial lever.<span class="fix">Fix: one source of truth for plan limits feeding card, table and app.</span></td><td class="n">6 / 6</td></tr>
-        <tr><td class="p"><span class="prio P1">P1</span></td><td class="id">W-04</td><td>Primary nav items expose as <code>menuitem</code> with <b>no accessible name</b>; hero submit is an unnamed button; intent chips use <code>role="radio"</code> outside a radiogroup. Combined with W-02 the hero is unusable by keyboard or screen reader.<span class="fix">Fix: aria-labels on nav and icon controls; chips as buttons or a real radiogroup. Part of a cross-team a11y epic with D-06 / AI-06.</span></td><td class="n">1 / 6</td></tr>
-        <tr><td class="p"><span class="prio P2">P2</span></td><td class="id">W-07</td><td>Basic card says "Limited AI" / "Limited diagram size"; the table says <b>15 credits</b> and <b>60</b>. The card hides the two numbers a free user needs.<span class="fix">Fix: put "15 AI credits · 60-line diagrams" on the card.</span></td><td class="n">2 / 6</td></tr>
-        <tr><td class="p"><span class="prio P2">P2</span></td><td class="id">W-08</td><td>Enterprise AI credits read <b>"Unlimited*"</b> — no footnote anywhere on the page.<span class="fix">Fix: publish the footnote or drop the asterisk.</span></td><td class="n">1 / 6</td></tr>
-        <tr><td class="p"><span class="prio P2">P2</span></td><td class="id">W-09</td><td>Plus (€8/user/mo) CTA reads <b>"Get started for free"</b>; the actually-free Basic tier reads "Get started".<span class="fix">Fix: label each CTA for what the tier is.</span></td><td class="n">1 / 6</td></tr>
-        <tr><td class="p"><span class="prio P3">P3</span></td><td class="id">W-05</td><td>Cookiebot banner appears on the signup page (not the homepage) with Preferences / Statistics / Marketing all <b>defaulting ON</b>.<span class="fix">Fix: default optional categories off; don't interrupt at peak signup intent.</span></td><td class="n">—</td></tr>
+        <tr><td class="p"><span class="prio P1">P1</span></td><td class="id">W-06</td><td><b>STILL OPEN, unchanged in 14 days.</b> Free-tier cap contradicts itself on <code>/pricing</code>: Basic card says <b>"3 Diagrams"</b>, compare table says <b>"Up to 6"</b>. The app's quota chip says <b>3 of 3</b>, so the table is wrong. This is the number gating the reverse-trial lever, and it is now wrong across two runs.<span class="fix">Fix: one source of truth for plan limits feeding card, table and app.</span></td><td class="n">4 / 6</td></tr>
+        <tr><td class="p"><span class="prio P1">P1</span></td><td class="id">W-01</td><td><b>Latent.</b> The 401 outage is fixed — the build redeployed (entry hashes rotated) and all 42 homepage assets now return 200 from an anonymous client. But the <b>bucket policy that turned a missing object into a 401 instead of a 404 was never verified as changed.</b> The trap that made Run 01's outage silent and un-alertable is still armed for the next bad deploy.<span class="fix">Fix: allow <code>s3:ListBucket</code> so missing keys 404 and surface in Sentry; gate deploys on the entry chunks resolving 200.</span></td><td class="n">2 / 6</td></tr>
+        <tr><td class="p"><span class="prio P2">P2</span></td><td class="id">W-07</td><td><b>STILL OPEN.</b> Basic card says "Limited AI" / "Limited diagram size"; the table says <b>15 credits</b> and <b>60</b>. The card hides the two numbers a free user needs to judge the tier.<span class="fix">Fix: put "15 AI credits · 60-line diagrams" on the card.</span></td><td class="n">2 / 6</td></tr>
+        <tr><td class="p"><span class="prio P2">P2</span></td><td class="id">W-09</td><td><b>CHANGED, still wrong.</b> Viewed while signed in on Basic, Plus and Premium both show <b>"Manage plan"</b> — plans this user does not have and cannot manage. A Basic user gets no route to a Plus trial from the pricing page, while the dashboard, the cap banner and the paywall all push exactly that.<span class="fix">Fix: CTA state should follow the viewer's actual plan. Re-check logged out to confirm the Run 01 "Get started for free" label.</span></td><td class="n">2 / 6</td></tr>
+        <tr><td class="p"><span class="prio P3">P3</span></td><td class="id">W-08</td><td><b>STILL OPEN.</b> Enterprise AI credits read <b>"Unlimited*"</b> — no footnote anywhere on the page, two runs running.<span class="fix">Fix: publish the footnote or drop the asterisk.</span></td><td class="n">2 / 6</td></tr>
       </tbody></table></div></div>
-    <p class="ok" style="font-size:13.5px;margin:6px 0 0">Working: deep links preserve destination through login (<code>/app/login?redirect=…</code>); Google / GitHub / SSO entry points are present and deep-linkable.</p>
+    <p class="ok" style="font-size:13.5px;margin:6px 0 0"><b>Fixed since Run 01:</b> W-01 / W-10 — the site redeployed and 42 of 42 assets return 200 to an anonymous client; zero 401s anywhere this run (Run 01 counted 67). <code>/pricing</code> now hydrates fully with a clean console. <b>Unverifiable this run:</b> W-02 hero input, W-03 chip preview, W-04 nav labels, W-05 cookie banner — <code>/</code> redirects an authenticated session to the dashboard, and the pane's session cannot be rebuilt unattended.</p>
   </section>
 
   <section id="onboarding">
-    <div class="sechead"><div><span class="kicker">Tickets · Onboarding</span><h2>Signup &amp; first run</h2></div><span class="pill red dot">2 / 10 checks pass</span></div>
+    <div class="sechead"><div><span class="kicker">Tickets · Onboarding</span><h2>Signup &amp; first run</h2></div><span class="pill red dot">2 / 10 checks pass · no change</span></div>
     <div class="tbl"><div class="scroll"><table>
       <thead><tr><th>P</th><th>Evidence</th><th>Finding</th><th>Personas hit</th></tr></thead>
       <tbody>
-        <tr><td class="p"><span class="prio P0">P0</span></td><td class="id">ACCESS</td><td>Cloudflare Turnstile <b>hard-fails inside embedded Chromium</b> (<code>Error: 600010</code>, UI: "Failed to validate. Please check your internet connection"). Same environment class as managed corporate browsers and in-app webviews. It also blocks this test from ever running unattended.<span class="fix">Ask: Turnstile off for a flagged test account or test email domain, or a staging URL on Cloudflare's always-pass sitekey. Then test Turnstile in managed browsers with a fallback path.</span></td><td class="n">1 / 6</td></tr>
-        <tr><td class="p"><span class="prio P1">P1</span></td><td class="id">O-07 O-06</td><td>First tip promises <b>"watch the diagram update in real time."</b> Edits actually land as proposals in chat (AI-03). The first tip on the product misdescribes its own behaviour.<span class="fix">Fix: rewrite to "review the proposed change and apply it" — or make AI-03 true.</span></td><td class="n">5 / 6</td></tr>
-        <tr><td class="p"><span class="prio P1">P1</span></td><td class="id">O-08</td><td>Once text is entered, a dropdown labelled only <b>"Redux"</b> appears by the submit arrow — the theme picker, with no "Theme" label. Read as a framework setting by one persona; as the exact ungovernable per-user styling a Steward is there to prevent.<span class="fix">Fix: "Theme: Redux" + palette icon; add "Save as team theme"; org-level default the picker inherits.</span></td><td class="n">5 / 6</td></tr>
-        <tr><td class="p"><span class="prio P1">P1</span></td><td class="id">O-05</td><td>Guided-hint anchors fail on the empty editor: <code>Reference element not found for template-toolbar</code> / <code>ai-chat-btn</code>.<span class="fix">Fix: gate hints on target presence, or render the anchors in the empty state.</span></td><td class="n">—</td></tr>
-        <tr><td class="p"><span class="prio P2">P2</span></td><td class="id">O-01 O-02 O-03</td><td>Signup/login fields are <b>placeholder-only</b> (no <code>label</code>, <code>id</code> or <code>aria-label</code>); confirm-password field is redundant next to the show/hide toggle; Terms of Use + T&amp;C linked at consent but <b>no privacy policy</b>.<span class="fix">Fix: real labels; drop confirm-password; link privacy policy / DPA at the point of consent.</span></td><td class="n">3 / 6</td></tr>
-        <tr><td class="p"><span class="prio P3">P3</span></td><td class="id">O-09</td><td>Post-generation URL carries <code>?shouldShowPopup=true&amp;entryPoint=Dashboard</code> — a permalink someone will paste into a spec.<span class="fix">Fix: strip control-flow params after use.</span></td><td class="n">2 / 6</td></tr>
+        <tr><td class="p"><span class="prio P1">P1</span></td><td class="id">O-02</td><td><b>STILL OPEN.</b> Signup fields are <b>placeholder-only</b> — the a11y tree now reports names ("Work email", "Password", "Re-enter password") but these are computed from the placeholder, and the screenshot confirms no persistent label. The label vanishes on input; worst on "Re-enter password", where the user cannot see which field they are in once typing starts. Fails WCAG 3.3.2.<span class="fix">Fix: real <code>&lt;label&gt;</code> elements above each field.</span></td><td class="n">4 / 6</td></tr>
+        <tr><td class="p"><span class="prio P1">P1</span></td><td class="id">O-06</td><td><b>REGRESSED or once-only — needs a clean account to tell.</b> Neither progressive tip fired this run across a generation and an edit. Run 01 recorded both firing in sequence and called the June report's Create → Edit with AI → Share checklist shipped. A thumbs-up/down feedback pair appeared instead.<span class="fix">Confirm on a fresh account before escalating; if the tips are once-per-account, say so in the run notes rather than re-raising.</span></td><td class="n">3 / 6</td></tr>
+        <tr><td class="p"><span class="prio P2">P2</span></td><td class="id">O-10</td><td><b>NEW.</b> A returning user opening an existing empty diagram lands on a <b>bare dotted canvas</b> whose only affordance is a one-line bar reading "Describe your idea" — no "What do you want to diagram?", no Generate / Paste toggle, no Upload, no Templates entry. A free user at 3/3 has no new-diagram path left, so this is the only entry they have, and it teaches them nothing.<span class="fix">Fix: show the guided empty state on any empty document, not only on freshly created ones.</span></td><td class="n">3 / 6</td></tr>
+        <tr><td class="p"><span class="prio P2">P2</span></td><td class="id">O-03</td><td><b>STILL OPEN.</b> Confirm-password field persists next to show/hide toggles that already solve the typo problem it exists to catch — an extra field on the highest-drop-off form in the funnel.<span class="fix">Fix: drop the confirm field.</span></td><td class="n">2 / 6</td></tr>
+        <tr><td class="p"><span class="prio P2">P2</span></td><td class="id">O-01</td><td><b>STILL OPEN.</b> Consent line names <b>Terms of Use</b> and <b>Terms &amp; Conditions</b> but <b>no privacy policy</b> at the point of consent — the Privacy Policy exists, it is just in the pricing footer. Also: <code>/app/sign-up</code> renders a full create-account form to an already-authenticated user.<span class="fix">Fix: link privacy policy / DPA at consent; redirect signed-in users away from signup.</span></td><td class="n">2 / 6</td></tr>
       </tbody></table></div></div>
-    <p class="ok" style="font-size:13.5px;margin:6px 0 0">Working: the empty editor ("What do you want to diagram?" · Generate / Paste Mermaid code · Upload) drew 3 delights; the Create → Edit with AI → Share tip sequence from the June report is live; the contextual follow-up arrives <em>after</em> first render, as recommended.</p>
+    <p class="ok" style="font-size:13.5px;margin:6px 0 0"><b>Fixed since Run 01:</b> Turnstile now <b>initialises</b> on the signup form — the widget renders and gates the Create account button, where Run 01 saw zero challenge iframes and a console repeating <code>Error: 600010</code>. The signup page produced <b>zero console messages of any kind</b> this run. O-08's unexplained "Redux" theme dropdown is gone. <b>Consequence:</b> the Run 01 prediction that the Turnstile failure was downstream of the hydration bug looks right — <b>do not file the Turnstile-exemption ticket yet</b>; have a human attempt one email login in the pane first. <b>Unverifiable:</b> O-05 hint anchors, O-09 URL flags, the new-diagram empty state — all blocked by the 3/3 cap.</p>
   </section>
 
   <section id="editor">
-    <div class="sechead"><div><span class="kicker">Tickets · Editor</span><h2>Canvas &amp; sharing</h2></div><span class="pill amber dot">3 / 5 checks pass · thin coverage</span></div>
+    <div class="sechead"><div><span class="kicker">Tickets · Editor</span><h2>Canvas &amp; sharing</h2></div><span class="pill red dot">2 / 5 checks pass · −1</span></div>
     <div class="tbl"><div class="scroll"><table>
       <thead><tr><th>P</th><th>Evidence</th><th>Finding</th><th>Personas hit</th></tr></thead>
       <tbody>
-        <tr><td class="p"><span class="prio P1">P1</span></td><td class="id">E-01</td><td>Share → "Use invite link" defaults to <b>Can edit</b>. A link pasted into Slack grants edit to whoever forwards it. Public link correctly defaults to No access.<span class="fix">Fix: default invite links to Can view; org-level setting to enforce it.</span></td><td class="n">6 / 6</td></tr>
-        <tr><td class="p"><span class="prio P2">P2</span></td><td class="id">E-02 AI-06</td><td>Header icon buttons (comments, save, history, title) and the Generate / Paste toggle have <b>no accessible names</b>. The pan/zoom cluster is the one well-labelled group in the product.<span class="fix">Fix: aria-labels across the header and toggles.</span></td><td class="n">1 / 6</td></tr>
+        <tr><td class="p"><span class="prio P1">P1</span></td><td class="id">E-01</td><td><b>STILL OPEN, unchanged.</b> Share → "Use invite link" still defaults to <b>Can edit</b>. A link pasted into Slack grants edit to whoever forwards it. Public link correctly defaults to <b>No access</b>. Verified again on a <b>Basic</b> account — which also proves the paywall's claim that sharing is a Plus benefit is false (D-04).<span class="fix">Fix: default invite links to Can view; org-level setting to enforce it.</span></td><td class="n">5 / 6</td></tr>
+        <tr><td class="p"><span class="prio P2">P2</span></td><td class="id">E-02</td><td><b>REGRESSED (moderate confidence).</b> On the bare canvas, the bottom-right control cluster is <b>6 unnamed buttons</b> (undo, redo, zoom out, zoom in, fit, fullscreen) plus 5 unnamed header icons — <b>14 of 24</b> interactive controls on the empty editor expose no accessible name. Run 01 recorded the pan/zoom cluster as the one well-labelled group in the product. The cluster appears to have moved (right rail → bottom-right), so this may be a new unlabelled group rather than labels being removed. The same functions <em>are</em> labelled correctly inside the chat preview.<span class="fix">Fix: reuse the chat preview's labelled control component on the canvas.</span></td><td class="n">2 / 6</td></tr>
+        <tr><td class="p"><span class="prio P3">P3</span></td><td class="id">E-01b</td><td><b>NEW.</b> The Share dialog shows <b>"Loading sharing information…"</b> for ~5 s before rendering anything.<span class="fix">Fix: render the dialog shell with skeleton rows immediately.</span></td><td class="n">1 / 6</td></tr>
       </tbody></table></div></div>
-    <p style="font-size:13.5px;color:var(--muted);margin:6px 0 0">Not exercised this run: code panel round-trip, node-level AI, templates gallery, export, version history, comments. Collaborator and Maintainer both rated this absence a 5 — it is their whole job.</p>
+    <p style="font-size:13.5px;color:var(--muted);margin:6px 0 0"><b>Not exercised — second run running:</b> code panel round-trip, node-level AI, templates gallery, export, version history, comments. Maintainer and Contributor both rated this absence a <b>5</b>. A version-history control exists in the editor header and has still never been opened.</p>
   </section>
 
   <section id="ai">
-    <div class="sechead"><div><span class="kicker">Tickets · AI</span><h2>Generation &amp; edit loop</h2></div><span class="pill amber dot">5 / 9 checks pass</span></div>
+    <div class="sechead"><div><span class="kicker">Tickets · AI</span><h2>Generation &amp; edit loop</h2></div><span class="pill red dot">2 / 9 checks pass · −3</span></div>
     <div class="tbl"><div class="scroll"><table>
       <thead><tr><th>P</th><th>Evidence</th><th>Finding</th><th>Personas hit</th></tr></thead>
       <tbody>
-        <tr><td class="p"><span class="prio P0">P0</span></td><td class="id">AI-03</td><td>Chat edit ("add a rate-limit check… return 429"): response in ~9 s, credit charged, summary says <b>"Here's the updated signup sequence"</b> — and the <b>canvas does not change</b>. The updated diagram exists only as a preview inside the chat; the button that applies it is labelled <b>"Edit"</b>. Every persona read this as "the edit failed." The updated diagram itself was correct.<span class="fix">Fix: apply to canvas by default with Undo, or label the action "Apply to diagram" and state "proposal — not yet applied" in the response. Consider a diff preview before the credit is spent.</span></td><td class="n">6 / 6</td></tr>
-        <tr><td class="p"><span class="prio P2">P2</span></td><td class="id">AI-01</td><td>Auto-title drifted from <b>"Email Signup Verification"</b> (accurate) to <b>"Email Password Flow"</b> (less accurate) with no explanation. Titles are the search key later.<span class="fix">Fix: keep the first title unless the user changes it; let titles be pinned.</span></td><td class="n">4 / 6</td></tr>
-        <tr><td class="p"><span class="prio P2">P2</span></td><td class="id">AI-04</td><td>Three placeholders for one AI input: "Describe it, or paste anything here." · "Describe what to add or change" · "Describe your idea".<span class="fix">Fix: one string per state, one owner.</span></td><td class="n">2 / 6</td></tr>
-        <tr><td class="p"><span class="prio P2">P2</span></td><td class="id">AI-06</td><td>The AI chat's attach and <b>send</b> buttons have no accessible name.<span class="fix">Fix: aria-labels.</span></td><td class="n">1 / 6</td></tr>
-        <tr><td class="p"><span class="prio P3">P3</span></td><td class="id">AI-05</td><td>First chat message switches the editor to a split view; applying the edit snaps back to full canvas.<span class="fix">Watch: disorienting on first encounter; not a bug.</span></td><td class="n">—</td></tr>
+        <tr><td class="p"><span class="prio P0">P0</span></td><td class="id">AI-03</td><td><b>REGRESSED — worse than Run 01.</b> In Run 01 the first generation rendered to the canvas and only <em>edits</em> were proposals. <b>This run neither did.</b> Generation and edit both appeared only as preview cards inside the chat, each behind a button labelled <b>"Edit"</b>. Closing the panel returns a <b>completely blank canvas</b>; after a reload the canvas is still blank, the file is still <b>"Untitled diagram"</b>, credits are <b>13</b>, and <b>no control in the editor chrome reopens the AI chat</b>. The dashboard still lists the file as "Empty diagram". Net: <b>two credits spent, two correct diagrams produced, user left with nothing.</b><span class="fix">Fix: apply to canvas by default with Undo. Failing that, label the action "Apply to diagram", say "proposal — not yet applied", and put a persistent AI-chat control in the editor header.</span></td><td class="n">6 / 6</td></tr>
+        <tr><td class="p"><span class="prio P0">P0</span></td><td class="id">AI-04</td><td><b>NEW.</b> On submitting the chat edit the user's own message <b>did not echo into the transcript</b>, no spinner appeared, and nothing changed for <b>~40 s</b> — while the credit counter had <b>already</b> decremented 14 → 13. The interface confirms the charge and shows no sign of work in progress. (Run 01 had a "Loading diagram…" state on the generation path; the edit path has none.)<span class="fix">Fix: echo the user message immediately, show a pending row, and charge the credit on delivery rather than on submit.</span></td><td class="n">3 / 6</td></tr>
+        <tr><td class="p"><span class="prio P1">P1</span></td><td class="id">AI-01</td><td><b>REGRESSED.</b> The first generation emitted <b>invalid Mermaid</b> and triggered a visible auto-repair: <b>"Repairing diagram… / The Mermaid code contains a syntax error."</b> Time to rendered output <b>~26 s</b> against ~10 s in Run 01. The repair worked and being visible beats a silent retry — but it sits on the critical path of the product's most important moment, and the word the user reads there is <b>"syntax error"</b>, in a product whose pitch is that they never touch syntax.<span class="fix">Fix: validate-and-repair server-side before first paint; never surface "syntax error" to the user.</span></td><td class="n">3 / 6</td></tr>
+        <tr><td class="p"><span class="prio P2">P2</span></td><td class="id">AI-07</td><td><b>STILL OPEN.</b> After a generation and an edit the file is still <b>"Untitled diagram"</b>. Run 01 at least auto-titled. Consistent with AI-03 — titling appears to happen on apply, and nothing was applied. Titles are the search key later.<span class="fix">Fix: title on first successful generation, not on apply.</span></td><td class="n">3 / 6</td></tr>
+        <tr><td class="p"><span class="prio P2">P2</span></td><td class="id">AI-06</td><td><b>PARTLY FIXED.</b> Inside the chat, Preview / Code, Copy code, More actions, Fullscreen, Edit, Pan, Zoom, Fit, Good/Bad Response, New AI Chat and Delete Chat all expose accessible names — a real improvement. The <b>send button</b> and the attach button still have none.<span class="fix">Fix: aria-labels on the last two.</span></td><td class="n">2 / 6</td></tr>
+        <tr><td class="p"><span class="prio P3">P3</span></td><td class="id">AI-05</td><td><b>STILL OPEN.</b> Two placeholders for one AI input this run: "Describe your idea" (canvas) · "What would you like to change or add?" (chat). Run 01 counted four across the journey.<span class="fix">Fix: one string per state, one owner.</span></td><td class="n">1 / 6</td></tr>
       </tbody></table></div></div>
-    <p class="ok" style="font-size:13.5px;margin:6px 0 0">Working: first generation faithful to a 287-char prompt including the failure branch, rendered in ~10 s; credits 15 → 14 → 13 visibly and correctly; post-render follow-up ("password strength… retry limits… error messages?") in the right order; three suggested next edits after each response.</p>
+    <p class="ok" style="font-size:13.5px;margin:6px 0 0"><b>Still good:</b> both outputs were <b>correct and faithful</b> — the flowchart carried every branch asked for, including the already-registered path and the expired-link resend loop, and the edit correctly inserted a rate-limit decision returning 429 before account creation. Credit accounting stayed visible and honest (15 → 14 → 13). <b>The model is not the problem; the delivery path is.</b></p>
   </section>
 
   <section id="app">
-    <div class="sechead"><div><span class="kicker">Tickets · Dashboard &amp; App</span><h2>Dashboard, paywall, auth telemetry</h2></div><span class="pill red dot">2 / 13 checks pass</span></div>
+    <div class="sechead"><div><span class="kicker">Tickets · Dashboard &amp; App</span><h2>Dashboard, paywall, auth telemetry</h2></div><span class="pill red dot">1 / 13 checks pass · −1</span></div>
     <div class="tbl"><div class="scroll"><table>
       <thead><tr><th>P</th><th>Evidence</th><th>Finding</th><th>Personas hit</th></tr></thead>
       <tbody>
-        <tr><td class="p"><span class="prio P0">P0</span></td><td class="id">A-01</td><td><b>SSO login: 62 successes vs 6,551 failures in 28 days</b> (weekly success 0.4 %–1.9 %). SSO is the headline Enterprise differentiator. Either SSO is broken, or <code>User SSO Login Failed</code> over-fires (e.g. an is-this-an-SSO-domain probe) and enterprise auth telemetry is unreadable. Both readings are serious.<span class="fix">Ask the owning engineer what the event fires on. Split it by cause. Publish a real SSO success rate.</span></td><td class="n">5 / 6</td></tr>
-        <tr><td class="p"><span class="prio P0">P0</span></td><td class="id">D-04</td><td>Cap-hit paywall: <b>"Trial Plusfree for 7 days"</b> (typo), <b>"15% off" with no price shown</b>, "You hit a limit" without naming it, and <b>"Collaborate with comments and sharing"</b> sold as a Plus benefit while Share works on Basic in the same session. This is the screen that decides conversion.<span class="fix">Fix: the space · show €/user/mo · "You've used 3 of 3 diagrams" · list only gated benefits.</span></td><td class="n">6 / 6</td></tr>
-        <tr><td class="p"><span class="prio P1">P1</span></td><td class="id">A-03</td><td><code>User Sign Up @server</code> — "Official event for user sign up" — has <b>no auth-method property</b>. Only custom property is <code>area</code> = <code>"authentication"</code>. Login is segmented by method; signup is not. A method-specific signup failure is invisible by construction.<span class="fix">Fix: add <code>method</code> / <code>provider</code> to the signup event.</span></td><td class="n">1 / 6</td></tr>
-        <tr><td class="p"><span class="prio P1">P1</span></td><td class="id">A-02</td><td><code>User Email Login ERROR</code> tracks ~1:1 with <code>User Email Login</code> every day (Sep 7: 377 vs 415). Real ~50 % failure rate or an over-firing error event.<span class="fix">Fix: same triage as A-01.</span></td><td class="n">—</td></tr>
-        <tr><td class="p"><span class="prio P1">P1</span></td><td class="id">D-01</td><td>"New diagram" → editor takes <b>2.8–3.5 s</b> with no spinner, no disabled state. Users double-click and get stray documents.<span class="fix">Fix: disable + pending state on click.</span></td><td class="n">5 / 6</td></tr>
-        <tr><td class="p"><span class="prio P1">P1</span></td><td class="id">D-02</td><td>Footer counter reads <b>"0 Items"</b> with 1, 2 and 3 diagrams on screen. Wrong in every state.<span class="fix">Fix: bind the count to the rendered list.</span></td><td class="n">4 / 6</td></tr>
-        <tr><td class="p"><span class="prio P2">P2</span></td><td class="id">D-05</td><td>Four labels for one upsell: "Try Plus free" · "Start my trial" · "Start your free trial" · "Start my free trial".<span class="fix">Fix: one string.</span></td><td class="n">4 / 6</td></tr>
-        <tr><td class="p"><span class="prio P2">P2</span></td><td class="id">D-06</td><td>Sidebar nav (Dashboard / Personal / Shared with you / Mermaid Flow) exposes as unnamed buttons; 8+ unnamed buttons on the page; "New diagram" and "new diagram" both present.<span class="fix">Fix: accessible names; a11y epic.</span></td><td class="n">1 / 6</td></tr>
-        <tr><td class="p"><span class="prio P3">P3</span></td><td class="id">D-07 D-08</td><td>Console hygiene: intermittent <b>HTTP 429</b> on an app resource, duplicate Statsig clients, <code>web-share</code> Permissions-Policy warning, CSP report-only <code>unsafe-eval</code>, a stray "Deleting Diagram …" string in body text, login redirect faithfully 404-ing on <code>/app/diagrams</code>.<span class="fix">Fix: backlog.</span></td><td class="n">1 / 6</td></tr>
+        <tr><td class="p"><span class="prio P0">P0</span></td><td class="id">D-09</td><td><b>NEW.</b> The account sits at <b>3 of 3</b> and two of the three files are <b>"Untitled diagram" with an "Empty diagram" thumbnail</b> — created in Run 01, never filled, never expired. They are worth nothing and they are <b>two thirds of the free tier</b>. A user who clicks "New diagram" three times while deciding what to draw is permanently locked out; the only ways out are deleting their own work or paying. Nothing flags the empties, and the paywall does not mention them. <b>The reverse-trial lever is converting on an accident rather than on value delivered.</b><span class="fix">Fix: don't count never-saved empty documents against the cap, or reclaim them automatically and say so.</span></td><td class="n">6 / 6</td></tr>
+        <tr><td class="p"><span class="prio P0">P0</span></td><td class="id">A-01</td><td><b>STILL OPEN — the apparent improvement is a windowing artifact.</b> 28-day totals are now <b>84 successes / 4,333 failures (1.9 %)</b> against Run 01's 62 / 6,551 (0.9 %). That looks like a 34 % drop in failures. It is not: Run 01's window contained the week of <b>2026-08-10 with 3,229 failures</b>, roughly triple every other week on record, and that outlier has simply rolled out. Every non-outlier week in both runs sits at <b>960–1,120</b>. The underlying rate is flat. Nobody has asked what happened on Aug 10.<span class="fix">Ask the owning engineer what the event fires on. Split it by cause. Publish a real SSO success rate. Two runs, no owner, no movement.</span></td><td class="n">4 / 6</td></tr>
+        <tr><td class="p"><span class="prio P0">P0</span></td><td class="id">A-03</td><td><b>STILL OPEN — two pulses old.</b> Re-probed directly: breaking <code>User Sign Up @server</code> down by <code>area</code> returns <b>exactly one row — "authentication", 63,295 events</b>. No provider, method or auth dimension exists. Login is segmented four ways; signup is not segmented at all, so a failure isolated to one signup method stays invisible by construction. This is the June 2026 report's ranked recommendation #1.<span class="fix">Fix: add <code>method</code> / <code>provider</code> to the signup event.</span></td><td class="n">1 / 6</td></tr>
+        <tr><td class="p"><span class="prio P1">P1</span></td><td class="id">D-04</td><td><b>REWRITTEN — two defects fixed, three survived, one regressed.</b> Gone: the "one-time 15% offer" framing and the "15% off" with no price. Survived: <b>"Trial Plusfree for 7 days"</b> — the missing space <b>outlived a full rewrite of this dialog</b>; still no price anywhere; and "Collaborate with comments and sharing" is still sold as Plus while <b>Share works on Basic</b> (verified this run, E-01). Regressed: Run 01's labelled decline <b>"I'll keep my limits"</b> is gone — the only exit is a <b>bare × with no accessible name</b>, and the primary button exposes no name either, so a screen-reader user meets a modal with two unnamed buttons and no labelled way out.<span class="fix">Fix: the space · show €/user/mo · restore a labelled decline · name both dialog buttons · list only genuinely gated benefits.</span></td><td class="n">6 / 6</td></tr>
+        <tr><td class="p"><span class="prio P1">P1</span></td><td class="id">A-02</td><td><b>STILL OPEN, unchanged.</b> <code>User Email Login ERROR</code> still tracks ~1:1 with <code>User Email Login</code>: 21-day totals <b>6,789 successes / 6,506 errors</b>, with errors exceeding successes on 5 of 21 days. Real ~50 % failure rate or an over-firing event — same unresolved ambiguity as Run 01, still nobody's ticket.<span class="fix">Fix: same triage as A-01.</span></td><td class="n">2 / 6</td></tr>
+        <tr><td class="p"><span class="prio P2">P2</span></td><td class="id">D-06</td><td><b>PARTLY FIXED, one gap widened.</b> Several sidebar controls now have names, and Run 01's duplicate "New diagram" / "new diagram" pair is gone. But <b>every file card is an unnamed button wrapping an unnamed link</b> — a screen-reader user gets four anonymous controls where the sighted user sees three diagram names. The files list is unusable without sight.<span class="fix">Fix: name the file-card controls after the diagram; 7 unnamed sidebar buttons remain.</span></td><td class="n">3 / 6</td></tr>
+        <tr><td class="p"><span class="prio P2">P2</span></td><td class="id">D-02</td><td><b>STILL OPEN.</b> Footer counter reads <b>"0 Items"</b> with 3 diagrams on screen and a quota chip reading "3 of 3 personal". Wrong in every state observed, across two runs.<span class="fix">Fix: bind the count to the rendered list.</span></td><td class="n">2 / 6</td></tr>
+        <tr><td class="p"><span class="prio P3">P3</span></td><td class="id">D-05</td><td><b>STILL OPEN.</b> Four labels for one upsell, still: "Try Plus free" (dashboard) · "Start your free trial" (cap banner) · "Start Free Trial" (paywall) · "Start my trial" (editor header).<span class="fix">Fix: one string.</span></td><td class="n">2 / 6</td></tr>
+        <tr><td class="p"><span class="prio P3">P3</span></td><td class="id">D-08 D-10 D-11</td><td><b>Mixed.</b> Console: HTTP 429s and the <code>/app/diagrams</code> 404 are gone; duplicate Statsig clients, <code>web-share</code> Permissions-Policy and CSP <code>unsafe-eval</code> remain. <b>D-10 (new):</b> "More create options" offers <b>"New presentation"</b>, a surface that appears nowhere on <code>/pricing</code> — unstated whether it counts against the 3-diagram cap. <b>D-11 (new):</b> the returning-user dashboard has <b>no memory of the last session</b> — no last-opened, no recent activity, no hint that the newest file is 14 days old.<span class="fix">Fix: backlog; document presentations on the pricing page.</span></td><td class="n">4 / 6</td></tr>
       </tbody></table></div></div>
-    <p class="ok" style="font-size:13.5px;margin:6px 0 0">Working: quota chip accurate at every step (0 → 3 of 3); banner copy changes at cap ("Start your free trial for unlimited editable diagrams"); signup volume healthy at ~7–9 k/weekday with no regression through this morning.</p>
+    <p class="ok" style="font-size:13.5px;margin:6px 0 0"><b>Working:</b> quota chip accurate; banner copy still changes at cap ("Start your free trial for unlimited editable diagrams"); the stray "Deleting Diagram …" string is gone; signups healthy and <b>up ~5 % on Run 01</b> at 8–9.2 k/weekday, window high 9,229 on Sep 16. <b>Not covered — second run running:</b> team spaces, Create Organization, Shared with you, search. Two of the six personas have now had no surface to react to, twice.</p>
   </section>
 
   <!-- ===== PERSONAS ===== -->
   <section id="personas">
-    <div class="sechead"><div><span class="kicker">Personas</span><h2>Six verdicts, zero trials</h2></div><span class="pill">same trace, separate contexts</span></div>
-    <p class="sec-sub">Editor personas are partially served; all three App personas are a blind spot — the run never opened a team space, a shared diagram, or an admin surface. Friction that recurs across ≥ 3 personas is treated as universal.</p>
+    <div class="sechead"><div><span class="kicker">Personas</span><h2>Six blind spots, zero trials</h2></div><span class="pill">same trace, separate contexts</span></div>
+    <p class="sec-sub">All six are now a blind spot — the three Editor personas fell from "Partially served" because the AI output they rated capable in Run 01 no longer reaches the canvas. The three App personas are a blind spot for the second run running: no team space, shared diagram or admin surface has been opened yet. Friction recurring across ≥ 3 personas is treated as universal.</p>
     <div class="pgrid" id="pgrid"></div>
 
     <h3>Severity heatmap · persona × finding</h3>
@@ -301,7 +301,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}
   <!-- ===== LANGUAGE ===== -->
   <section id="language">
     <div class="sechead"><div><span class="kicker">Language</span><h2>The words the personas used</h2></div><span class="pill">from in-character reactions</span></div>
-    <p class="sec-sub">Frequency across all six logs, stop-words removed. <em>nothing</em> at 13 and <em>wrong</em>, <em>broken</em>, <em>assume</em> together outnumber any positive term. <em>plusfree</em> appears six times — every persona repeated the typo back.</p>
+    <p class="sec-sub">Frequency across all six logs, stop-words removed. <em>canvas</em> (25) and <em>empty</em> (25) are new this run and sit just behind <em>diagram</em> — the personas are describing the same hole. <em>labelled</em> and <em>unnamed</em> together appear 27 times; <em>syntax</em>, absent from Run 01, appears 12.</p>
     <div class="words" id="words"></div>
     <h3>Three-word descriptors</h3>
     <div class="desc" id="desc"></div>
@@ -313,19 +313,19 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}
     <p class="sec-sub">Website and editor share a register the Editor personas recognised as theirs. The paywall drops out of it, and no surface anywhere speaks to the person who <em>inherits</em> a diagram or the person who has to <em>approve</em> the tool.</p>
     <div class="voice">
       <div class="vcard"><h4>Holds</h4><ul>
-        <li><code>You already think in systems. Now you can diagram them just as fast.</code></li>
-        <li><code>What do you want to diagram?</code> · <code>Describe it, or paste anything here.</code></li>
-        <li><code>Built something good? Show it off</code> — right nudge, right moment</li>
+        <li><code>We recommend using your work email</code> — still the one line that sounds like a colleague</li>
+        <li><code>Describe your idea</code> · <code>What would you like to change or add?</code></li>
+        <li><code>Start your free trial for unlimited editable diagrams</code> — the banner names the benefit</li>
       </ul></div>
       <div class="vcard"><h4>Breaks</h4><ul>
-        <li><code>You hit a limit. Plus removes all of them</code> — "a different, sloppier company wrote it"</li>
-        <li><code>Trial Plusfree for 7 days</code> — on the screen that asks for a card</li>
-        <li><code>Your one-time 15% offer</code> with no number — "a consumer coupon, not a vendor"</li>
+        <li><code>Trial Plusfree for 7 days</code> — survived a full rewrite of the paywall</li>
+        <li><code>Repairing diagram… The Mermaid code contains a syntax error.</code> — in a product sold on never touching syntax</li>
+        <li><code>Get more diagrams for free</code> — no longer names the cap the user just hit</li>
       </ul></div>
       <div class="vcard"><h4>Drifts</h4><ul>
-        <li>4 labels for one upsell action</li>
-        <li>3 placeholders for one AI input</li>
-        <li>"3 Diagrams" · "Up to 6" · "3 of 3" for one limit</li>
+        <li>4 labels for one upsell action — unchanged, two strings swapped</li>
+        <li>A button labelled <code>Edit</code> that means "apply"</li>
+        <li>"3 Diagrams" · "Up to 6" · "3 of 3" for one limit — unchanged</li>
       </ul></div>
       <div class="vcard"><h4>Never speaks to</h4><ul>
         <li>The reader: "nobody wrote a sentence for me" — Knowledge Consumer</li>
@@ -337,7 +337,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}
 
   <!-- ===== DELTA ===== -->
   <section id="delta">
-    <div class="sechead"><div><span class="kicker">Delta</span><h2>Change since last run</h2></div><span class="pill">next run ≈ 2026-09-22</span></div>
+    <div class="sechead"><div><span class="kicker">Delta</span><h2>Change since last run</h2></div><span class="pill">next run ≈ 2026-10-06</span></div>
     <div class="delta" id="deltabox"></div>
   </section>
 
@@ -345,10 +345,11 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}
   <section id="coverage">
     <div class="sechead"><div><span class="kicker">Coverage</span><h2>Not covered this run</h2></div></div>
     <ul class="plain">
-      <li><b>True cold first-run after signup.</b> Account creation is done by a human; Turnstile then blocked email login in the test browser. The logged-in half ran on an existing account with an emptied personal space — no onboarding wizard fired.</li>
-      <li><b>Returning-user dashboard / memory between sessions.</b> Device link dropped before <code>/app/dashboard</code> was reached.</li>
-      <li><b>Team spaces, Create Organization, Shared with you, search.</b> The App personas' entire world — the reason all three verdicts read "blind spot".</li>
-      <li><b>Templates &amp; Diagram types, export, version history, comments, code round-trip, Mermaid Flow.</b></li>
+      <li><b>The entire logged-out walk in a real browser</b> — hero prompt box, intent chips, logged-out nav, cookie banner. The pane holds a session that cannot be rebuilt unattended, and <code>/</code> redirects an authenticated user to the dashboard. What could be checked without a browser (asset serving, hydration) was verified over plain HTTP from a second machine.</li>
+      <li><b>New-diagram creation, its latency, and the new-diagram empty state</b> (Templates &amp; Diagram types, Upload, Generate/Paste toggle). The account sits at 3/3 and no diagram was created or deleted this run.</li>
+      <li><b>Team spaces, Create Organization, Shared with you, search.</b> The App personas' entire world — <b>uncovered in both runs</b>, which is why all three verdicts read "blind spot" twice.</li>
+      <li><b>Export, version history, comments, code round-trip, node-level AI, Mermaid Flow, presentations.</b> A version-history control exists in the editor header and has still never been opened.</li>
+      <li><b>8 of the 48 checks were therefore unverifiable and are scored as failures.</b> The honest score is somewhere between 11 and 19 of 48.</li>
     </ul>
   </section>
 
@@ -356,12 +357,12 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}
   <section id="method">
     <div class="sechead"><div><span class="kicker">Method &amp; caveats</span><h2>How to read this</h2></div></div>
     <p style="max-width:66ch">One real trace of the production product was captured in a browser (screens, copy, DOM, console, network), then replayed to each of the six persona agents in isolation so all six judged an identical flow. Quantitative auth figures come from Mixpanel EU. Synthetic personas are a fast directional pass anchored in real customer quotes — the reliable signal is friction that recurs across several personas, not any single verdict. Confirm the recurring seams with live users.</p>
-    <div class="callout"><p><b>To make the biweekly run unattended:</b> the test needs a way past Cloudflare Turnstile — a flagged test account/domain, or a staging URL on the always-pass sitekey. Without it every run needs a human to sign in.</p></div>
+    <div class="callout"><p><b>To unblock Run 03, in order of value:</b> (1) <b>Delete the two empty "Untitled diagram" files</b>, or give the pulse its own account — that alone restores the new-diagram path, D-01, the empty state, Templates and the progressive tips. (2) <b>One human, ten seconds, logged out:</b> does the hero box accept text? Closes W-02 / W-03 / W-04. (3) <b>One human, one email login in the pane:</b> does Turnstile now <em>validate</em>? It initialises again, so the Run 01 exemption ticket may not be needed at all — don't file it until this is tested. (4) Seed the account with a diagram authored by someone else, or the Knowledge Consumer is a blind spot for the third run running.</p></div>
   </section>
 
   <footer>
     <p><b>Sources.</b> <a href="https://app.notion.com/p/372bd9ed97e581e9b33ed4b935081e58">Synthetic User Personas (Notion)</a> · <a href="https://app.notion.com/p/388bd9ed97e5814aa9c8ea4ad0d3a81a">June 2026 onboarding report</a> · Mixpanel EU: <a href="https://eu.mixpanel.com/project/2954792/view/3476256/app/insights#kaW8F6F4JtXb">SSO success vs failed</a>, <a href="https://eu.mixpanel.com/project/2954792/view/3476256/app/insights#Vd22gSBVXi3D">login by method</a>, <a href="https://eu.mixpanel.com/project/2954792/view/3476256/app/insights#8e534b15">daily signups</a>.</p>
-    <p>Run 01 · 2026-09-08 · evidence log <code>evidence-run-2026-09-08.md</code> and six persona logs live beside this page in <code>research-at-mermaid</code>.</p>
+    <p>Run 02 · 2026-09-22 · evidence log and six persona logs live in <code>research-at-mermaid</code> under <code>synthetic-user-pulse/runs/2026-09-22/</code>.</p>
   </footer>
 </div>
 
@@ -403,6 +404,42 @@ const RUNS = [
     words: [["diagram",22],["edit",19],["link",19],["free",14],["nothing",13],["trial",12],["team",11],["tell",10],["time",10],["seconds",9],["clicked",8],["button",8],["change",8],["wrong",7],["credit",7],["share",7],["invite",7],["assume",6],["plusfree",6],["broken",5]],
     descriptors: [["capable",2],["unfinished",2],["flaky",1],["half-finished",1],["promising",1],["unaccountable",1],["generative",1],["unversioned",1],["untrustworthy",1],["solo",1],["author-first",1],["uncatalogued",1],["individual-first",1],["ungoverned",1],["unproven",1],["unstyled",1]],
     trialYes: 0, defects: 31, working: 8
+  },
+  {
+    id: "02", date: "2026-09-22", label: "Infra fixed, AI regressed",
+    areas: [
+      { key:"website",    name:"Website",         owner:"Web / Marketing eng", pass:4, total:11 },
+      { key:"onboarding", name:"Onboarding",      owner:"Growth",              pass:2, total:10 },
+      { key:"editor",     name:"Editor",          owner:"Editor team",         pass:2, total:5  },
+      { key:"ai",         name:"AI",              owner:"AI team",             pass:2, total:9  },
+      { key:"app",        name:"Dashboard & App", owner:"App team",            pass:1, total:13 }
+    ],
+    personas: [
+      { n:"01", name:"Sensemaker",    set:"Editor · Now",   verdict:"Blind spot", cls:"red", words:"faster, emptier, unfinished", trial:"No", q:"You fixed the servers and broke the moment the product exists for — AI output that never reaches the canvas is worse than a site that won't load, because this time I paid for it." },
+      { n:"02", name:"Collaborator",  set:"Editor · Soon",  verdict:"Blind spot", cls:"red", words:"unshippable, unlabelled, unowned", trial:"No", q:"The AI now produces correct diagrams that never reach the canvas, never get a name, and therefore can never be shared — fix the apply path before you sell me collaboration." },
+      { n:"03", name:"Maintainer",    set:"Editor · Soon",  verdict:"Blind spot", cls:"red", words:"amnesiac, lossy, unverifiable", trial:"No", q:"The product has no concept of time — not on a file card, not in the AI panel, not in the dashboard — and until it does there is no version of this I can rely on." },
+      { n:"04", name:"Knowledge Consumer", set:"App · Q2 primary", verdict:"Blind spot", cls:"red", words:"authored-for, unsearchable, anonymous", trial:"No", q:"Two consecutive runs have tested the authoring half of a product whose stated Q2 primary persona never authors — seed the pulse its own team account, or Run 03 is the third blind spot in a row." },
+      { n:"05", name:"Knowledge Steward", set:"App · Q2 secondary", verdict:"Blind spot", cls:"red", words:"ungoverned, inconsistent, unaccountable", trial:"Not yet", q:"You fixed the infrastructure and I'll credit that, but my entire world — orgs, roles, audit, brand defaults — has gone two runs untested, so enterprise readiness isn't good or bad, it's unknown." },
+      { n:"06", name:"Knowledge Contributor", set:"App · editor-served", verdict:"Blind spot", cls:"red", words:"unfinished, unreusable, lossy", trial:"No", q:"Fix AI-03 first — until generated output actually lands on the canvas, nothing about style, reuse or export is even testable." }
+    ],
+    // severity per finding per persona (0 = no opinion). Order: Sensemaker, Collaborator, Maintainer, Consumer, Steward, Contributor
+    heat: [
+      ["AI-03 output never reaches canvas", [5,5,5,4,2,5]],
+      ["D-04 paywall / “Plusfree”",       [4,4,4,4,4,4]],
+      ["D-09 empty diagrams eat the cap",   [4,3,4,4,3,4]],
+      ["E-01 invite link = edit",           [3,4,4,4,5,0]],
+      ["A-01 SSO 98% failure",              [0,4,4,5,5,0]],
+      ["D-11 no returning-user memory",     [0,3,5,5,3,0]],
+      ["AI-04 no pending state",            [4,0,4,0,0,4]],
+      ["AI-01 syntax error + repair",       [4,3,0,0,0,4]],
+      ["D-06 file cards unnamed",           [0,4,0,5,4,0]],
+      ["AI-07 no auto-title",               [0,4,0,4,0,3]],
+      ["E-03 history / export untested",    [0,0,5,0,0,5]],
+      ["A-03 signup unsegmentable",         [0,0,0,0,5,0]]
+    ],
+    words: [["diagram",42],["canvas",25],["link",25],["empty",25],["diagrams",23],["card",16],["free",16],["runs",14],["labelled",14],["chat",13],["edit",13],["first",13],["unnamed",13],["basic",12],["sharing",12],["editor",12],["mermaid",12],["code",12],["syntax",12],["share",12]],
+    descriptors: [["unfinished",2],["lossy",2],["faster",1],["emptier",1],["unshippable",1],["unlabelled",1],["unowned",1],["amnesiac",1],["unverifiable",1],["authored-for",1],["unsearchable",1],["anonymous",1],["ungoverned",1],["inconsistent",1],["unaccountable",1],["unreusable",1]],
+    trialYes: 0, defects: 28, working: 12
   }
 ];
 
@@ -445,17 +482,17 @@ const fmtFull = n => n.toLocaleString("en-US");
 const niceMax = m => { const p=Math.pow(10,Math.floor(Math.log10(m))); const s=m/p; const n = s<=1?1:s<=2?2:s<=2.5?2.5:s<=5?5:10; return n*p; };
 const SER = { google:"#5B4FC4", github:"#B8862B", email:"#1B7FA6", good:"#448361", bad:"#C4554D" };
 
-// Mixpanel EU, project 2954792 — pulled 2026-09-08
+// Mixpanel EU, project 2954792 — pulled 2026-09-22
 const D = {
-  signups: [["08-09",4856],["08-10",7461],["08-11",7785],["08-12",7536],["08-13",7341],["08-14",5485],["08-15",3357],["08-16",4571],["08-17",7256],["08-18",8019],["08-19",8039],["08-20",7453],["08-21",5732],["08-22",3488],["08-23",5050],["08-24",7671],["08-25",8041],["08-26",7953],["08-27",7480],["08-28",5736],["08-29",4113],["08-30",5627],["08-31",8108],["09-01",8241],["09-02",8354],["09-03",8022],["09-04",6583],["09-05",4388],["09-06",6096],["09-07",8849],["09-08",3503]],
-  days21: ["08-18","08-19","08-20","08-21","08-22","08-23","08-24","08-25","08-26","08-27","08-28","08-29","08-30","08-31","09-01","09-02","09-03","09-04","09-05","09-06","09-07"],
-  google: [13134,13639,12793,9168,5800,9031,12989,13216,13514,12902,9395,6682,9459,13738,13812,13575,13196,10568,7250,10714,15441],
-  github: [2154,2357,2258,1479,1006,1487,2324,2342,2245,2169,1518,1028,1636,2268,2516,2177,2235,1670,1170,1768,2830],
-  emailOk:[343,360,334,230,130,212,357,436,369,371,225,134,185,342,405,403,378,256,130,263,377],
-  emailErr:[359,417,300,175,71,203,355,351,360,373,221,132,169,357,366,362,347,232,148,224,415],
-  sso: [["Aug 10",12,3229],["Aug 17",12,983],["Aug 24",15,1017],["Aug 31",22,1112],["Sep 7*",1,210]],
-  prio: [["Website",1,2,3,1],["Onboarding",1,3,1,1],["Editor",0,1,1,0],["AI",1,0,3,1],["App",2,4,2,1]],
-  time: [["New diagram → editor",3.5,"none"],["Prompt → first render",10,"\"Loading diagram…\""],["Edit → AI response",9,"none"],["Apply → canvas",1,"none"]]
+  signups: [["08-23",5050],["08-24",7671],["08-25",8041],["08-26",7953],["08-27",7480],["08-28",5736],["08-29",4113],["08-30",5627],["08-31",8108],["09-01",8241],["09-02",8354],["09-03",8022],["09-04",6583],["09-05",4388],["09-06",6096],["09-07",8849],["09-08",9172],["09-09",9169],["09-10",8721],["09-11",6612],["09-12",4470],["09-13",6188],["09-14",8760],["09-15",8993],["09-16",9229],["09-17",8973],["09-18",6773],["09-19",4799],["09-20",6646],["09-21",9122]],
+  days21: ["09-01","09-02","09-03","09-04","09-05","09-06","09-07","09-08","09-09","09-10","09-11","09-12","09-13","09-14","09-15","09-16","09-17","09-18","09-19","09-20","09-21"],
+  google: [13812,13575,13196,10569,7252,10721,15448,15764,15259,14344,10667,8106,10783,15211,15144,15364,14985,10493,8426,11426,14513],
+  github: [2516,2177,2235,1671,1172,1770,2831,2792,2674,2745,1979,1417,1885,2704,2779,2736,2560,1692,1603,2112,2503],
+  emailOk:[405,403,378,256,130,263,377,368,444,398,269,198,269,429,463,390,405,264,186,278,416],
+  emailErr:[366,362,347,232,148,224,415,371,342,376,256,181,255,347,427,326,374,299,175,255,428],
+  sso: [["Aug 24",15,1017],["Aug 31",22,1112],["Sep 7",19,969],["Sep 14",25,962],["Sep 21*",3,273]],
+  prio: [["Website",0,2,2,1],["Onboarding",0,2,3,0],["Editor",0,1,1,1],["AI",2,1,2,1],["App",3,2,2,2]],
+  time: [["Prompt → first render",26,"\"Repairing diagram…\""],["Edit → AI response",40,"none"],["Share dialog → ready",5,"\"Loading sharing information…\""],["New diagram → paywall",1.5,"none"]]
 };
 
 function lineChart(el, labels, series, opts={}){
@@ -516,9 +553,9 @@ function stackedH(el, rows, keys, colors, opts={}){
 
 function timeStrip(el, rows){
   const W=520, rowH=22, gap=10, L=150, R=48, T=6; const H=T+rows.length*(rowH+gap)+18;
-  const max=12, iw=W-L-R, x=v=>L+iw*v/max;
-  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Seconds waited per step"><g class="grid">${[0,3,6,9,12].map(t=>`<line x1="${x(t)}" x2="${x(t)}" y1="${T}" y2="${H-18}"/>`).join("")}</g>`;
-  s+=`<g class="axis">${[0,3,6,9,12].map(t=>`<text x="${x(t)}" y="${H-4}" text-anchor="middle">${t}s</text>`).join("")}</g>`;
+  const max=niceMax(Math.max(...rows.map(r=>r[1]))*1.08),TICKS=[0,.25,.5,.75,1].map(t=>Math.round(t*max)), iw=W-L-R, x=v=>L+iw*v/max;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Seconds waited per step"><g class="grid">${TICKS.map(t=>`<line x1="${x(t)}" x2="${x(t)}" y1="${T}" y2="${H-18}"/>`).join("")}</g>`;
+  s+=`<g class="axis">${TICKS.map(t=>`<text x="${x(t)}" y="${H-4}" text-anchor="middle">${t}s</text>`).join("")}</g>`;
   rows.forEach((r,i)=>{ const y0=T+i*(rowH+gap); const fb=r[2]!=="none"; const c=fb?SER.good:SER.bad;
     s+=`<text x="${L-8}" y="${y0+rowH/2+4}" text-anchor="end" style="fill:var(--ink);font-size:12px">${r[0]}</text>`;
     s+=`<rect class="sbar" x="${x(0)}" y="${y0}" width="${x(r[1])-x(0)}" height="${rowH}" rx="3" fill="${c}" opacity="${fb?.85:.75}" data-t="${r[0]}: ${r[1]} s · feedback: ${r[2]}"/>`;
