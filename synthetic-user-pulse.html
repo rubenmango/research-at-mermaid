@@ -423,17 +423,17 @@ const RUNS = [
       { key:"app",        name:"Dashboard & App", owner:"App team",            pass:1, total:13 }
     ],
     personas: [
-      { n:"01", name:"Sensemaker",    set:"Editor · Now",   verdict:"Blind spot", cls:"red", words:"faster, emptier, unfinished", trial:"No", q:"You fixed the servers and broke the moment the product exists for — AI output that never reaches the canvas is worse than a site that won't load, because this time I paid for it." },
-      { n:"02", name:"Collaborator",  set:"Editor · Soon",  verdict:"Blind spot", cls:"red", words:"unshippable, unlabelled, unowned", trial:"No", q:"The AI now produces correct diagrams that never reach the canvas, never get a name, and therefore can never be shared — fix the apply path before you sell me collaboration." },
-      { n:"03", name:"Maintainer",    set:"Editor · Soon",  verdict:"Blind spot", cls:"red", words:"amnesiac, lossy, unverifiable", trial:"No", q:"The product has no concept of time — not on a file card, not in the AI panel, not in the dashboard — and until it does there is no version of this I can rely on." },
-      { n:"04", name:"Knowledge Consumer", set:"App · Q2 primary", verdict:"Blind spot", cls:"red", words:"authored-for, unsearchable, anonymous", trial:"No", q:"Two consecutive runs have tested the authoring half of a product whose stated Q2 primary persona never authors — seed the pulse its own team account, or Run 03 is the third blind spot in a row." },
-      { n:"05", name:"Knowledge Steward", set:"App · Q2 secondary", verdict:"Blind spot", cls:"red", words:"ungoverned, inconsistent, unaccountable", trial:"Not yet", q:"You fixed the infrastructure and I'll credit that, but my entire world — orgs, roles, audit, brand defaults — has gone two runs untested, so enterprise readiness isn't good or bad, it's unknown." },
-      { n:"06", name:"Knowledge Contributor", set:"App · editor-served", verdict:"Blind spot", cls:"red", words:"unfinished, unreusable, lossy", trial:"No", q:"Fix AI-03 first — until generated output actually lands on the canvas, nothing about style, reuse or export is even testable." }
+      { n:"01", name:"Sensemaker",    set:"Editor \u00b7 Now",   verdict:"Blind spot", cls:"red", words:"faster, emptier, unfinished", trial:"No", q:"You fixed the servers and broke the moment the product exists for \u2014 AI output that never reaches the canvas is worse than a site that won't load, because this time I paid for it." },
+      { n:"02", name:"Collaborator",  set:"Editor \u00b7 Soon",  verdict:"Blind spot", cls:"red", words:"unshippable, unlabelled, unowned", trial:"No", q:"The AI now produces correct diagrams that never reach the canvas, never get a name, and therefore can never be shared \u2014 fix the apply path before you sell me collaboration." },
+      { n:"03", name:"Maintainer",    set:"Editor \u00b7 Soon",  verdict:"Blind spot", cls:"red", words:"amnesiac, lossy, unverifiable", trial:"No", q:"The product has no concept of time \u2014 not on a file card, not in the AI panel, not in the dashboard \u2014 and until it does there is no version of this I can rely on." },
+      { n:"04", name:"Knowledge Consumer", set:"App \u00b7 Q2 primary", verdict:"Blind spot", cls:"red", words:"authored-for, unsearchable, anonymous", trial:"No", q:"Two consecutive runs have tested the authoring half of a product whose stated Q2 primary persona never authors \u2014 seed the pulse its own team account, or Run 03 is the third blind spot in a row." },
+      { n:"05", name:"Knowledge Steward", set:"App \u00b7 Q2 secondary", verdict:"Blind spot", cls:"red", words:"ungoverned, inconsistent, unaccountable", trial:"Not yet", q:"You fixed the infrastructure and I'll credit that, but my entire world \u2014 orgs, roles, audit, brand defaults \u2014 has gone two runs untested, so enterprise readiness isn't good or bad, it's unknown." },
+      { n:"06", name:"Knowledge Contributor", set:"App \u00b7 editor-served", verdict:"Blind spot", cls:"red", words:"unfinished, unreusable, lossy", trial:"No", q:"Fix AI-03 first \u2014 until generated output actually lands on the canvas, nothing about style, reuse or export is even testable." }
     ],
     // severity per finding per persona (0 = no opinion). Order: Sensemaker, Collaborator, Maintainer, Consumer, Steward, Contributor
     heat: [
       ["AI-03 output never reaches canvas", [5,5,5,4,2,5]],
-      ["D-04 paywall / “Plusfree”",       [4,4,4,4,4,4]],
+      ["D-04 paywall / \u201cPlusfree\u201d",       [4,4,4,4,4,4]],
       ["D-09 empty diagrams eat the cap",   [4,3,4,4,3,4]],
       ["E-01 invite link = edit",           [3,4,4,4,5,0]],
       ["A-01 SSO 98% failure",              [0,4,4,5,5,0]],
@@ -459,21 +459,21 @@ const RUNS = [
       { key:"app",        name:"Dashboard & App", owner:"App team",            pass:3, total:13 }
     ],
     personas: [
-      { n:"01", name:"Sensemaker",    set:"Editor · Now",   verdict:"Partially served", cls:"amber", words:"fast, promising, unfinished", trial:"No", q:"Nothing else on this list matters until clicking “Edit” puts the diagram the AI just wrote onto the canvas intact." },
-      { n:"02", name:"Collaborator",  set:"Editor · Soon",  verdict:"Blind spot", cls:"red", words:"confident, unfinished, unsharable", trial:"No", q:"You rewrote the homepage to promise “Edit together, in real time” and still haven’t tested a single collaboration surface in three runs — fix AI-08 so there’s something to share, flip the invite link to view-only, then point the pulse at team spaces." },
-      { n:"03", name:"Maintainer",    set:"Editor · Soon",  verdict:"Blind spot", cls:"red", words:"unversioned, amnesiac, confident", trial:"No", q:"Ship nothing else on the AI path until “Edit” is a diff I approve rather than a write I can’t undo — AI-08 plus no visible version history is exactly the IQVIA failure." },
-      { n:"04", name:"Knowledge Consumer", set:"App · Q2 primary", verdict:"Blind spot", cls:"red", words:"untitled, unattributed, unsearched", trial:"No", q:"Run 04 is worthless to me unless someone seeds this account with a diagram I didn’t write and types one query into that search box — until then you’re testing authoring and calling it a product." },
-      { n:"05", name:"Knowledge Steward", set:"App · Q2 secondary", verdict:"Blind spot", cls:"red", words:"ungoverned, improving, unaccountable", trial:"Not yet", q:"Three runs in, the only numbers about my half of the product — 1.9% SSO success, signup with no auth dimension — still have no owner, and I still haven’t been shown one setting I could apply to anyone but myself." },
-      { n:"06", name:"Knowledge Contributor", set:"App · editor-served", verdict:"Blind spot", cls:"red", words:"faster, confident, lossy", trial:"No", q:"You made generation fast and the website honest about what it is, then shipped a button whose only job is to put my diagram on the canvas and it deletes it — fix AI-08 before you ship anything else." }
+      { n:"01", name:"Sensemaker",    set:"Editor \u00b7 Now",   verdict:"Partially served", cls:"amber", words:"fast, promising, unfinished", trial:"No", q:"Nothing else on this list matters until clicking \u201cEdit\u201d puts the diagram the AI just wrote onto the canvas intact." },
+      { n:"02", name:"Collaborator",  set:"Editor \u00b7 Soon",  verdict:"Blind spot", cls:"red", words:"confident, unfinished, unsharable", trial:"No", q:"You rewrote the homepage to promise \u201cEdit together, in real time\u201d and still haven\u2019t tested a single collaboration surface in three runs \u2014 fix AI-08 so there\u2019s something to share, flip the invite link to view-only, then point the pulse at team spaces." },
+      { n:"03", name:"Maintainer",    set:"Editor \u00b7 Soon",  verdict:"Blind spot", cls:"red", words:"unversioned, amnesiac, confident", trial:"No", q:"Ship nothing else on the AI path until \u201cEdit\u201d is a diff I approve rather than a write I can\u2019t undo \u2014 AI-08 plus no visible version history is exactly the IQVIA failure." },
+      { n:"04", name:"Knowledge Consumer", set:"App \u00b7 Q2 primary", verdict:"Blind spot", cls:"red", words:"untitled, unattributed, unsearched", trial:"No", q:"Run 04 is worthless to me unless someone seeds this account with a diagram I didn\u2019t write and types one query into that search box \u2014 until then you\u2019re testing authoring and calling it a product." },
+      { n:"05", name:"Knowledge Steward", set:"App \u00b7 Q2 secondary", verdict:"Blind spot", cls:"red", words:"ungoverned, improving, unaccountable", trial:"Not yet", q:"Three runs in, the only numbers about my half of the product \u2014 1.9% SSO success, signup with no auth dimension \u2014 still have no owner, and I still haven\u2019t been shown one setting I could apply to anyone but myself." },
+      { n:"06", name:"Knowledge Contributor", set:"App \u00b7 editor-served", verdict:"Blind spot", cls:"red", words:"faster, confident, lossy", trial:"No", q:"You made generation fast and the website honest about what it is, then shipped a button whose only job is to put my diagram on the canvas and it deletes it \u2014 fix AI-08 before you ship anything else." }
     ],
     // severity per finding per persona (0 = no opinion). Order: Sensemaker, Collaborator, Maintainer, Consumer, Steward, Contributor
     heat: [
-      ["AI-08 “Edit” destroys the diagram",  [5,5,5,3,3,5]],
+      ["AI-08 \u201cEdit\u201d destroys the diagram",  [5,5,5,3,3,5]],
       ["AI-09 stranded output rots",        [4,5,5,4,4,4]],
       ["AI-03 output never reaches canvas", [5,4,4,0,0,5]],
       ["E-01 invite link = edit",           [3,5,4,5,5,3]],
       ["D-09 empty diagrams eat the cap",   [3,4,4,4,0,4]],
-      ["D-04 paywall / “Plusfree”",       [2,5,3,3,4,4]],
+      ["D-04 paywall / \u201cPlusfree\u201d",       [2,5,3,3,4,4]],
       ["AI-04 credit counter invisible",    [3,0,4,0,5,4]],
       ["D-06 search / attribution gap",     [0,1,2,5,1,0]],
       ["D-11 no returning-user memory",     [0,3,4,4,0,0]],
@@ -536,7 +536,7 @@ const D = {
   emailErr:[375,299,175,255,428,345,437,291,225,177,187,384,395,337,244,197,89,127,341,284,447],
   sso: [["Sep 7",19,969],["Sep 14",25,962],["Sep 21",14,1080],["Sep 28",18,864],["Oct 5*",9,1051]],
   prio: [["Website",0,2,3,1],["Onboarding",0,2,3,1],["Editor",0,2,1,0],["AI",2,2,2,1],["App",1,3,3,2]],
-  time: [["Prompt → first render",9.7,"none"],["Click “Edit” → applied",4,"none"],["New diagram → paywall",3,"none"],["Share dialog → ready",0.5,"none"]]
+  time: [["Prompt \u2192 first render",9.7,"none"],["Click \u201cEdit\u201d \u2192 applied",4,"none"],["New diagram \u2192 paywall",3,"none"],["Share dialog \u2192 ready",0.5,"none"]]
 };
 
 function lineChart(el, labels, series, opts={}){
