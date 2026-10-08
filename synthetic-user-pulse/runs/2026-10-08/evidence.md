@@ -317,6 +317,7 @@ Opened on the Basic account. Contents, verbatim:
 - "Use invite link" → "Copy link" → permission control reading **"Can edit"**
 - "Who has access" → ruben Mangorrinha → "Manage"
 - "Public link access" → **"No access"**
+
 - Public-off default still correct.
 - **Invite link still defaults to "Can edit"** — third run. A copied link grants edit to
   anyone who receives it.
